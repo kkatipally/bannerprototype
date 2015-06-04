@@ -12,6 +12,14 @@
 	<packaging>jar</packaging>
 	<name>banner prototype Module API</name>
 	<description>API project for bannerprototype</description>
+	
+	
+	 <repositories>
+		<repository>
+			<id>codehaus</id>
+			<url>http://repository.codehaus.org/org/codehaus</url>
+		</repository>
+    </repositories>
 
 	<dependencies>
 	
@@ -68,6 +76,25 @@
 			<artifactId>banner</artifactId>
 			<version>.1</version>
 		</dependency>
+		
+		
+ 
+  
+	<dependency>
+		<groupId>org.codehaus.jackson</groupId>
+		<artifactId>jackson-mapper-asl</artifactId>
+		<version>1.5.0</version>
+	</dependency>
+	<dependency>
+		<groupId>org.codehaus.jackson</groupId>
+		<artifactId>jackson-core-asl</artifactId>
+		<version>1.5.0</version>
+	</dependency>
+	
+	
+  
+  
+  
 		
 	</dependencies>
 	

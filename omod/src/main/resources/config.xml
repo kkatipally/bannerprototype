@@ -23,6 +23,14 @@
         <point>org.openmrs.patientDashboardTab</point>
         <class>${project.parent.groupId}.${project.parent.artifactId}.extension.html.NLPPatientDashboardTab</class>
     </extension>
+    
+    <require_modules>
+    	<require_module>
+        	org.openmrs.module.uiframework
+    	</require_module>
+	</require_modules>
+	
+	
 	
 	
 	<!-- Adds link to admin page -->

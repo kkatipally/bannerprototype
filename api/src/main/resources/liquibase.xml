@@ -26,6 +26,8 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="encounter_id" type="int"></column>
+            <column name="obs_id" type="int"></column>
+            
             <column name="patient_id" type="int"></column>
             <column name="uuid" type="char(38)"></column>
             <column name="text" type="text"></column>

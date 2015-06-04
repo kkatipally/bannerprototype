@@ -17,7 +17,7 @@ public class NERTagger {
 	Tokenizer tokenizer;
 	ArrayList<Mention> mentions;
 	ArrayList<NamedEntity> namedEntities;
-	ConceptService conceptService;
+	//ConceptService conceptService;
 	
 	
 	public NERTagger()
@@ -34,8 +34,8 @@ public class NERTagger {
 	public ArrayList<NamedEntity> tag(String sofa)
 	{
 		namedEntities.clear();
-		conceptService = Context.getConceptService();
-		List<Concept> matchedConcepts;
+		//conceptService = Context.getConceptService();
+		List<Concept> matchedConcepts = new ArrayList<Concept>();
 		String mentionText;
 		
 		mentions.clear();
@@ -52,7 +52,7 @@ public class NERTagger {
 			mentionText = m.getText();
 			mentionText = cleanText(mentionText);
 			System.out.println(mentionText);
-			matchedConcepts = conceptService.getConceptsByName(mentionText);
+			//matchedConcepts = conceptService.getConceptsByName(mentionText);
 			namedEntities.add(new NamedEntity(m,matchedConcepts));
 		}
 		

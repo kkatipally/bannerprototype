@@ -70,8 +70,13 @@
                 <prop key="**/nlpPatientNotes.portlet">MyNLPNotesPortletController</prop>
             </props>
         </property>
-    </bean>	 
-
+    </bean>
+    	 
+    <!-- Annotation based controllers  -->	
+    <bean class="org.openmrs.ui.framework.StandardModuleUiConfiguration">
+        <property name="moduleId" value="bannerprototype"/>
+    </bean>
+	
 
     <bean id="MyNLPNotesPortletController" class="org.openmrs.module.bannerprototype.web.controller.NLPPatientNotesPortletController" />
 	

@@ -1,6 +1,7 @@
 package org.openmrs.module.bannerprototype;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -178,6 +179,23 @@ public class SofaTextMention extends BaseOpenmrsObject implements Serializable {
 	 */
 	public void setSofaText(SofaText sofaText) {
 		this.sofaText = sofaText;
+	}
+	
+	public List<Concept> getConcepts()
+	{
+		List<Concept> concepts = new ArrayList<Concept>();
+		for(SofaTextMentionConcept c : sofaTextMentionConcept)
+			concepts.add(c.getConcept());
+		
+		return concepts;
+	}
+	
+	public void addConcepts(List<Concept> concepts)
+	{
+		for(Concept c : concepts){
+			
+			sofaTextMentionConcept.add(new SofaTextMentionConcept(this,c));
+		}
 	}
 
 }

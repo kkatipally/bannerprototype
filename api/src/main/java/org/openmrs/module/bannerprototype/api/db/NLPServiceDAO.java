@@ -3,6 +3,7 @@ package org.openmrs.module.bannerprototype.api.db;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.SessionFactory;
 import org.openmrs.Encounter;
 import org.openmrs.Patient;
 import org.openmrs.module.bannerprototype.SofaDocument;
@@ -24,4 +25,5 @@ public interface NLPServiceDAO {
 	public Set<SofaText> getSofaTextsByEncounter(Encounter encounter);
 	public Set<SofaText> getSofaTextByDocument(SofaDocument sofaDocument);
 	public SofaDocument getSofaDocumentById(int SofaDocumentId);
+	public SessionFactory getSessionFactory();
 }

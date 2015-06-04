@@ -27,16 +27,22 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.openmrs.Concept;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.bannerprototype.SofaDocument;
 import org.openmrs.module.bannerprototype.SofaText;
 import org.openmrs.module.bannerprototype.bannerprototype;
 import org.openmrs.module.bannerprototype.api.NLPService;
+import org.openmrs.module.bannerprototype.nlp.ConceptClassTagger;
 import org.openmrs.module.bannerprototype.nlp.DocumentTagger;
 import org.openmrs.module.bannerprototype.nlp.NERTagger;
 import org.openmrs.module.bannerprototype.nlp.NamedEntity;
 import org.openmrs.module.bannerprototype.nlp.TaggerFactory;
+import org.openmrs.module.bannerprototype.transport.SofaDocumentTransport;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -148,6 +154,71 @@ public class  bannerprototypeManageController {
 					break;
 				}
             return sofaDocument.getAnnotatedHTML();
+    }
+	/*
+	@Transactional
+	@RequestMapping(value = "/module/bannerprototype/dump", method = RequestMethod.GET)
+	public @ResponseBody String bannerDataDump(@RequestParam(value="directory") String directory)
+    {        
+			BannerDataDump bdd = new BannerDataDump();
+			
+			try {
+				bdd.serialize(directory, allSofaDocuments);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return "not ok";
+			}
+            return "OK";
+    }
+	*/
+	/*
+	@Transactional
+	@RequestMapping(value = "/module/bannerprototype/classSearch", method = RequestMethod.POST)
+	public @ResponseBody String bannerClasSearch(HttpServletRequest request)
+    {        
+		String className = request.getParameter("class");
+		String text = request.getParameter("text");
+		String out = "hello";
+		System.out.println("in POST"+className+text);
+		
+		ConceptClassTagger cct = new ConceptClassTagger(className,"test");
+		List<NamedEntity> foundConcepts = cct.tag(text);
+		
+		for(NamedEntity ne : foundConcepts)
+		{
+			out+=" " + ne.getText();
+			
+		}
+		
+		return out;
+    }
+    */
+	
+	@RequestMapping(value = "/module/bannerprototype/transport", method = RequestMethod.GET)
+	public @ResponseBody String bannerDataDump() throws JsonGenerationException, JsonMappingException, IOException
+    {        
+			
+		
+			SofaDocumentTransport[] transports = new SofaDocumentTransport[allSofaDocuments.size()];
+			int i = 0;
+			for(SofaDocument sd : allSofaDocuments)
+			{
+				transports[i] = new SofaDocumentTransport(sd);
+				i++;
+			}
+
+			ObjectMapper mapper = new ObjectMapper();
+			
+			String out = mapper.writeValueAsString(transports);
+			out = "sendJsonData("+out+");";
+					
+					
+			
+			return out;
+			
+			
+			
     }
 	
 }

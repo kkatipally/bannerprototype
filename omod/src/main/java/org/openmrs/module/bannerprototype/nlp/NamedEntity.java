@@ -43,6 +43,14 @@ public class NamedEntity {
 			
 		}	
 	}
+	
+	public NamedEntity(Mention m, Concept concept, String cName)
+	{
+		mention = m;
+		conceptIdToName.put(concept.getId(), cName);
+		conceptMatches = new HashSet<Concept>();
+		conceptMatches.add(concept);
+	}
 
 	
 	public Mention getMention() {

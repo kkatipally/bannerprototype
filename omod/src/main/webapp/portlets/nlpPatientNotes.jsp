@@ -90,6 +90,12 @@ span.mention-type-treatment {
 	cursor: hand; 
 }
 
+.table-date:hover {
+	text-shadow:0px 0px 1px lightgray;
+	cursor: pointer; 
+	cursor: hand; 
+}
+
 
 table.datatable {
   width: 100%;
@@ -119,17 +125,55 @@ span.not-colored{
 	color:grey;
 }
 
+div.search-history {
+	text-align: left;
+	float:left;
+}
+
+#search-history-items span {
+	color:navy;
+	font-size:14px;
+}
+
+#search-history-items span {
+	color:navy;
+	font-size:14px;
+}
+
+#search-history-items span:hover {
+	text-shadow:0px 0px 1px lightgray;
+	cursor: pointer; 
+	cursor: hand; 
+}
+
+#history-and-key button{
+	margin-bottom:5px;
+}
+
+#doc-date {
+	color:navy;
+	font-size:16px;
+}
+
 </style>
 
 <span class="boxHeader">Texts</span>
 <div class="box">
-<div class=doc-key>
-KEY:  
-<span class=mention-type-test>test  </span>
-<span class=mention-type-treatment>treatment  </span>
-<span class=mention-type-problem>problem  </span>
-</div>
+<div id="history-and-key">
+	<div class="search-history">
+	Search History:
+	<span id=search-history-items></span><br>
+	<button onClick=clearSearchHistory()>clear history</button>
 
+	</div><br>
+
+	<div class=doc-key>
+		KEY:  
+		<span class=mention-type-test>test  </span>
+		<span class=mention-type-treatment>treatment  </span>
+		<span class=mention-type-problem>problem  </span>
+	</div>
+</div>
 <div id="patientTabs">
 	<ul>
 		<li>
@@ -161,7 +205,7 @@ KEY:
 			<tbody>
       		<c:forEach var="document" items="${allSofaDocuments}">
            	<tr class="concept-table document-${document.sofaDocumentId}">
-           		<td>${document.dateCreated}</td>
+           		<td class="table-date" onCLick="doDocumentSelected(${document.sofaDocumentId})">${document.dateCreated}</td>
            		<td>
            			<c:forEach var="problem" items="${document.problems}">
            				<span onClick=doMentionSelected(this,${document.sofaDocumentId}) class="mention-type-problem table-mention">${problem.mentionText}</span>
@@ -187,7 +231,7 @@ KEY:
 			<tbody>
       		<c:forEach var="document" items="${allSofaDocuments}">
            	<tr class="concept-table document-${document.sofaDocumentId}">
-           		<td >${document.dateCreated}</td>
+           		<td class="table-date" onCLick="doDocumentSelected(${document.sofaDocumentId})">${document.dateCreated}</td>
            		<td>
            			<c:forEach var="treatment" items="${document.treatments}">
            				<span onClick=doMentionSelected(this,${document.sofaDocumentId})  class="mention-type-treatment table-mention">${treatment.mentionText}</span> 
@@ -214,7 +258,7 @@ KEY:
 			<tbody>
       		<c:forEach var="document" items="${allSofaDocuments}">
            	<tr class="concept-table document-${document.sofaDocumentId}">
-           		<td>${document.dateCreated}</td>
+           		<td class="table-date" onCLick="doDocumentSelected(${document.sofaDocumentId})">${document.dateCreated}</td>
            		<td>
            			<c:forEach var="test" items="${document.tests}">
            				<span onClick=doMentionSelected(this,${document.sofaDocumentId}) class="mention-type-test table-mention">${test.mentionText}</span>
@@ -240,7 +284,7 @@ KEY:
 			<tbody>
       		<c:forEach var="document" items="${allSofaDocuments}">
            	<tr class="concept-table document-${document.sofaDocumentId}">
-           		<td>${document.dateCreated}</td>
+           		<td class="table-date" onCLick="doDocumentSelected(${document.sofaDocumentId})">${document.dateCreated}</td>
            		<td>
            			<c:forEach var="test" items="${document.tests}">
            				<span onClick=doMentionSelected(this,${document.sofaDocumentId}) class="mention-type-test table-mention">${test.mentionText}</span>
@@ -267,7 +311,7 @@ KEY:
 	
 	
 </div>
-
+<span id=doc-date>DATE</span>
 <div id=doc-viewer class="doc-viewer">${sofaDocument.annotatedHTML}</div>
 
 
@@ -306,10 +350,17 @@ KEY:
 		var mention = getSelectedMentionCookie();
 		highlightSelectedMention(mention)
 		
+		
+		updateDocumentColors(c);
+		
+		
 		var doc = getSelectedDocumentCookie();
 		highlightDocument(doc);
 		
-		updateDocumentColors(c);
+		// set keyup event binding for search box
+		$j(".dataTables_filter input").keyup(searchKeyUp)
+		updateTableStyle();
+		refreshSearchBreadCrumb()
 		
     } );
 
@@ -345,7 +396,15 @@ function changeConceptTypeTab(tabObj) {
 	setSearchVals(searchVal);
 	
 	updateDocumentColors(tabObj.id)
+	
+	updateTableStyle()
+	updateKey(tabObj.id);
 	return false;
+}
+
+function updateKey(id)
+{
+	
 }
 
 function setConceptTabCookie(tabType) {
@@ -365,11 +424,14 @@ function doMentionSelected(obj,docId){
 	var $j = jQuery.noConflict();
 	var queryString = window.location.href.slice(window.location.href.indexOf('?'))
 	
-	var searchVal = getSearchVal();
-	setSearchCookie(searchVal)
+	
 	
 	var selectedMention = obj.innerHTML
 	setSelectedMentionCookie(selectedMention)
+	addSearchBreadCrumb(selectedMention)
+	
+	var searchVal = getSearchVal();
+	setSearchCookie(searchVal)
 	
 	setSelectedDocumentCookie(docId)
 	
@@ -423,14 +485,21 @@ function getSearchVal()
 	
 }
 
+var inputstmp
+
 function setSearchVals(text){
 	var searchInputs = $j(".dataTables_filter input");
-	var e = $j.Event("keyup");
+	inputstmp = searchInputs
+	//alert(searchInputs)
+
 	for(i = 0; i<searchInputs.length; i++)
 	{	
+		
+		
 		searchInputs[i].value = text;
-		$j(searchInputs[i]).trigger(e)
 	}
+	var e = $j.Event("keyup");
+	$j(searchInputs).trigger(e)
 }
 
 function setSelectedMentionCookie(text){
@@ -451,9 +520,17 @@ function highlightSelectedMention(mention){
 	for(i = 0; i < mentionSpans.length; i++)
 	{
 		if(mentionSpans[i].innerHTML == mention)
-			mentionSpans[i].style.backgroundColor = "yellow"; 
+			mentionSpans[i].style.backgroundColor = "rgb(157, 198, 245)"; 
 			mentionSpans[i].focus()
-	}	
+	}
+	
+	var concepts = $j(".table-mention")
+	
+	for(i = 0; i < concepts.length; i++)
+	{
+		if(concepts[i].innerHTML== mention)
+			concepts[i].style.backgroundColor = "rgb(157, 198, 245)"; 
+	}
 	
 }
 
@@ -470,11 +547,11 @@ function getSelectedDocumentCookie() {
 }
 
 function highlightDocument(doc){
-	var tr = $j(".document-"+doc)
+	$j(".document-"+doc + " td").css("background-color","rgb(163, 236, 227)")
+	var d = $j(".document-"+doc + " td")[0]
+	var date = $j(d).html();
+	$j("#doc-date").html("DATE: "+date);
 	
-	
-	for(i=0; i<tr.length; i++)
-		tr[i].style.backgroundColor="lightgrey"
 	
 }
 
@@ -483,6 +560,9 @@ function updateDocumentColors(c)
 	var conceptType = c.replace("show","").replace("Tab","").toLowerCase();
 	conceptType = conceptType.substring(0,conceptType.length-1)
 	var spans = $j("#doc-viewer span")
+	var keySpans = $j(".doc-key span")
+	spans = spans.add(keySpans)
+	
 
 	if(conceptType == "al")
 	{
@@ -501,8 +581,120 @@ function updateDocumentColors(c)
 			spans[i].classList.add("not-colored")
 		else
 			spans[i].classList.remove("not-colored")
+
 			
 }
 
+function updateTableStyle(){
+	$j("#PatientNotesNLP tbody td").css("background-color","rgb(245, 242, 242)");
+	$j("#PatientNotesNLP table").css("background-color","rgb(200, 200, 200)");
+	
+	var doc = getSelectedDocumentCookie();
+	highlightDocument(doc);
+	
+}
+
+function doDocumentSelected(docId){
+	var queryString = window.location.href.slice(window.location.href.indexOf('?'))
+	var searchVal = getSearchVal();
+	setSearchCookie(searchVal)
+	
+	setSelectedDocumentCookie(docId)
+	
+	$j.post("/openmrs/patientDashboard.form"+ queryString,
+			{"docId":docId},
+			function(result){
+				window.location.reload()
+			}
+			)
+	
+	
+}
+
+function searchKeyUp(event){
+	
+	var searchVal = getSearchVal();
+	
+	//if enter, do breadcrumbs
+	if (event.which == 13 || event.keyCode == 13) {
+		addSearchBreadCrumb(searchVal)        
+
+        return
+    }
+
+	
+	var concepts = $j(".table-mention")
+	
+	if(searchVal == "")
+	{
+		for(i = 0; i < concepts.length; i++)
+		{
+			concepts[i].removeAttribute("style"); 
+		}
+	}
+	else
+	{	
+		for(i = 0; i < concepts.length; i++)
+		{
+			var innerhtml = concepts[i].innerHTML.toLowerCase()
+			if(innerhtml.indexOf(searchVal) != -1)
+				concepts[i].style.backgroundColor = "rgb(157, 198, 245)";
+			else
+				concepts[i].removeAttribute("style"); 
+		}
+	}
+	
+	updateTableStyle()
+	//setSearchCookie(searchVal)
+	
+}
+
+function addSearchBreadCrumb(searchVal)
+{
+	var crumb = getBreadCrumbCookie();
+	if(crumb == "")
+		crumb=searchVal;
+	else
+		crumb = crumb +"&"+ searchVal;
+	
+	setBreadCrumbCookie(crumb);
+	refreshSearchBreadCrumb()
+	
+}
+
+function getBreadCrumbCookie() {
+	var cookies = document.cookie.match('searchBreadCrumb-' + userId + '=(.*?)(;|$)');
+	if (cookies) {
+		return unescape(cookies[1]);
+	}
+	return "";
+}
+
+function setBreadCrumbCookie(crumb){
+	document.cookie = "searchBreadCrumb-" + userId + "="+escape(crumb);
+}
+
+function refreshSearchBreadCrumb()
+{
+	var crumbs = getBreadCrumbCookie().split("&");
+	var crumbHTML = "";
+	
+	for(i=0; i < crumbs.length; i++)
+		crumbHTML += "<span onCLick=doBreadCrumbClicked(\""+escape(crumbs[i])+"\")> > "+crumbs[i]+"</span>";
+		
+	$j("#search-history-items").html(crumbHTML)
+	
+}
+
+function doBreadCrumbClicked(crumb)
+{
+	setSearchVals(unescape(crumb))	
+}
+
+function clearSearchHistory()
+{
+	setBreadCrumbCookie("");
+	refreshSearchBreadCrumb();
+}
 
 </script>

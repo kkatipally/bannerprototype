@@ -3,6 +3,7 @@ package org.openmrs.module.bannerprototype.api.impl;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.SessionFactory;
 import org.openmrs.Encounter;
 import org.openmrs.Patient;
 import org.openmrs.api.impl.BaseOpenmrsService;
@@ -83,5 +84,11 @@ public class NLPServiceImpl extends BaseOpenmrsService implements NLPService {
 	public List<SofaDocument> getSofaDocumentsByPatient(Patient patient) {
 		return dao.getSofaDocumentsByPatient(patient);
 	}
+	
+	public SessionFactory getSessionFactory() {
+		return dao.getSessionFactory();
+	}
+	
+	
 
 }

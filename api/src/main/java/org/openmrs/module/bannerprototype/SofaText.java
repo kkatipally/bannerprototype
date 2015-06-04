@@ -22,6 +22,7 @@ public class SofaText extends BaseOpenmrsObject implements Serializable,Comparab
 	private String text;
 	private String uuid;
 	private Set<SofaTextMention> sofaTextMention = new HashSet<SofaTextMention>();
+
 	
 	public SofaText()
 	{
@@ -40,6 +41,26 @@ public class SofaText extends BaseOpenmrsObject implements Serializable,Comparab
 	
 	public void addMentionAndConcepts(Mention m, List<Concept> concepts)
 	{
+		//System.out.println("Mention Text: " + m.getText());
+		for(SofaTextMention stm : sofaTextMention)
+		{
+			//System.out.println("STM: " + stm.getMentionText());
+			
+			if(stm.getMentionText().toLowerCase().indexOf(m.getText().toLowerCase()) != -1)
+			{	
+				stm.addConcepts(concepts);
+				return;
+			}
+			if(m.getText().toLowerCase().indexOf(stm.getMentionText().toLowerCase()) != -1)
+			{	
+				concepts.addAll(stm.getConcepts());
+				sofaTextMention.remove(stm);
+				//System.out.println("removed");
+			}
+			
+			
+		}
+
 		sofaTextMention.add(new SofaTextMention(this,m,concepts));
 	}
 	

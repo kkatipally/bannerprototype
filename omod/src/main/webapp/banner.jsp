@@ -121,10 +121,19 @@ KEY:
 <script type="text/javascript">
 
  $j(document).ready(function() {
+	    
         $j('#doc-table').dataTable({"pageLength": 50});
         
         
         $j("#doc-table").width("100%")
+        
+        //$j.post("/openmrs/module/bannerprototype/classSearch.form",
+		//	{"class":"Test",
+        //	"text": "Test text with CD4"},
+		//	function(result){
+		//		alert(result)
+		//	}
+		//	)
     } );
 
 

@@ -1,30 +1,55 @@
 package org.openmrs.module.bannerprototype.nlp;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.openmrs.module.bannerprototype.SofaDocument;
 import org.openmrs.module.bannerprototype.SofaText;
 
 public class DocumentTagger {
 	private String document;
-	private ArrayList<SofaText> sofaTexts;
+	private List<SofaText> sofaTexts;
 	private NERTagger tagger;
+	private ConceptClassTagger testClassTagger;
+	private ConceptClassTagger problemClassTagger;
+	private ConceptClassTagger treatmentClassTagger;
 	
 	public DocumentTagger()
 	{
 		this.tagger = new NERTagger();
+		ArrayList<String> testClasses = new ArrayList<String>();
+		testClasses.add("Test");
+		
+		ArrayList<String> problemClasses = new ArrayList<String>();
+		problemClasses.add("Diagnosis");
+		problemClasses.add("Symptom");
+		problemClasses.add("Symptom/Finding");
+		
+		ArrayList<String> treatmentClasses = new ArrayList<String>();
+		treatmentClasses.add("Procedure");
+		treatmentClasses.add("Drug");
+		
+		this.testClassTagger = new ConceptClassTagger(testClasses,"test");
+		this.problemClassTagger = new ConceptClassTagger(problemClasses,"problem");
+		this.treatmentClassTagger = new ConceptClassTagger(treatmentClasses,"treatment");
 	}
 	
 	public SofaDocument tagDocument(String document)
 	{
 		sofaTexts = splitSentences(document);
-		ArrayList<NamedEntity> namedEntities;
+		List<NamedEntity> namedEntities;
 		SofaDocument sofaDocument = new SofaDocument();
 		sofaDocument.setText(document);
 		
+		
 		for(SofaText st : sofaTexts)
 		{	
-    		namedEntities = tagger.tag(st.getText());
+			namedEntities = new ArrayList<NamedEntity>();
+			namedEntities.addAll(tagger.tag(st.getText()));
+			namedEntities.addAll(testClassTagger.tag(st.getText()));
+			namedEntities.addAll(problemClassTagger.tag(st.getText()));
+			namedEntities.addAll(treatmentClassTagger.tag(st.getText()));
+			
 			for(NamedEntity ne : namedEntities)
     			st.addMentionAndConcepts(ne.getMention(), ne.getConceptMatches());
 			
