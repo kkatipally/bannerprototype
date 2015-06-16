@@ -1,10 +1,12 @@
 package org.openmrs.module.bannerprototype.advice;
 
 import java.lang.reflect.Method;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
+import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
@@ -18,36 +20,39 @@ import org.springframework.aop.MethodBeforeAdvice;
 
 public class VisitNoteAdvice implements MethodBeforeAdvice {
  
-//DocumentTagger dt = new DocumentTagger();
+    DocumentTagger dt = new DocumentTagger();
 
 	@Override
 	public void before(Method method, Object[] args, Object arg2) throws Throwable {
-        System.out.println("obs class");
-		// if not calling saveObs method, return
         
-        if(method != null)
-        	System.out.println(method.getName());
-        
-		if (method != null && method.getName().equals("saveObs"))
+		if (method != null && method.getName().equals("saveEncounter"))
 		{    
             		
-			System.out.println("saveObs");
+			
+			//System.out.println("saveEncounter Entered");
+			Set<Obs> obs = ((Encounter)args[0]).getAllObs();
+			
 			Concept c = Context.getConceptService().getConceptByName("Text of encounter note");
-			Obs obs = (Obs)args[0];
+			
+			for(Obs o : obs)
+			{	
+				Concept obs_concept = o.getConcept();
+				//System.out.println(obs_concept.getName().getName());
+				// if not encounter note, return
+				if(obs_concept.equals(c))
+				{
         
-			// if not encounter note, return
-			if(!obs.getConcept().equals(c))
-			{
+					//System.out.println("Visit Note!");
         
-				System.out.println("patient Note!");
-        
-				String sofa = obs.getValueText();
-				Patient p = obs.getPatient();
+					String sofa = o.getValueText();
+					Patient p = o.getPatient();
             
-       // SofaDocument sofaDocument = dt.tagDocument(sofa);
-		//sofaDocument.setPatient(p);
+					//System.out.println(sofa);
+					SofaDocument sofaDocument = dt.tagDocument(sofa);
+					sofaDocument.setPatient(p);
 		
-		//Context.getService(NLPService.class).saveSofaDocument(sofaDocument);
+					Context.getService(NLPService.class).saveSofaDocument(sofaDocument);
+				}
 			}
 		}
     }

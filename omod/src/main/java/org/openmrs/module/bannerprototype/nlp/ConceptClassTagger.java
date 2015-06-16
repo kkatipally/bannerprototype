@@ -1,7 +1,9 @@
 package org.openmrs.module.bannerprototype.nlp;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.openmrs.Concept;
 import org.openmrs.ConceptClass;
@@ -22,12 +24,28 @@ public class ConceptClassTagger {
 	private List<Concept> concepts;
 	private String mention_class;
 	private Tokenizer tokenizer;
+	private Map<Concept,ArrayList<String>> nameMap = new HashMap<Concept,ArrayList<String>>();
 	
 	public ConceptClassTagger(ArrayList<String> conceptClassStrs,String mention_class){
 
 		this.concepts = getConceptsByClass(conceptClassStrs);
 		this.mention_class = mention_class;
 		this.tokenizer = new WhitespaceTokenizer();
+		populateNameMap();
+		
+	}
+
+
+	private void populateNameMap() {
+		for(Concept c : concepts)
+		{
+			ArrayList<String> names = new ArrayList<String>();
+			
+			for(ConceptName cn : c.getNames())
+				names.add(cn.getName());
+			
+			nameMap.put(c, names);
+		}
 		
 	}
 
@@ -63,10 +81,10 @@ public class ConceptClassTagger {
 		
 		for(Concept c : concepts)
 		{
-			for(ConceptName cn : c.getNames())
+			for(String name : nameMap.get(c))
 			{
 				//System.out.println(cn.getName());
-				String name = cn.getName().toLowerCase();
+				name = name.toLowerCase();
 				if(lower_str.contains(" "+name+" "))
 				{
 					Mention m = getMention(str,lower_str,name);

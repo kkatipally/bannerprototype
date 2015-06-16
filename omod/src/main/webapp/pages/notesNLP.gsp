@@ -16,6 +16,11 @@ def dateISOFormatted
 dateStringFormat = new java.text.SimpleDateFormat("dd-MM-yyyy")
 dateISOFormatted = new java.text.SimpleDateFormat("yyyy-MM-dd")
 %>
+
+<head>
+<script type="text/javascript" src="/openmrs/dwr/interface/DWRNLPService.js">
+<script src="/openmrs/dwr/engine.js" type="text/javascript" ></script>
+</head>
 <style>
 
 #footer{
@@ -301,7 +306,7 @@ var userId = ${user}
 			<thead>
 			<tr>
 				<th>Doc Date</th>
-				<th>Problems</th>
+				<th>Treatments</th>
 				
 			</tr>	
 			</thead>
@@ -333,7 +338,7 @@ var userId = ${user}
 			<thead>
 			<tr>
 				<th>Doc Date</th>
-				<th>Problems</th>
+				<th>Tests</th>
 				
 			</tr>	
 			</thead>
@@ -366,7 +371,7 @@ var userId = ${user}
 			<thead>
 			<tr>
 				<th>Doc Date</th>
-				<th>Problems</th>
+				<th>All</th>
 				
 			</tr>	
 			</thead>
@@ -458,9 +463,7 @@ jq = jQuery;
 		
 		var mention = getSelectedMentionCookie();
 		highlightSelectedMention(mention)
-		
-		
-		
+	
 		updateDocumentColors(c);
 		
 		
@@ -496,27 +499,13 @@ function changeConceptTypeTab(cType) {
 	updateDocumentColors(cType)
 	
 	updateTableStyle()
-	updateKey(cType);
+    highlightSelectedMention(getSelectedMentionCookie())
+    setConceptTabCookie(cType)
+    
+	//updateKey(cType);
 	return false;
 }
 
-function updateKey(id)
-{
-	
-}
-
-function setConceptTabCookie(tabType) {
-	document.cookie = "conceptTab-" + userId + "="+escape(tabType);
-}
-
-
-function getConceptTabCookie() {
-	var cookies = document.cookie.match('conceptTab-' + userId + '=(.*?)(;|\$)');
-	if (cookies) {
-		return unescape(cookies[1]);
-	}
-	return null;
-}
 
 function doMentionSelected(obj,docId){
 	
@@ -528,7 +517,7 @@ function doMentionSelected(obj,docId){
 	
 	var selectedMention = obj.innerHTML
 	setSelectedMentionCookie(selectedMention)
-	addSearchBreadCrumb(selectedMention)
+	addSearchBreadCrumb(selectedMention,docId)
 	
 	var searchVal = getSearchVal();
 	setSearchCookie(searchVal)
@@ -540,16 +529,8 @@ function doMentionSelected(obj,docId){
 }
 
 
-function setSearchCookie(searchVal) {
-	document.cookie = "search-" + userId + "="+escape(searchVal);
-}
-function getsearchCookie() {
-	var cookies = document.cookie.match('search-' + userId + '=(.*?)(;|\$)');
-	if (cookies) {
-		return unescape(cookies[1]);
-	}
-	return "";
-}
+
+
 function getSearchVal()
 {
 	var currentCookie = getsearchCookie();
@@ -595,49 +576,43 @@ function setSearchVals(text){
 	jq(searchInputs).trigger(e)
 }
 
-function setSelectedMentionCookie(text){
-	document.cookie = "mention-" + userId + "="+escape(text);
-}
-
-function getSelectedMentionCookie() {
-	var cookies = document.cookie.match('mention-' + userId + '=(.*?)(;|\$)');
-	if (cookies) {
-		return unescape(cookies[1]);
-	}
-	return "";
-}
-
 function highlightSelectedMention(mention){
-	var mentionSpans = jq(".doc-viewer span");
+    var split = mention.split("-")
+    mention = split[0]
+
+    if(getConceptTabCookie() != split[1])
+    {
+        clearMentionHighlights()
+        return false
+    }
+   
+	
+    var mentionSpans = jq(".doc-viewer span");
+    mentionSpans = mentionSpans.add(jq(".table-mention"))
 	
 	for(i = 0; i < mentionSpans.length; i++)
 	{
 		if(mentionSpans[i].innerHTML == mention)
 			mentionSpans[i].style.backgroundColor = "rgb(157, 198, 245)"; 
-			mentionSpans[i].focus()
+			
 	}
-	
-	var concepts = jq(".table-mention")
-	
-	for(i = 0; i < concepts.length; i++)
-	{
-		if(concepts[i].innerHTML== mention)
-			concepts[i].style.backgroundColor = "rgb(157, 198, 245)"; 
-	}
+
 	
 }
 
-function setSelectedDocumentCookie(docId){
-	document.cookie = "doc-" + userId + "="+escape(docId);
+function clearMentionHighlights()
+{
+    var mentionSpans = jq(".doc-viewer span");
+    mentionSpans = mentionSpans.add(jq(".table-mention"))
+    for(i = 0; i < mentionSpans.length; i++)
+    {
+        
+        mentionSpans[i].style.backgroundColor = ""; 
+            
+    }
+
 }
 
-function getSelectedDocumentCookie() {
-	var cookies = document.cookie.match('doc-' + userId + '=(.*?)(;|\$)');
-	if (cookies) {
-		return unescape(cookies[1]);
-	}
-	return "";
-}
 
 function highlightDocument(doc){
 	jq(".document-"+doc + " td").css("background-color","rgb(163, 236, 227)")
@@ -742,30 +717,21 @@ function searchKeyUp(event){
 	
 }
 
-function addSearchBreadCrumb(searchVal)
+function addSearchBreadCrumb(searchVal,docId)
 {
-	var crumb = getBreadCrumbCookie();
+	var newCrumb = searchVal+"-"+docId+"-"+getConceptTabCookie();
+
+    var crumb = getBreadCrumbCookie();
 	if(crumb == "")
-		crumb=searchVal;
+		crumb=newCrumb;
 	else
-		crumb = crumb +"&"+ searchVal;
+		crumb = crumb +"&"+ newCrumb;
 	
 	setBreadCrumbCookie(crumb);
 	refreshSearchBreadCrumb()
 	
 }
 
-function getBreadCrumbCookie() {
-	var cookies = document.cookie.match('searchBreadCrumb-' + userId + '=(.*?)(;|\$)');
-	if (cookies) {
-		return unescape(cookies[1]);
-	}
-	return "";
-}
-
-function setBreadCrumbCookie(crumb){
-	document.cookie = "searchBreadCrumb-" + userId + "="+escape(crumb);
-}
 
 function refreshSearchBreadCrumb()
 {
@@ -773,7 +739,7 @@ function refreshSearchBreadCrumb()
 	var crumbHTML = "";
 	
 	for(i=0; i < crumbs.length; i++)
-		crumbHTML += "<span onCLick=doBreadCrumbClicked(\""+escape(crumbs[i])+"\")> > "+crumbs[i]+"</span>";
+		crumbHTML += "<span onCLick=doBreadCrumbClicked(\""+escape(crumbs[i])+"\")> > "+crumbs[i].split("-")[0]+"</span>";
 		
 	jq("#search-history-items").html(crumbHTML)
 	
@@ -781,13 +747,86 @@ function refreshSearchBreadCrumb()
 
 function doBreadCrumbClicked(crumb)
 {
-	setSearchVals(unescape(crumb))	
+	crumb_vals = unescape(crumb).split("-")
+    setSearchVals(crumb_vals[0])
+    setSelectedMentionCookie(crumb_vals[0])
+    setConceptTab(crumb_vals[2])
+
+
 }
 
 function clearSearchHistory()
 {
 	setBreadCrumbCookie("");
 	refreshSearchBreadCrumb();
+}
+
+
+// ****************** COOKIE MANAGEMENT FUNCTIONS ****************************
+
+function getBreadCrumbCookie() {
+    var cookies = document.cookie.match('searchBreadCrumb-' + userId + '=(.*?)(;|\$)');
+    if (cookies) {
+        return unescape(cookies[1]);
+    }
+    return "";
+}
+
+function setBreadCrumbCookie(crumb){
+    document.cookie = "searchBreadCrumb-" + userId + "="+escape(crumb);
+}
+
+
+function setSelectedDocumentCookie(docId){
+    document.cookie = "doc-" + userId + "="+escape(docId);
+}
+
+
+function getSelectedDocumentCookie() {
+    var cookies = document.cookie.match('doc-' + userId + '=(.*?)(;|\$)');
+    if (cookies) {
+        return unescape(cookies[1]);
+    }
+    return "";
+}
+
+function setSelectedMentionCookie(text){
+    document.cookie = "mention-"+ userId + "="+escape(text+"-"+getConceptTabCookie());
+}
+
+function getSelectedMentionCookie() {
+    var cookies = document.cookie.match('mention-' + userId + '=(.*?)(;|\$)');
+    if (cookies) {
+        return unescape(cookies[1]);
+    }
+    return "";
+}
+
+
+function setSearchCookie(searchVal) {
+    document.cookie = "search-" + userId + "="+escape(searchVal);
+}
+
+function getsearchCookie() {
+    var cookies = document.cookie.match('search-' + userId + '=(.*?)(;|\$)');
+    if (cookies) {
+        return unescape(cookies[1]);
+    }
+    return "";
+}
+
+
+function setConceptTabCookie(tabType) {
+    document.cookie = "conceptTab-" + userId + "="+escape(tabType);
+}
+
+
+function getConceptTabCookie() {
+    var cookies = document.cookie.match('conceptTab-' + userId + '=(.*?)(;|\$)');
+    if (cookies) {
+        return unescape(cookies[1]);
+    }
+    return null;
 }
 
 </script>

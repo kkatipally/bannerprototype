@@ -48,6 +48,28 @@
 		<file>SofaTextMentionConcept.hbm.xml</file>
 		-->	
 	</mappingFiles>
+	
+	<advice>
+		<point>org.openmrs.api.EncounterService</point>
+		<class>org.openmrs.module.bannerprototype.advice.VisitNoteAdvice</class>
+	</advice>
+	
+	<dwr>
+        <allow>
+            <create creator="new" javascript="DWRNLPService">
+                <param name="class" value="org.openmrs.module.bannerprototype.web.DWRNLPService"/>
+                <include method="getSofaDocument"/>
+            </create>
+        </allow>
+ 
+        <signatures>
+            <![CDATA[
+            import org.openmrs.module.bannerprototype.web.DWRNLPService;
+            DWRNLPService.getSofaDocument(int docId);
+            ]]>
+        </signatures>
+    </dwr>
+	
 
 	<!-- Internationalization -->
 	<!-- All message codes should start with ${project.parent.artifactId}. -->
