@@ -79,7 +79,7 @@ public class  bannerprototypeManageController {
 	String loadModelFileName;
 	
 	Tokenizer tokenizer;
-	NERTagger tagger;
+	
 	
 	SofaDocument sofaDocument = new SofaDocument();
 	List<SofaDocument> allSofaDocuments;
@@ -90,7 +90,7 @@ public class  bannerprototypeManageController {
 	
 	public bannerprototypeManageController(){
 
-		tagger = new NERTagger();
+		
 		
 		
 	}

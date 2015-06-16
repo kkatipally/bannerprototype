@@ -6,9 +6,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.GlobalProperty;
+import org.openmrs.api.context.Context;
 import org.springframework.core.io.ClassPathResource;
 
 import banner.tagging.CRFTagger;
@@ -18,15 +21,19 @@ import banner.tokenization.WhitespaceTokenizer;
 public class TaggerFactory {
 	private static CRFTagger tagger = null;
 	//private static Log log = LogFactory.getLog(TaggerFactory.class);
-	private static String defaultTagger = "tagger.ser";
+	private static String taggerName;
 	private static Tokenizer tokenizer = new WhitespaceTokenizer();
 
 	public static CRFTagger getTagger()
 	{
-		//log.debug("TaggerFactory.getTagger()");
-		if(tagger == null)
-			tagger = (CRFTagger)deserialize(defaultTagger);
 		
+		String taggerProp = Context.getAdministrationService().getGlobalProperty("bannerprototype.tagger");
+
+		//If no tagger has been initailized or tagger property has changed, initialize tagger
+		if(tagger == null || !taggerName.equals(taggerProp))
+			tagger = (CRFTagger)deserialize(taggerProp);
+		
+		taggerName = taggerProp;
 		return tagger;
 	}
 	

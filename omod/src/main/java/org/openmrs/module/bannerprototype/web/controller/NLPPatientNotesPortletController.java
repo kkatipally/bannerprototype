@@ -32,7 +32,7 @@ public class NLPPatientNotesPortletController {
 	String loadModelFileName;
 	
 	Tokenizer tokenizer;
-	NERTagger tagger;
+
 	
 	SofaDocument sofaDocument = new SofaDocument();
 	List<SofaDocument> allSofaDocuments;
@@ -44,7 +44,7 @@ public class NLPPatientNotesPortletController {
 	String sofa = "";
 	
 	public NLPPatientNotesPortletController(){
-		tagger = new NERTagger();
+		
 		
 	}
 	

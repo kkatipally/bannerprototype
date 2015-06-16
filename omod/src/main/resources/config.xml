@@ -54,6 +54,43 @@
 		<class>org.openmrs.module.bannerprototype.advice.VisitNoteAdvice</class>
 	</advice>
 	
+	<globalProperty>
+		<property>bannerprototype.conceptClassMappingProblem</property>
+		<defaultValue>Diagnosis,Symptom,Symptom/Finding</defaultValue>
+		
+		<description>
+		Comma separated list of Concept Classes to be mapped to Problems
+		</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>bannerprototype.conceptClassMappingTreatment</property>
+		<defaultValue>Procedure,Drug</defaultValue>
+		
+		<description>
+		Comma separated list of Concept Classes to be mapped to Treatment
+		</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>bannerprototype.conceptClassMappingTest</property>
+		<defaultValue>Test</defaultValue>
+		
+		<description>
+		Comma separated list of Concept Classes to be mapped to Test
+		</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>bannerprototype.tagger</property>
+		<defaultValue>defaultTagger.ser</defaultValue>
+		
+		<description>
+		Which banner model to be used for tagging text
+		</description>
+	</globalProperty>
+	
+	
 	<dwr>
         <allow>
             <create creator="new" javascript="DWRNLPService">

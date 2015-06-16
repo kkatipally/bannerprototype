@@ -13,9 +13,15 @@ public class DocumentTagger {
 	private ConceptClassTagger testClassTagger;
 	private ConceptClassTagger problemClassTagger;
 	private ConceptClassTagger treatmentClassTagger;
+	private boolean initialized = false;
 	
 	public DocumentTagger()
 	{
+		
+	}
+	
+	private void initialize(){
+		
 		this.tagger = new NERTagger();
 		ArrayList<String> testClasses = new ArrayList<String>();
 		testClasses.add("Test");
@@ -32,10 +38,15 @@ public class DocumentTagger {
 		this.testClassTagger = new ConceptClassTagger(testClasses,"test");
 		this.problemClassTagger = new ConceptClassTagger(problemClasses,"problem");
 		this.treatmentClassTagger = new ConceptClassTagger(treatmentClasses,"treatment");
+		initialized = true;
+		
 	}
 	
 	public SofaDocument tagDocument(String document)
 	{
+		if(!initialized)
+			initialize();
+		
 		sofaTexts = splitSentences(document);
 		List<NamedEntity> namedEntities;
 		SofaDocument sofaDocument = new SofaDocument();
