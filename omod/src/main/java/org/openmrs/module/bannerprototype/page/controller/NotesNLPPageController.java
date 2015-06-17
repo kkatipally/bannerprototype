@@ -1,5 +1,11 @@
 package org.openmrs.module.bannerprototype.page.controller;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,6 +35,7 @@ import org.openmrs.module.bannerprototype.bannerprototype;
 import org.openmrs.module.bannerprototype.api.NLPService;
 import org.openmrs.module.bannerprototype.nlp.NERTagger;
 import org.openmrs.ui.framework.page.PageModel;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -59,12 +66,12 @@ public class NotesNLPPageController {
    public void controller(@RequestParam("patientId") Patient patient,
            PageModel pageModel,
            @RequestParam(value = "returnUrl", required = false) String returnUrl,
-           @RequestParam(value = "docId", required = false, defaultValue = "-1") int docId){
+           @RequestParam(value = "docId", required = false, defaultValue = "-1") int docId) throws IOException, ClassNotFoundException{
 	   
 	   	Integer patientId = patient.getId();
 		
-		System.out.println("loading AllSofaDocuments");
-		System.out.println(docId);
+		//System.out.println("loading AllSofaDocuments");
+		//System.out.println(docId);
 		
 		FormService fs = Context.getFormService();
 		ConceptService cs = Context.getConceptService();
@@ -73,10 +80,7 @@ public class NotesNLPPageController {
 		Concept c = cs.getConceptByName("Text of encounter note");
 		List<Obs> obs = os.getObservationsByPersonAndConcept(patient, c);
 		
-		for(Obs o : obs)
-		{
-			System.out.println(o.getValueText());
-		}
+		
 		
 
 		
@@ -97,7 +101,7 @@ public class NotesNLPPageController {
 			}
 		
 		
-		System.out.println(allSofaDocuments.size());
+		//System.out.println(allSofaDocuments.size());
 		reloadDocuments = true; // if not redirected from POST, reload documents
 		//sofaDocument = allSofaDocuments.get(0);
 		if(sofaDocument != null)
@@ -116,9 +120,10 @@ public class NotesNLPPageController {
 		pageModel.addAttribute("sofaDocumentId", sofaDocumentId);
 		pageModel.addAttribute("bannerprototype",new bannerprototype());
 		pageModel.addAttribute("sofa",sofa);
+		String modelFiles[] = new ClassPathResource("taggers/").getFile().list();
 		
-		//System.out.println(sofaDocument.getAnnotatedHTML());
 		//return new ModelAndView("/module/bannerprototype/portlets/nlpPatientNotes", model);
+		
 
    }
    
@@ -126,8 +131,10 @@ public class NotesNLPPageController {
            @RequestParam(value = "returnUrl", required = false) String returnUrl,
            @RequestParam("patientId") Patient patient) {
 	   
-	   		System.out.println("in post");
-	   		System.out.println(allSofaDocuments.size());
+	   		
+	   
+	   		//System.out.println("***************in post**********************");
+	   		//System.out.println(allSofaDocuments.size());
 	        for(SofaDocument sd : allSofaDocuments)
 				if(sd.getSofaDocumentId() == docId)
 				{	

@@ -31,6 +31,7 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.openmrs.Concept;
+import org.openmrs.GlobalProperty;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.bannerprototype.SofaDocument;
@@ -90,15 +91,49 @@ public class  bannerprototypeManageController {
 	
 	public bannerprototypeManageController(){
 
-		
-		
-		
 	}
 
 	
 	@RequestMapping(value = "/module/bannerprototype/manage", method = RequestMethod.GET)
 	public void manage(ModelMap model) {
+		
+		String modelFiles[] = null;
+		String curModel = Context.getAdministrationService().getGlobalProperty("bannerprototype.tagger");
+		
+		try {
+			modelFiles = new ClassPathResource("taggers/").getFile().list();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//set curModel as first element in array
+		for(int i = 0; i<modelFiles.length; i++)
+			if(modelFiles[i].equals(curModel))
+			{
+				modelFiles[i] = modelFiles[0];
+				modelFiles[0] = curModel;
+				break;
+			}
+		
+		model.addAttribute("modelFiles",modelFiles);
 		model.addAttribute("user", Context.getAuthenticatedUser());
+	}
+	
+	@RequestMapping(value = "/module/bannerprototype/manage", method = RequestMethod.POST)
+	public void setProperties(HttpServletRequest request) {
+		
+		String model 	= request.getParameter("model");
+		String test 	= request.getParameter("test");
+		String problem 	= request.getParameter("problem");
+		String treatment= request.getParameter("treatment");
+		
+		
+		Context.getAdministrationService().setGlobalProperty("bannerprototype.tagger",model);
+		Context.getAdministrationService().setGlobalProperty("bannerprototype.conceptClassMappingProblem",problem);
+		Context.getAdministrationService().setGlobalProperty("bannerprototype.conceptClassMappingTreatment",treatment);
+		Context.getAdministrationService().setGlobalProperty("bannerprototype.conceptClassMappingTest",test);
+		
 	}
 	
 	@RequestMapping(value = "/module/bannerprototype/banner", method = RequestMethod.GET)

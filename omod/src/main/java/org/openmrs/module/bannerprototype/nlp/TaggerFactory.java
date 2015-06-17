@@ -27,7 +27,7 @@ public class TaggerFactory {
 	public static CRFTagger getTagger()
 	{
 		
-		String taggerProp = Context.getAdministrationService().getGlobalProperty("bannerprototype.tagger");
+		String taggerProp ="taggers/"+ Context.getAdministrationService().getGlobalProperty("bannerprototype.tagger");
 
 		//If no tagger has been initailized or tagger property has changed, initialize tagger
 		if(tagger == null || !taggerName.equals(taggerProp))

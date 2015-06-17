@@ -3,6 +3,7 @@ package org.openmrs.module.bannerprototype.nlp;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openmrs.api.context.Context;
 import org.openmrs.module.bannerprototype.SofaDocument;
 import org.openmrs.module.bannerprototype.SofaText;
 
@@ -23,17 +24,29 @@ public class DocumentTagger {
 	private void initialize(){
 		
 		this.tagger = new NERTagger();
-		ArrayList<String> testClasses = new ArrayList<String>();
-		testClasses.add("Test");
+		
 		
 		ArrayList<String> problemClasses = new ArrayList<String>();
-		problemClasses.add("Diagnosis");
-		problemClasses.add("Symptom");
-		problemClasses.add("Symptom/Finding");
+		String problems[] =  Context.getAdministrationService()
+									.getGlobalProperty("bannerprototype.conceptClassMappingProblem")
+									.split(",");
+		for(String s : problems)
+			problemClasses.add(s);
+		
+		
+		ArrayList<String> testClasses = new ArrayList<String>();
+		String tests[] =  Context.getAdministrationService()
+									.getGlobalProperty("bannerprototype.conceptClassMappingTest")
+									.split(",");
+		for(String s : tests)
+			testClasses.add(s);
 		
 		ArrayList<String> treatmentClasses = new ArrayList<String>();
-		treatmentClasses.add("Procedure");
-		treatmentClasses.add("Drug");
+		String treatments[] =  Context.getAdministrationService()
+									.getGlobalProperty("bannerprototype.conceptClassMappingTreatment")
+									.split(",");
+		for(String s : treatments)
+			treatmentClasses.add(s);
 		
 		this.testClassTagger = new ConceptClassTagger(testClasses,"test");
 		this.problemClassTagger = new ConceptClassTagger(problemClasses,"problem");

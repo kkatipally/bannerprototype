@@ -135,6 +135,11 @@
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 			</resource>
+			<resource>
+				<directory>src/main/resources/taggers</directory>
+				<filtering>true</filtering>
+				<targetPath>taggers</targetPath>
+			</resource>
 			
 			<resource>
 				<directory>src/main/webapp</directory>
@@ -152,6 +157,7 @@
 				</includes>
 				<targetPath>web/module</targetPath>
 			</resource>
+			
 			<resource>
 				<directory>dict</directory>
 			</resource>
