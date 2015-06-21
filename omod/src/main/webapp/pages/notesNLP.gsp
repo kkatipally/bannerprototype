@@ -196,15 +196,15 @@ table th, table td {
   }
   
 #tabs-and-doc{
-position:relative;
-top:25px;
+	position:relative;
+	top:25px;
 }
 
 #tag-cloud{
-border: 1px solid green;
-border-radius:5px;
-padding-left:5px;
-padding-right:5px;
+	border: 1px solid green;
+	border-radius:5px;
+	padding-left:5px;
+	padding-right:5px;
 }
 #tag-cloud span:hover{
 	text-shadow:0px 0px 1px lightgray;
@@ -212,6 +212,13 @@ padding-right:5px;
 	cursor: hand; 
 }
 
+.highlighted-mention{
+	background-color: rgb(157, 198, 245);
+}
+
+.highlighted-document{
+	background-color: rgb(163, 236, 227) !important;
+}
 </style>
 
 
@@ -557,8 +564,9 @@ function changeConceptTypeTab(cType) {
 	updateDocumentColors(cType)
 	
 	updateTableStyle()
+	setConceptTabCookie(cType)
     highlightSelectedMention(getSelectedMentionCookie())
-    setConceptTabCookie(cType)
+    
     
 	//updateKey(cType);
 	return false;
@@ -569,7 +577,9 @@ function doWordCloudMentionSelected(obj)
 	var selectedMention = obj.innerHTML
 	setSelectedMentionCookie(selectedMention)
 	setSearchVals(selectedMention)
-	//highlightSelectedMention(selectedMention);
+	setConceptTab(getClassFromElement(obj));
+	
+	doMentionSelected(obj, -1)
 }
 
 function doMentionSelected(obj,docId){
@@ -590,12 +600,27 @@ function doMentionSelected(obj,docId){
 	setSelectedDocumentCookie(docId)
 	
 	//window.location="/openmrs/bannerprototype/notesNLP.page"+queryString+"&docId="+docId;
-	updateDocumentFragmentHTML(docId);
-	//var mention = getSelectedMentionCookie();
+	if(docId != -1)
+	{
+		updateDocumentFragmentHTML(docId);
+		highlightDocument(docId)
+	}	
+	var mention = getSelectedMentionCookie();
 	highlightSelectedMention(mention)
 }
 
+function getClassFromElement(obj)
+{
+	var classList =jq(obj).attr('class').split(" ")
+	
+	
+	for(index in classList)
+	{
+		if(classList[index].indexOf("mention-type") != -1)
+			return classList[index].split("-")[2]
+	}
 
+}
 
 
 function getSearchVal()
@@ -646,10 +671,10 @@ function setSearchVals(text){
 function highlightSelectedMention(mention){
     var split = mention.split("-")
     mention = split[0]
-
+	
+	clearMentionHighlights()
     if(getConceptTabCookie() != split[1])
     {
-        clearMentionHighlights()
         return false
     }
    
@@ -660,7 +685,7 @@ function highlightSelectedMention(mention){
 	for(i = 0; i < mentionSpans.length; i++)
 	{
 		if(mentionSpans[i].innerHTML == mention)
-			mentionSpans[i].style.backgroundColor = "rgb(157, 198, 245)"; 
+			jq(mentionSpans[i]).addClass("highlighted-mention") 
 			
 	}
 
@@ -674,7 +699,7 @@ function clearMentionHighlights()
     for(i = 0; i < mentionSpans.length; i++)
     {
         
-        mentionSpans[i].style.backgroundColor = ""; 
+        jq(mentionSpans[i]).removeClass("highlighted-mention")
             
     }
 
@@ -682,11 +707,19 @@ function clearMentionHighlights()
 
 
 function highlightDocument(doc){
-	jq(".document-"+doc + " td").css("background-color","rgb(163, 236, 227)")
+	clearDocumentHighlights()
+
+	jq(".document-"+doc + " td").addClass("highlighted-document")
 	var d = jq(".document-"+doc + " td")[0]
 	var date = jq(d).html();
 	jq("#doc-date").html("DATE: "+date);
 	
+	
+}
+
+function clearDocumentHighlights()
+{
+	jq(".concept-table td").removeClass("highlighted-document")
 	
 }
 
@@ -735,13 +768,9 @@ function doDocumentSelected(docId){
 	setSearchCookie(searchVal)
 	
 	setSelectedDocumentCookie(docId)
+	updateDocumentFragmentHTML(docId);
+	highlightDocument(docId);
 	
-	jq.post("/openmrs/patientDashboard.form"+ queryString,
-			{"docId":docId},
-			function(result){
-				window.location.reload()
-			}
-			)
 	
 	
 }
