@@ -20,6 +20,8 @@ dateISOFormatted = new java.text.SimpleDateFormat("yyyy-MM-dd")
 <head>
 <script type="text/javascript" src="/openmrs/dwr/interface/DWRNLPService.js">
 <script src="/openmrs/dwr/engine.js" type="text/javascript" ></script>
+<script type="text/javascript" src="http://i2ui.com/Scripts/Downloads/i2ui-1.0.0.js"></script>
+
 </head>
 <style>
 
@@ -101,6 +103,10 @@ span.mention-type-treatment {
   font-family: "arial";
   font-size: 20px;
   color: rgb(33, 119, 67)
+}
+
+.table-mention{
+	text-decoration:underline;
 }
 
 .table-mention:hover {
@@ -188,6 +194,23 @@ table th, table td {
   padding: 0px 0px;
   font-size: 12px;
   }
+  
+#tabs-and-doc{
+position:relative;
+top:25px;
+}
+
+#tag-cloud{
+border: 1px solid green;
+border-radius:5px;
+padding-left:5px;
+padding-right:5px;
+}
+#tag-cloud span:hover{
+	text-shadow:0px 0px 1px lightgray;
+	cursor: pointer; 
+	cursor: hand; 
+}
 
 </style>
 
@@ -204,6 +227,15 @@ ${ ui.includeFragment("uicommons", "fieldErrors", [ fieldName: "startDate" ]) }
             window.translations = window.translations || {};
 </script>
 
+<script type="text/javascript">
+   var breadcrumbs = [
+        { icon: "icon-home", link: '/' + OPENMRS_CONTEXT_PATH + '/index.htm' },
+        { label: "${ ui.escapeJs(patient.familyName + ', ' + patient.givenName ) }" , link: '${ui.escapeJs(returnUrl)}'},
+        { label: "Notes NLP"}
+    ];
+var ret = "${returnUrl}";
+var x = 1;
+</script>
 
 
 <script id="breadcrumb-template" type="text/template">
@@ -236,6 +268,18 @@ var userId = ${user}
   });
   
 </script>
+<div id="tag-cloud" class="box">
+<div data-i2="css:[{fontSize:'12px',color:'#888888'},{fontSize:'30px',color:'#000000'}]">
+
+    <% tagCloudWords.each { word -> %>
+    <span onCLick=doWordCloudMentionSelected(this) class=mention-type-${word.getClassName()} data-i2="rate:${word.getCount()}">${word.getWord()}</span>
+    
+	<% } %> 
+    
+</div>
+
+</div>
+
 <div id="history-and-key">
 	<div class="search-history">
 	Search History:
@@ -252,7 +296,7 @@ var userId = ${user}
 	</div>
 </div>
 <br/>
-
+<div id="tabs-and-doc">
 <div id="conceptTabs">
 	<ul>
 		<li>
@@ -409,10 +453,13 @@ var userId = ${user}
 	</table>
 </div>
 
+<!--
 </div>
 <span id=doc-date>DATE</span>
 <div id=doc-viewer class="doc-viewer">${sofaDocument.getAnnotatedHTML()}</div>
-
+</div>
+-->
+${ ui.includeFragment("bannerprototype", "documentViewer") }
 <script type="text/javascript">
 
 var userId = ${user.getId()}
@@ -474,6 +521,17 @@ jq = jQuery;
 		jq(".dataTables_filter input").keyup(searchKeyUp)
 		updateTableStyle();
 		refreshSearchBreadCrumb()
+		i2.emph();
+		
+		jq("span.mention-type-problem").css({"color": "rgb(190, 53, 90)"})
+		jq("span.mention-type-test").css({"color": "rgb(17, 76, 126)"})
+		jq("span.mention-type-treatment").css({"color": "rgb(33, 119, 67)"})
+
+
+
+
+		
+		
                
 });
 
@@ -506,6 +564,13 @@ function changeConceptTypeTab(cType) {
 	return false;
 }
 
+function doWordCloudMentionSelected(obj)
+{
+	var selectedMention = obj.innerHTML
+	setSelectedMentionCookie(selectedMention)
+	setSearchVals(selectedMention)
+	//highlightSelectedMention(selectedMention);
+}
 
 function doMentionSelected(obj,docId){
 	
@@ -524,8 +589,10 @@ function doMentionSelected(obj,docId){
 	
 	setSelectedDocumentCookie(docId)
 	
-	window.location="/openmrs/bannerprototype/notesNLP.page"+queryString+"&docId="+docId;
-	
+	//window.location="/openmrs/bannerprototype/notesNLP.page"+queryString+"&docId="+docId;
+	updateDocumentFragmentHTML(docId);
+	//var mention = getSelectedMentionCookie();
+	highlightSelectedMention(mention)
 }
 
 

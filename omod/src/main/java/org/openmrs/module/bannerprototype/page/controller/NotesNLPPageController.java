@@ -1,15 +1,21 @@
 package org.openmrs.module.bannerprototype.page.controller;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,9 +37,13 @@ import org.openmrs.api.FormService;
 import org.openmrs.api.ObsService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.bannerprototype.SofaDocument;
+import org.openmrs.module.bannerprototype.SofaTextMention;
 import org.openmrs.module.bannerprototype.bannerprototype;
 import org.openmrs.module.bannerprototype.api.NLPService;
+import org.openmrs.module.bannerprototype.eval.DocGenerator;
+import org.openmrs.module.bannerprototype.nlp.DocumentTagger;
 import org.openmrs.module.bannerprototype.nlp.NERTagger;
+import org.openmrs.module.bannerprototype.web.wordcloud.WordCloud;
 import org.openmrs.ui.framework.page.PageModel;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ui.ModelMap;
@@ -69,23 +79,14 @@ public class NotesNLPPageController {
            @RequestParam(value = "docId", required = false, defaultValue = "-1") int docId) throws IOException, ClassNotFoundException{
 	   
 	   	Integer patientId = patient.getId();
-		
-		//System.out.println("loading AllSofaDocuments");
-		//System.out.println(docId);
-		
+
 		FormService fs = Context.getFormService();
 		ConceptService cs = Context.getConceptService();
 		ObsService os = Context.getObsService();
+		WordCloud wordcloud = new WordCloud();
 		
 		Concept c = cs.getConceptByName("Text of encounter note");
 		List<Obs> obs = os.getObservationsByPersonAndConcept(patient, c);
-		
-		
-		
-
-		
-		
-		
 		
 		
 		allSofaDocuments = Context.getService(NLPService.class).getSofaDocumentsByPatient(patient);
@@ -93,12 +94,14 @@ public class NotesNLPPageController {
 		if(docId == -1 && allSofaDocuments.size() != 0)
 			sofaDocument = allSofaDocuments.get(0);
 		else
+			sofaDocument = Context.getService(NLPService.class).getSofaDocumentById(docId);
+		
 		for(SofaDocument sd : allSofaDocuments)
-			if(sd.getSofaDocumentId() == docId)
-			{	
-				sofaDocument = sd;
-				break;
-			}
+		{	
+			addToCloud(wordcloud, sd.getProblems());
+			addToCloud(wordcloud,sd.getTests());
+			addToCloud(wordcloud, sd.getTreatments());
+		}	
 		
 		
 		//System.out.println(allSofaDocuments.size());
@@ -113,21 +116,81 @@ public class NotesNLPPageController {
 		
 		//User u = Context.getAuthenticatedUser();
 		//u.getId()
-		
+		pageModel.addAttribute("returnUrl", returnUrl);
 		pageModel.addAttribute("user", Context.getAuthenticatedUser());
 		pageModel.addAttribute("sofaDocument",sofaDocument);
 		pageModel.put("allSofaDocuments",allSofaDocuments);
 		pageModel.addAttribute("sofaDocumentId", sofaDocumentId);
 		pageModel.addAttribute("bannerprototype",new bannerprototype());
 		pageModel.addAttribute("sofa",sofa);
+		pageModel.addAttribute("tagCloudWords", wordcloud.getTopWordsShuffled(30));
+		
+		
 		String modelFiles[] = new ClassPathResource("taggers/").getFile().list();
 		
 		//return new ModelAndView("/module/bannerprototype/portlets/nlpPatientNotes", model);
 		
+		// ***************** TESTING *******************************
+		/*
+		DocumentTagger tag = new DocumentTagger();
+		//tag.tagDocument("test");
+		String srcDocs = "/Users/ryaneshleman/Dropbox/SFSU/openMRS/development/testDocs/";
+		
+		int docs = 1000;
+		
+		long startTime,endTime;
+		long duration = 0;
+		SofaDocument s;
+		String doc;
+		StringBuffer sb;
+		File files[] = new File(srcDocs).listFiles();
+		
+		for(int i = 0; i < docs; i++)
+		{	
+			Scanner sc = new Scanner(files[i]);
+			sb = new StringBuffer();
+			while(sc.hasNext())
+				sb.append("\n"+sc.nextLine());
+			
+			sc.close();
+			doc = sb.toString();
+			
+			startTime = System.nanoTime();
+			tag.tagDocument(doc);
+			endTime = System.nanoTime();
+			duration += (endTime - startTime);
+			if(i % 10 == 0)
+				System.out.println("" + i+","+duration / 1000000);
+			
+			
+		}
+		
 
+		//long duration = (endTime - startTime) / 1000000;  //divide by 1000000 to get milliseconds.
+			
+		System.out.println("\nExecution Time for "+docs+" docs:"+ duration/1000000);
+   		*/
    }
    
-   public String post(@RequestParam(value = "docId", required = false) int docId,
+   private void addToCloud(WordCloud wordcloud, List<SofaTextMention> mentions) {
+	
+	   for(SofaTextMention m : mentions)
+	   {
+		   /*
+		   for(String str : m.getMentionText().split(" "))
+		   {   
+			   wordcloud.addWord(str);
+			   //System.out.println(str);
+		   }
+		   */
+		   wordcloud.addWord(m.getMentionText(),m.getMentionType());
+		   
+		   
+	   }
+	
+}
+
+public String post(@RequestParam(value = "docId", required = false) int docId,
            @RequestParam(value = "returnUrl", required = false) String returnUrl,
            @RequestParam("patientId") Patient patient) {
 	   

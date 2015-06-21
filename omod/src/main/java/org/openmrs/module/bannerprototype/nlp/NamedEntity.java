@@ -1,5 +1,6 @@
 package org.openmrs.module.bannerprototype.nlp;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,7 +16,7 @@ import org.openmrs.api.context.Context;
 
 import banner.tagging.Mention;
 
-public class NamedEntity {
+public class NamedEntity implements Serializable {
 	private Mention mention;
 	private Set<Concept> conceptMatches;
 	private Map<Integer,String> conceptIdToName = new HashMap<Integer,String>();

@@ -1,5 +1,6 @@
 package org.openmrs.module.bannerprototype.nlp;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +8,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.bannerprototype.SofaDocument;
 import org.openmrs.module.bannerprototype.SofaText;
 
-public class DocumentTagger {
+public class DocumentTagger implements Serializable {
 	private String document;
 	private List<SofaText> sofaTexts;
 	private NERTagger tagger;

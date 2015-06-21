@@ -51,6 +51,14 @@ td input {
 <button onClick=saveProperties()>Save </button>
 <button onClick=cancelChanges()>Cancel </button>
 
+<br>
+</br>
+<form method="POST" enctype="multipart/form-data"
+        action="upload.form">
+        File to upload: <input type="file" name="file"><br /> Name: <input
+            type="text" name="name"><br /> <br /> <input type="submit"
+            value="Upload"> Press here to upload the file!
+    </form> 
 
 <%@ include file="/WEB-INF/template/footer.jsp"%>
 <script>

@@ -1,5 +1,6 @@
 package org.openmrs.module.bannerprototype.nlp;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +20,7 @@ import banner.tokenization.Tokenizer;
 import banner.tokenization.WhitespaceTokenizer;
 
 
-public class ConceptClassTagger {
+public class ConceptClassTagger implements Serializable {
 	
 	private List<Concept> concepts;
 	private String mention_class;
@@ -87,8 +88,13 @@ public class ConceptClassTagger {
 				name = name.toLowerCase();
 				if(lower_str.contains(" "+name+" "))
 				{
+					try{
 					Mention m = getMention(str,lower_str,name);
 					entities.add(new NamedEntity(m,c,name));
+					}catch(Exception e)
+					{
+						System.out.println("MENTION ERROR: " +  str + " " + name);
+					}
 					
 				}
 				else
@@ -113,10 +119,10 @@ public class ConceptClassTagger {
 			if(lower_str.charAt(i) ==' ')
 				token_index++;
 		
-		System.out.println(token_index);
-		System.out.println(str);
-		System.out.println(name);
-		System.out.println(num_tokens);
+		//System.out.println(token_index);
+		//System.out.println(str);
+		//System.out.println(name);
+		//System.out.println(num_tokens);
 		Sentence s = new Sentence(str);
 		tokenizer.tokenize(s);
 		

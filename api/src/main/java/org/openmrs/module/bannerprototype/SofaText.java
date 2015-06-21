@@ -3,6 +3,7 @@ package org.openmrs.module.bannerprototype;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,7 +22,7 @@ public class SofaText extends BaseOpenmrsObject implements Serializable,Comparab
 	private int textEnd;
 	private String text;
 	private String uuid;
-	private Set<SofaTextMention> sofaTextMention = new HashSet<SofaTextMention>();
+	private Set<SofaTextMention> sofaTextMention = Collections.synchronizedSet(new HashSet<SofaTextMention>());
 
 	
 	public SofaText()
@@ -42,6 +43,7 @@ public class SofaText extends BaseOpenmrsObject implements Serializable,Comparab
 	public void addMentionAndConcepts(Mention m, List<Concept> concepts)
 	{
 		//System.out.println("Mention Text: " + m.getText());
+		ArrayList<SofaTextMention> toRemove = new ArrayList<SofaTextMention>();
 		for(SofaTextMention stm : sofaTextMention)
 		{
 			//System.out.println("STM: " + stm.getMentionText());
@@ -54,13 +56,14 @@ public class SofaText extends BaseOpenmrsObject implements Serializable,Comparab
 			if(m.getText().toLowerCase().indexOf(stm.getMentionText().toLowerCase()) != -1)
 			{	
 				concepts.addAll(stm.getConcepts());
-				sofaTextMention.remove(stm);
+				//sofaTextMention.remove(stm);
+				toRemove.add(stm);
 				//System.out.println("removed");
 			}
 			
 			
 		}
-
+		sofaTextMention.removeAll(toRemove);
 		sofaTextMention.add(new SofaTextMention(this,m,concepts));
 	}
 	

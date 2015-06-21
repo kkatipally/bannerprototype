@@ -1,5 +1,6 @@
 package org.openmrs.module.bannerprototype.nlp;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import banner.tagging.CRFTagger;
 import banner.tokenization.Tokenizer;
 import banner.tagging.Mention;
 
-public class NERTagger {
+public class NERTagger implements Serializable {
 	CRFTagger tagger;
 	Tokenizer tokenizer;
 	ArrayList<Mention> mentions;
@@ -51,7 +52,7 @@ public class NERTagger {
 		{
 			mentionText = m.getText();
 			mentionText = cleanText(mentionText);
-			System.out.println(mentionText);
+			//System.out.println(mentionText);
 			//matchedConcepts = conceptService.getConceptsByName(mentionText);
 			namedEntities.add(new NamedEntity(m,matchedConcepts));
 		}
