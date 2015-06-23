@@ -14,7 +14,7 @@ import org.openmrs.GlobalProperty;
 import org.openmrs.api.context.Context;
 import org.springframework.core.io.ClassPathResource;
 
-import banner.tagging.CRFTagger;
+import com.sfsu.bannertrain.train.CRFTagger;
 import banner.tokenization.Tokenizer;
 import banner.tokenization.WhitespaceTokenizer;
 
@@ -30,8 +30,8 @@ public class TaggerFactory {
 		String taggerProp ="taggers/"+ Context.getAdministrationService().getGlobalProperty("bannerprototype.tagger");
 
 		//If no tagger has been initailized or tagger property has changed, initialize tagger
-		if(tagger == null || !taggerName.equals(taggerProp))
-			tagger = (CRFTagger)deserialize(taggerProp);
+		
+		tagger = (CRFTagger)deserialize(taggerProp);
 		
 		taggerName = taggerProp;
 		return tagger;
@@ -42,13 +42,32 @@ public class TaggerFactory {
 		return tokenizer;
 	}
 	
-	
-	private static Object deserialize(String file)
+	public static boolean isNewtaggerRequired(String tagger_name)
 	{
-			//log.debug("Trying to deserialize resource: " + file);
-			File f;
+		String taggerProp ="taggers/"+ Context.getAdministrationService().getGlobalProperty("bannerprototype.tagger");
+		return !tagger_name.equals(taggerProp);
+	}
+	
+	
+	
+	private static Object deserialize(String file_name)
+	{
+			
+			File f = null;
 			try {
-				f = new ClassPathResource(file).getFile();
+				//hack because ClassPathResource() doesnt find 
+				// newly uploaded files, must find manually
+				ClassPathResource cpr = new ClassPathResource("taggers/");
+				for(File fi : cpr.getFile().listFiles())
+					if(fi.getPath().contains(file_name))
+					{	
+						f = fi;
+						break;
+					}
+				
+				if(f==null)
+					throw new IOException();
+				
 				FileInputStream fio = new FileInputStream(f);
 				InputStream buffer = new BufferedInputStream(fio);
 				ObjectInputStream ois = new ObjectInputStream (buffer);
@@ -57,12 +76,19 @@ public class TaggerFactory {
 				
 			} catch (IOException e1) {
 				
-				//log.debug("could not find serialized tagger",e1);
+				System.out.println(("could not find serialized tagger"));
+				e1.printStackTrace();
 			} catch (ClassNotFoundException e) {
-				//log.debug("could not deserialized tagger",e);
+				System.out.println("could not deserialized tagger/n ");
+				e.printStackTrace();
 			}
 			return null;
 
+	}
+
+	public static String getTaggerName() {
+		// TODO Auto-generated method stub
+		return taggerName;
 	}
 }
 

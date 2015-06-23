@@ -8,13 +8,16 @@ import org.openmrs.Concept;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
 
+import com.sfsu.bannertrain.train.CRFTagger;
+
 import banner.Sentence;
-import banner.tagging.CRFTagger;
+//import banner.tagging.CRFTagger;
 import banner.tokenization.Tokenizer;
 import banner.tagging.Mention;
 
 public class NERTagger implements Serializable {
 	CRFTagger tagger;
+	String taggerName;
 	Tokenizer tokenizer;
 	ArrayList<Mention> mentions;
 	ArrayList<NamedEntity> namedEntities;
@@ -24,6 +27,7 @@ public class NERTagger implements Serializable {
 	public NERTagger()
 	{
 		tagger = TaggerFactory.getTagger();
+		taggerName = TaggerFactory.getTaggerName();
 		tokenizer = TaggerFactory.getTokenizer();
 		
 		mentions = new ArrayList<Mention>();
@@ -34,6 +38,9 @@ public class NERTagger implements Serializable {
 	
 	public ArrayList<NamedEntity> tag(String sofa)
 	{
+		if(TaggerFactory.isNewtaggerRequired(taggerName))
+			tagger = TaggerFactory.getTagger();
+		
 		namedEntities.clear();
 		//conceptService = Context.getConceptService();
 		List<Concept> matchedConcepts = new ArrayList<Concept>();

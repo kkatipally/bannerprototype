@@ -48,6 +48,7 @@ public class VisitNoteAdvice implements MethodBeforeAdvice {
 					Patient p = o.getPatient();
             
 					//System.out.println(sofa);
+					
 					SofaDocument sofaDocument = dt.tagDocument(sofa);
 					sofaDocument.setPatient(p);
 		

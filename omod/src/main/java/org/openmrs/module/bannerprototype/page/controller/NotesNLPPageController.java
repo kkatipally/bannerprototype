@@ -43,6 +43,7 @@ import org.openmrs.module.bannerprototype.api.NLPService;
 import org.openmrs.module.bannerprototype.eval.DocGenerator;
 import org.openmrs.module.bannerprototype.nlp.DocumentTagger;
 import org.openmrs.module.bannerprototype.nlp.NERTagger;
+import org.openmrs.module.bannerprototype.nlp.TaggerFactory;
 import org.openmrs.module.bannerprototype.web.wordcloud.WordCloud;
 import org.openmrs.ui.framework.page.PageModel;
 import org.springframework.core.io.ClassPathResource;
@@ -170,6 +171,23 @@ public class NotesNLPPageController {
 			
 		System.out.println("\nExecution Time for "+docs+" docs:"+ duration/1000000);
    		*/
+		
+		/*
+		ClassPathResource cpr = new ClassPathResource("taggers/");
+		for(File f : cpr.getFile().listFiles())
+		{	
+			
+			if(f.getPath().contains("newModel.ser"))
+			{
+				System.out.println(f.getPath());
+				FileInputStream fio = new FileInputStream(f);
+				InputStream buffer = new BufferedInputStream(fio);
+				ObjectInputStream ois = new ObjectInputStream (buffer);
+				ois.readObject();
+			}
+		}
+		*/
+			//System.out.println(cpr.getFile().listFiles().length);
    }
    
    private void addToCloud(WordCloud wordcloud, List<SofaTextMention> mentions) {
