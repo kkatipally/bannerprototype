@@ -20,7 +20,7 @@ td input {
 <openmrs:globalProperty key="bannerprototype.conceptClassMappingTest" var="testClasses"/>
 <openmrs:globalProperty key="bannerprototype.conceptClassMappingTreatment" var="treatmentClasses"/>
 
-
+<div class=boxHeader>Manage Tagger</div>
 <div class="class-mapping box">
 	<table>
 		<tr>
@@ -47,18 +47,26 @@ td input {
 			<td><input type=text id=tests value=${testClasses}> </td>
 		</tr>
 	</table>
-</div>
 <button onClick=saveProperties()>Save </button>
 <button onClick=cancelChanges()>Cancel </button>
+</div>
 
-<br>
-</br>
+<div class=boxHeader>Upload New Model </div>
+<div class=box>
 <form method="POST" enctype="multipart/form-data"
         action="upload.form">
         File to upload: <input type="file" name="file"><br /> Name: <input
             type="text" name="name"><br /> <br /> <input type="submit"
             value="Upload"> Press here to upload the file!
-    </form> 
+    </form>
+    
+</div>
+<div class=boxHeader>Re-analyze documents</div>
+<div class=box>
+<button onCLick=reanalyzeDocuments()>Run</button>
+
+
+</div> 
 
 <%@ include file="/WEB-INF/template/footer.jsp"%>
 <script>
@@ -88,6 +96,16 @@ function cancelChanges()
 	$j( "#treatments" ).val("${treatmentClasses}");
 	
 }
+
+function reanalyzeDocuments()
+{
+	$j.post( "reanalyze.form", 
+			function( data ) {
+		  		alert( data );
+			}
+	);
+}
+
 
 
 </script>

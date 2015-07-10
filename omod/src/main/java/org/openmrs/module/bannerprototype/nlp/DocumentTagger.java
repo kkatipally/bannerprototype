@@ -86,7 +86,7 @@ public class DocumentTagger implements Serializable {
 	}
 
 	private ArrayList<SofaText> splitSentences(String document) {
-		int prevPeriod = 0;
+		int prevPeriod = -1;
 		int nextPeriod = document.indexOf('.');
 		SofaText sofa;
 		ArrayList<SofaText> sofaTexts = new ArrayList<SofaText>();

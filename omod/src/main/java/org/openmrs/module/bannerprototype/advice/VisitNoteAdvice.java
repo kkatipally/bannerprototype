@@ -21,10 +21,11 @@ import org.springframework.aop.MethodBeforeAdvice;
 public class VisitNoteAdvice implements MethodBeforeAdvice {
  
     DocumentTagger dt = new DocumentTagger();
+    Log log = LogFactory.getLog(getClass());
 
 	@Override
 	public void before(Method method, Object[] args, Object arg2) throws Throwable {
-        
+        log.info("Tagging Document");
 		if (method != null && method.getName().equals("saveEncounter"))
 		{    
             		

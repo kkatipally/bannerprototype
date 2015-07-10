@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,6 +22,8 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
 import org.openmrs.ConceptSet;
 import org.openmrs.Encounter;
@@ -70,7 +73,7 @@ public class NotesNLPPageController {
 	
 	boolean reloadDocuments = true;
 	
-	//protected final Log log = LogFactory.getLog(getClass());
+	protected final Log log = LogFactory.getLog(getClass());
 	String sofa = "";
 
    // public void get(PageModel pageModel) {
@@ -128,11 +131,37 @@ public class NotesNLPPageController {
 		
 		
 		String modelFiles[] = new ClassPathResource("taggers/").getFile().list();
+
 		
+		//runReanalysis();
 		//return new ModelAndView("/module/bannerprototype/portlets/nlpPatientNotes", model);
 		
 		// ***************** TESTING *******************************
+		//runDocEvalTest();
+		
 		/*
+		ClassPathResource cpr = new ClassPathResource("taggers/");
+		for(File f : cpr.getFile().listFiles())
+		{	
+			
+			if(f.getPath().contains("newModel.ser"))
+			{
+				System.out.println(f.getPath());
+				FileInputStream fio = new FileInputStream(f);
+				InputStream buffer = new BufferedInputStream(fio);
+				ObjectInputStream ois = new ObjectInputStream (buffer);
+				ois.readObject();
+			}
+		}
+		*/
+			//System.out.println(cpr.getFile().listFiles().length);
+   }
+   
+   
+
+private void runDocEvalTest()
+   {
+	   
 		DocumentTagger tag = new DocumentTagger();
 		//tag.tagDocument("test");
 		String srcDocs = "/Users/ryaneshleman/Dropbox/SFSU/openMRS/development/testDocs/";
@@ -148,7 +177,13 @@ public class NotesNLPPageController {
 		
 		for(int i = 0; i < docs; i++)
 		{	
-			Scanner sc = new Scanner(files[i]);
+			Scanner sc = null;
+			try {
+				sc = new Scanner(files[i]);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			sb = new StringBuffer();
 			while(sc.hasNext())
 				sb.append("\n"+sc.nextLine());
@@ -170,25 +205,34 @@ public class NotesNLPPageController {
 		//long duration = (endTime - startTime) / 1000000;  //divide by 1000000 to get milliseconds.
 			
 		System.out.println("\nExecution Time for "+docs+" docs:"+ duration/1000000);
-   		*/
-		
-		/*
-		ClassPathResource cpr = new ClassPathResource("taggers/");
-		for(File f : cpr.getFile().listFiles())
-		{	
-			
-			if(f.getPath().contains("newModel.ser"))
-			{
-				System.out.println(f.getPath());
-				FileInputStream fio = new FileInputStream(f);
-				InputStream buffer = new BufferedInputStream(fio);
-				ObjectInputStream ois = new ObjectInputStream (buffer);
-				ois.readObject();
-			}
-		}
-		*/
-			//System.out.println(cpr.getFile().listFiles().length);
+  		
+	   
    }
+
+private void runReanalysis() {
+	   System.out.println("1");
+	   DocumentTagger dt = new DocumentTagger();
+	   System.out.println("2");
+	   List<Concept> concepts = new ArrayList<Concept>();
+	   System.out.println("3");
+	   concepts.add(Context.getConceptService().getConceptByName("Text of encounter note"));
+	   System.out.println("4");
+	   Context.getService(NLPService.class).truncateNLPtables();
+	   System.out.println("5");
+	   
+	   
+	   System.out.println("Running Analysis");
+	   List<Obs> obs =  Context.getObsService().getObservations(null, null, concepts,null, null, null, null, null, null, null, null, false);
+	   System.out.println(obs.size());
+	   for(Obs o : obs)
+	   {   
+		   SofaDocument sd = dt.tagDocument(o.getValueText());
+		   sd.setPatient((Patient) o.getPerson());
+		   Context.getService(NLPService.class).saveSofaDocument(sd);
+		   
+	   }
+}
+   
    
    private void addToCloud(WordCloud wordcloud, List<SofaTextMention> mentions) {
 	

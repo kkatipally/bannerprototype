@@ -34,6 +34,7 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.openmrs.Concept;
 import org.openmrs.GlobalProperty;
+import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.bannerprototype.SofaDocument;
@@ -236,6 +237,7 @@ public class  bannerprototypeManageController {
     public @ResponseBody String handleFileUpload(@RequestParam("name") String name,
             @RequestParam("file") MultipartFile file) throws IOException{
         System.out.println("in upload");
+        System.out.println(name);
         String path = new ClassPathResource("taggers/").getURL().getPath();
         if (!file.isEmpty()) {
             try {
@@ -256,6 +258,42 @@ public class  bannerprototypeManageController {
         
         
     }
+	
+	@RequestMapping(value = "/module/bannerprototype/reanalyze", method = RequestMethod.POST)
+    public @ResponseBody String handleReanalyzeCorpus() throws IOException{
+        System.out.println("in ReanalyzeCorpus");
+
+        runReanalysis();
+        
+		return "ok! reanalyze!";
+
+    }
+	
+	
+	private void runReanalysis() {
+		   //System.out.println("1");
+		   DocumentTagger dt = new DocumentTagger();
+		   //System.out.println("2");
+		   List<Concept> concepts = new ArrayList<Concept>();
+		   //System.out.println("3");
+		   concepts.add(Context.getConceptService().getConceptByName("Text of encounter note"));
+		   //System.out.println("4");
+		   Context.getService(NLPService.class).truncateNLPtables();
+		   //System.out.println("5");
+		   
+		   
+		   System.out.println("Running Analysis");
+		   List<Obs> obs =  Context.getObsService().getObservations(null, null, concepts,null, null, null, null, null, null, null, null, false);
+		   //System.out.println(obs.size());
+		   for(Obs o : obs)
+		   {   
+			   SofaDocument sd = dt.tagDocument(o.getValueText());
+			   System.out.println(o.getId());
+			   sd.setPatient((Patient) o.getPerson());
+			   Context.getService(NLPService.class).saveSofaDocument(sd);
+			   
+		   }
+	}
 	
 	
 	@RequestMapping(value = "/module/bannerprototype/transport", method = RequestMethod.GET)

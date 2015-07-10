@@ -88,6 +88,13 @@ public class NLPServiceImpl extends BaseOpenmrsService implements NLPService {
 	public SessionFactory getSessionFactory() {
 		return dao.getSessionFactory();
 	}
+
+	@Override
+	public void truncateNLPtables() {
+		dao.truncateNLPTables();
+		return;
+		
+	}
 	
 	
 

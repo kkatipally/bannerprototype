@@ -15,7 +15,7 @@ function updateDocumentFragmentHTML(docId) {
             jq('#doc-viewer').html(data);
             var mention = getSelectedMentionCookie();
 			highlightSelectedMention(mention);
-			var mention_text = mention.split("-")[0];
+			var mention_text = mention.split("-")[0].replace("@","-");
 			var scroll =  jq(findSpan(mention_text)).position().top+ jq(".doc-viewer").scrollTop() - 100
 			console.log(scroll)
             jq('.doc-viewer').animate({

@@ -37,4 +37,5 @@ public interface NLPService extends OpenmrsService {
 	
 	
 	public List<SofaDocument> getSofaDocumentsByPatient(Patient patient);
+	public void truncateNLPtables();
 }

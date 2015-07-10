@@ -14,9 +14,9 @@ import org.openmrs.GlobalProperty;
 import org.openmrs.api.context.Context;
 import org.springframework.core.io.ClassPathResource;
 
-import com.sfsu.bannertrain.train.CRFTagger;
 import banner.tokenization.Tokenizer;
 import banner.tokenization.WhitespaceTokenizer;
+import com.sfsu.bannertrain.train.CRFTagger;
 
 public class TaggerFactory {
 	private static CRFTagger tagger = null;

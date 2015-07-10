@@ -120,13 +120,18 @@ function doMentionSelected(obj,docId){
 		queryString =  queryString.substring(0,docIndex)
 	
 	
-	var selectedMention = obj.innerHTML
+	var selectedMention = obj.innerHTML.replace("-","@")
+	console.log("before setSelectedMentionCookie")
 	setSelectedMentionCookie(selectedMention)
+	console.log("before addSearchBreadCrumb")
 	addSearchBreadCrumb(selectedMention,docId)
 	
+	console.log("before getSearchVal")
 	var searchVal = getSearchVal();
+	console.log("before setSearchCookie")
 	setSearchCookie(searchVal)
 	
+	console.log("before setSelectedDocumentCookie")
 	setSelectedDocumentCookie(docId)
 	
 	//window.location="/openmrs/bannerprototype/notesNLP.page"+queryString+"&docId="+docId;
@@ -134,9 +139,12 @@ function doMentionSelected(obj,docId){
 	{
 		updateDocumentFragmentHTML(docId);
 		highlightDocument(docId)
-	}	
+	}
+	console.log("before getSelectedMentionCookie")
 	var mention = getSelectedMentionCookie();
+	console.log("before highlightSelectedMention")
 	highlightSelectedMention(mention)
+	console.log("ok!")
 }
 
 function getClassFromElement(obj)
@@ -200,25 +208,35 @@ function setSearchVals(text){
 
 function highlightSelectedMention(mention){
     var split = mention.split("-")
-    mention = split[0]
-	
+    mention = split[0].replace("@","-")
+	console.log("1")
 	clearMentionHighlights()
+	console.log("2")
     if(getConceptTabCookie() != split[1])
     {
         return false
     }
    
-	
+    console.log("3")
     var mentionSpans = jq(".doc-viewer span");
+    console.log("4")
     mentionSpans = mentionSpans.add(jq(".table-mention"))
+    console.log("5")
 	
 	for(i = 0; i < mentionSpans.length; i++)
 	{
+		console.log(i)
 		if(mentionSpans[i].innerHTML == mention)
+		{	
+			console.log("!")
 			jq(mentionSpans[i]).addClass("highlighted-mention") 
+			console.log("!!")
+		}	
 			
 	}
-
+    
+    console.log("6")
+    return false;
 	
 }
 
@@ -345,6 +363,7 @@ function searchKeyUp(event){
 
 function addSearchBreadCrumb(searchVal,docId)
 {
+	searchVal = searchVal.replace("-","@")
 	var newCrumb = searchVal+"-"+docId+"-"+getConceptTabCookie();
 
     var crumb = getBreadCrumbCookie();
@@ -365,7 +384,7 @@ function refreshSearchBreadCrumb()
 	var crumbHTML = "";
 	
 	for(i=0; i < crumbs.length; i++)
-		crumbHTML += "<span onCLick=doBreadCrumbClicked(\""+escape(crumbs[i])+"\")> > "+crumbs[i].split("-")[0]+"</span>";
+		crumbHTML += "<span onCLick=doBreadCrumbClicked(\""+escape(crumbs[i])+"\")> > "+crumbs[i].split("-")[0].replace("@","-")+"</span>";
 		
 	jq("#search-history-items").html(crumbHTML)
 	
@@ -373,9 +392,11 @@ function refreshSearchBreadCrumb()
 
 function doBreadCrumbClicked(crumb)
 {
-	crumb_vals = unescape(crumb).split("-")
-    setSearchVals(crumb_vals[0])
-    setSelectedMentionCookie(crumb_vals[0])
+	var crumb_vals = unescape(crumb).split("-")
+	var mention = crumb_vals[0].replace("@","-")
+	
+    setSearchVals(mention)
+    setSelectedMentionCookie(mention)
     setConceptTab(crumb_vals[2])
 
 

@@ -26,4 +26,5 @@ public interface NLPServiceDAO {
 	public Set<SofaText> getSofaTextByDocument(SofaDocument sofaDocument);
 	public SofaDocument getSofaDocumentById(int SofaDocumentId);
 	public SessionFactory getSessionFactory();
+	public void truncateNLPTables();
 }
