@@ -300,7 +300,7 @@ public class  bannerprototypeManageController {
 	public @ResponseBody String bannerDataDump() throws JsonGenerationException, JsonMappingException, IOException
     {        
 			
-		
+			allSofaDocuments = Context.getService(NLPService.class).getAllSofaDocuments();
 			SofaDocumentTransport[] transports = new SofaDocumentTransport[allSofaDocuments.size()];
 			int i = 0;
 			for(SofaDocument sd : allSofaDocuments)

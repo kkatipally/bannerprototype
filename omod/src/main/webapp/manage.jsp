@@ -11,6 +11,7 @@ td input {
 	width:300px;
 }
 
+
 </style>
 
 </head>
@@ -35,16 +36,33 @@ td input {
 			</td>
 		</tr>
 		<tr>
+			<td></td>
+			<td class=description>Choose one of the Models to tag documents</td>
+		</tr>
+		
+		<tr>
 			<td>Problems</td>
 			<td><input type=text id=problems value=${problemClasses}> </td>
+		</tr>
+		<tr>
+			<td></td>
+			<td class=description>Comma separated list of Concept Classes to be mapped to "Problem"</td>
 		</tr>
 		<tr>
 			<td>Treatments</td>
 			<td><input type=text id=treatments value=${treatmentClasses}> </td>
 		</tr>
 		<tr>
+			<td></td>
+			<td class=description>Comma separated list of Concept Classes to be mapped to "Treatment"</td>
+		</tr>
+		<tr>
 			<td>Tests</td>
 			<td><input type=text id=tests value=${testClasses}> </td>
+		</tr>
+		<tr>
+			<td></td>
+			<td class=description>Comma separated list of Concept Classes to be mapped to "Test" </td>
 		</tr>
 	</table>
 <button onClick=saveProperties()>Save </button>
@@ -63,6 +81,7 @@ td input {
 </div>
 <div class=boxHeader>Re-analyze documents</div>
 <div class=box>
+<p class=description> Run the analaysis on all Visit Notes in the database with the chosen Tagger<p>
 <button onCLick=reanalyzeDocuments()>Run</button>
 
 

@@ -121,17 +121,17 @@ function doMentionSelected(obj,docId){
 	
 	
 	var selectedMention = obj.innerHTML.replace("-","@")
-	console.log("before setSelectedMentionCookie")
+	//console.log("before setSelectedMentionCookie")
 	setSelectedMentionCookie(selectedMention)
-	console.log("before addSearchBreadCrumb")
+	//console.log("before addSearchBreadCrumb")
 	addSearchBreadCrumb(selectedMention,docId)
 	
-	console.log("before getSearchVal")
+	//console.log("before getSearchVal")
 	var searchVal = getSearchVal();
-	console.log("before setSearchCookie")
+	//console.log("before setSearchCookie")
 	setSearchCookie(searchVal)
 	
-	console.log("before setSelectedDocumentCookie")
+	//console.log("before setSelectedDocumentCookie")
 	setSelectedDocumentCookie(docId)
 	
 	//window.location="/openmrs/bannerprototype/notesNLP.page"+queryString+"&docId="+docId;
@@ -398,6 +398,8 @@ function doBreadCrumbClicked(crumb)
     setSearchVals(mention)
     setSelectedMentionCookie(mention)
     setConceptTab(crumb_vals[2])
+    doDocumentSelected(crumb_vals[1])
+    highlightSelectedMention(mention)
 
 
 }

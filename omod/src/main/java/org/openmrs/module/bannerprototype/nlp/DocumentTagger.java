@@ -70,13 +70,18 @@ public class DocumentTagger implements Serializable {
 		for(SofaText st : sofaTexts)
 		{	
 			namedEntities = new ArrayList<NamedEntity>();
-			namedEntities.addAll(tagger.tag(st.getText()));
+			//namedEntities.addAll(tagger.tag(st.getText()));
 			namedEntities.addAll(testClassTagger.tag(st.getText()));
 			namedEntities.addAll(problemClassTagger.tag(st.getText()));
 			namedEntities.addAll(treatmentClassTagger.tag(st.getText()));
 			
+			//Add all entities found with String Matching
 			for(NamedEntity ne : namedEntities)
     			st.addMentionAndConcepts(ne.getMention(), ne.getConceptMatches());
+			
+			//Add entities from BANNER, with low precedence
+			for(NamedEntity ne : tagger.tag(st.getText()))
+				st.addBannerMention(ne.getMention());
 			
 			st.setSofaDocument(sofaDocument);
 			sofaDocument.addSofaText(st);

@@ -67,6 +67,19 @@ public class SofaText extends BaseOpenmrsObject implements Serializable,Comparab
 		sofaTextMention.add(new SofaTextMention(this,m,concepts));
 	}
 	
+	public void addBannerMention(Mention m) {
+		for(SofaTextMention stm : sofaTextMention)
+		{
+			if(stm.getMentionText().toLowerCase().indexOf(m.getText().toLowerCase()) != -1)
+			{	
+				return;
+			}
+
+		}
+		sofaTextMention.add(new SofaTextMention(this,m,new ArrayList<Concept>()));
+		
+	}
+	
 	@Override
 	public Integer getId() {
 		// TODO Auto-generated method stub
@@ -246,5 +259,7 @@ public class SofaText extends BaseOpenmrsObject implements Serializable,Comparab
 		
 		return treatments;
 	}
+
+	
 
 }
