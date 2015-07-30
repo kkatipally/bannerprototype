@@ -41,8 +41,9 @@ public class ConceptClassTagger implements Serializable {
 		for(Concept c : concepts)
 		{
 			ArrayList<String> names = new ArrayList<String>();
-			
-			for(ConceptName cn : c.getNames())
+			ArrayList<ConceptName> cNames = new ArrayList<ConceptName>();
+			cNames.addAll(c.getNames()); 
+			for(ConceptName cn : cNames)
 				names.add(cn.getName());
 			
 			nameMap.put(c, names);
@@ -86,6 +87,7 @@ public class ConceptClassTagger implements Serializable {
 			{
 				//System.out.println(cn.getName());
 				name = name.toLowerCase();
+				//this is a hack and needs to be cleaned up
 				if(lower_str.contains(" "+name+" "))
 				{
 					try{
@@ -100,7 +102,6 @@ public class ConceptClassTagger implements Serializable {
 				else
 					continue;
 				
-				break;
 			}	
 			
 		}

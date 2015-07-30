@@ -14,6 +14,7 @@
 package org.openmrs.module.bannerprototype.web.controller;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -46,6 +48,7 @@ import org.openmrs.module.bannerprototype.nlp.DocumentTagger;
 import org.openmrs.module.bannerprototype.nlp.NERTagger;
 import org.openmrs.module.bannerprototype.nlp.NamedEntity;
 import org.openmrs.module.bannerprototype.nlp.TaggerFactory;
+import org.openmrs.module.bannerprototype.reporting.ReportGenerator;
 import org.openmrs.module.bannerprototype.transport.SofaDocumentTransport;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
@@ -131,13 +134,14 @@ public class  bannerprototypeManageController {
 		String test 	= request.getParameter("test");
 		String problem 	= request.getParameter("problem");
 		String treatment= request.getParameter("treatment");
+		String adminEmail= request.getParameter("adminEmail");
 		
 		
 		Context.getAdministrationService().setGlobalProperty("bannerprototype.tagger",model);
 		Context.getAdministrationService().setGlobalProperty("bannerprototype.conceptClassMappingProblem",problem);
 		Context.getAdministrationService().setGlobalProperty("bannerprototype.conceptClassMappingTreatment",treatment);
 		Context.getAdministrationService().setGlobalProperty("bannerprototype.conceptClassMappingTest",test);
-		
+		Context.getAdministrationService().setGlobalProperty("bannerprototype.adminEmail",adminEmail);
 	}
 	
 	@RequestMapping(value = "/module/bannerprototype/banner", method = RequestMethod.GET)
@@ -194,50 +198,13 @@ public class  bannerprototypeManageController {
 				}
             return sofaDocument.getAnnotatedHTML();
     }
-	/*
-	@Transactional
-	@RequestMapping(value = "/module/bannerprototype/dump", method = RequestMethod.GET)
-	public @ResponseBody String bannerDataDump(@RequestParam(value="directory") String directory)
-    {        
-			BannerDataDump bdd = new BannerDataDump();
-			
-			try {
-				bdd.serialize(directory, allSofaDocuments);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return "not ok";
-			}
-            return "OK";
-    }
-	*/
-	/*
-	@Transactional
-	@RequestMapping(value = "/module/bannerprototype/classSearch", method = RequestMethod.POST)
-	public @ResponseBody String bannerClasSearch(HttpServletRequest request)
-    {        
-		String className = request.getParameter("class");
-		String text = request.getParameter("text");
-		String out = "hello";
-		System.out.println("in POST"+className+text);
-		
-		ConceptClassTagger cct = new ConceptClassTagger(className,"test");
-		List<NamedEntity> foundConcepts = cct.tag(text);
-		
-		for(NamedEntity ne : foundConcepts)
-		{
-			out+=" " + ne.getText();
-			
-		}
-		
-		return out;
-    }
-    */
+	
+    
 	@RequestMapping(value = "/module/bannerprototype/upload", method = RequestMethod.POST)
     public @ResponseBody String handleFileUpload(@RequestParam("name") String name,
             @RequestParam("file") MultipartFile file) throws IOException{
-        System.out.println("in upload");
-        System.out.println(name);
+        //System.out.println("in upload");
+        //System.out.println(name);
         String path = new ClassPathResource("taggers/").getURL().getPath();
         if (!file.isEmpty()) {
             try {
@@ -246,9 +213,14 @@ public class  bannerprototypeManageController {
                         new BufferedOutputStream(new FileOutputStream(new File(path+name)));
                 stream.write(bytes);
                 stream.close();
-                System.out.println("uploaded!");
-                return "You successfully uploaded " + name + "!";
-            } catch (Exception e) {
+                //System.out.println("uploaded!");
+                return "You successfully uploaded " + name + "!\n<a href=manage.form>back</a>";
+            }   catch(FileNotFoundException ex)
+            {
+            	ex.printStackTrace();
+            	return "ERROR:  Please name your file";
+            	
+            }	catch (Exception e) {
                 e.printStackTrace();
                 return "You failed to upload " + name + " => " + e.getMessage();
             }
@@ -262,10 +234,11 @@ public class  bannerprototypeManageController {
 	@RequestMapping(value = "/module/bannerprototype/reanalyze", method = RequestMethod.POST)
     public @ResponseBody String handleReanalyzeCorpus() throws IOException{
         System.out.println("in ReanalyzeCorpus");
-
+        
+        
         runReanalysis();
         
-		return "ok! reanalyze!";
+		return "Analysis Complete!";
 
     }
 	
@@ -295,6 +268,48 @@ public class  bannerprototypeManageController {
 		   }
 	}
 	
+	 
+	@RequestMapping(value = "/module/bannerprototype/report-entity-freq", method = RequestMethod.GET)
+	public void getEntityFreqReport(
+	    HttpServletResponse response) {
+		List<SofaDocument> documents = Context.getService(NLPService.class).getAllSofaDocuments();
+	    ReportGenerator rg = new ReportGenerator(documents);
+	    String report = rg.generateEntityFrequencyReport();
+		
+		try {
+	      // get your file as InputStream
+	      InputStream is = new ByteArrayInputStream(report.getBytes());
+	      // copy it to response's OutputStream
+	      org.apache.commons.io.IOUtils.copy(is, response.getOutputStream());
+	      response.flushBuffer();
+	    } catch (IOException ex) {
+	      
+	      throw new RuntimeException("IOError writing file to output stream");
+	    }
+
+	}
+	
+	@RequestMapping(value = "/module/bannerprototype/report-all-notes", method = RequestMethod.GET)
+	public void getAllNotesReport(
+	    HttpServletResponse response) {
+		List<SofaDocument> documents = Context.getService(NLPService.class).getAllSofaDocuments();
+	    ReportGenerator rg = new ReportGenerator(documents);
+	    String report = rg.generateAllNoteAndEntityReport();
+		
+		try {
+	      // get your file as InputStream
+	      InputStream is = new ByteArrayInputStream(report.getBytes());
+	      // copy it to response's OutputStream
+	      org.apache.commons.io.IOUtils.copy(is, response.getOutputStream());
+	      response.flushBuffer();
+	    } catch (IOException ex) {
+	      
+	      throw new RuntimeException("IOError writing file to output stream");
+	    }
+
+	}
+	
+	
 	
 	@RequestMapping(value = "/module/bannerprototype/transport", method = RequestMethod.GET)
 	public @ResponseBody String bannerDataDump() throws JsonGenerationException, JsonMappingException, IOException
@@ -314,8 +329,6 @@ public class  bannerprototypeManageController {
 			String out = mapper.writeValueAsString(transports);
 			out = "sendJsonData("+out+");";
 					
-					
-			
 			return out;
 			
 			

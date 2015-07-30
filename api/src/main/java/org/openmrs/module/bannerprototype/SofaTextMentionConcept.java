@@ -14,8 +14,6 @@ public class SofaTextMentionConcept extends BaseOpenmrsObject implements
 	private int conceptId;
 	private Concept concept;
 	private String conceptName = "uninitialized";
-	private boolean conceptReviewed = false;
-	private boolean conceptCorrect = false;
 	private String uuid;
 
 	public SofaTextMentionConcept()
@@ -72,33 +70,6 @@ public class SofaTextMentionConcept extends BaseOpenmrsObject implements
 		this.conceptId = conceptId;
 	}
 
-	/**
-	 * @return the conceptReviewed
-	 */
-	public boolean isConceptReviewed() {
-		return conceptReviewed;
-	}
-
-	/**
-	 * @param conceptReviewed the conceptReviewed to set
-	 */
-	public void setConceptReviewed(boolean conceptReviewed) {
-		this.conceptReviewed = conceptReviewed;
-	}
-
-	/**
-	 * @return the conceptCorrect
-	 */
-	public boolean isConceptCorrect() {
-		return conceptCorrect;
-	}
-
-	/**
-	 * @param conceptCorrect the conceptCorrect to set
-	 */
-	public void setConceptCorrect(boolean conceptCorrect) {
-		this.conceptCorrect = conceptCorrect;
-	}
 
 	/**
 	 * @return the concept

@@ -50,7 +50,7 @@ ${ ui.includeFragment("uicommons", "fieldErrors", [ fieldName: "startDate" ]) }
    var breadcrumbs = [
         { icon: "icon-home", link: '/' + OPENMRS_CONTEXT_PATH + '/index.htm' },
         { label: "${ ui.escapeJs(patient.familyName + ', ' + patient.givenName ) }" , link: '${ui.escapeJs(returnUrl)}'},
-        { label: "Notes NLP"}
+        { label: "Visit Notes Analysis"}
     ];
 var ret = "${returnUrl}";
 var x = 1;
@@ -113,6 +113,9 @@ var userId = ${user}
 		<span class=mention-type-treatment>treatment  </span>
 		<span class=mention-type-problem>problem  </span>
 	</div>
+	<span id=report-problem>Feedback On Results? 
+	<A HREF="mailto:$adminEmail?subject=Visit Notes Analysis Module Correction&body=[no document selected]">E-mail the administrator</A>
+	</span>
 </div>
 <br/>
 <div id="tabs-and-doc">
@@ -274,7 +277,9 @@ var userId = ${user}
 
 ${ ui.includeFragment("bannerprototype", "documentViewer") }
 <script type="text/javascript">
-
+	var patientMRN = "$patientMRN"
+	var adminEmail = "$adminEmail"
+	
 </script>
 
 

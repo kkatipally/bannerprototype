@@ -36,7 +36,7 @@ public class AdminList extends AdministrationSectionExt {
 	 * @see AdministrationSectionExt#getTitle()
 	 */
 	public String getTitle() {
-		return "bannerprototype.title";
+		return "Visit Note Analysis Module";
 	}
 	
 	/**
@@ -44,8 +44,9 @@ public class AdminList extends AdministrationSectionExt {
 	 */
 	public Map<String, String> getLinks() {
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-		map.put("/module/bannerprototype/manage.form", "bannerprototype.manage");
-		map.put("/module/bannerprototype/banner.form", "banner");
+		map.put("/module/bannerprototype/manage.form", "Manage Visit Notes Analysis");
+		// below is used to support 
+		//map.put("/module/bannerprototype/banner.form", "banner");
 		return map;
 	}
 	

@@ -193,3 +193,9 @@ table th, table td {
 .highlighted-document{
 	background-color: rgb(163, 236, 227) !important;
 }
+
+#report-problem{
+	float:right;
+	position:relative;
+	top:20px;
+}

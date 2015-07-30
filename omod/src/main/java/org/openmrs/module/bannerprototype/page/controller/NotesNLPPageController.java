@@ -47,6 +47,7 @@ import org.openmrs.module.bannerprototype.eval.DocGenerator;
 import org.openmrs.module.bannerprototype.nlp.DocumentTagger;
 import org.openmrs.module.bannerprototype.nlp.NERTagger;
 import org.openmrs.module.bannerprototype.nlp.TaggerFactory;
+import org.openmrs.module.bannerprototype.reporting.ReportGenerator;
 import org.openmrs.module.bannerprototype.web.wordcloud.WordCloud;
 import org.openmrs.ui.framework.page.PageModel;
 import org.springframework.core.io.ClassPathResource;
@@ -83,6 +84,8 @@ public class NotesNLPPageController {
            @RequestParam(value = "docId", required = false, defaultValue = "-1") int docId) throws IOException, ClassNotFoundException{
 	   
 	   	Integer patientId = patient.getId();
+	   	System.out.println(patientId);
+	   	String patientMRN = patient.getPatientIdentifier().getIdentifier();
 
 		FormService fs = Context.getFormService();
 		ConceptService cs = Context.getConceptService();
@@ -120,6 +123,8 @@ public class NotesNLPPageController {
 		
 		//User u = Context.getAuthenticatedUser();
 		//u.getId()
+		String adminEmail = Context.getAdministrationService().getGlobalProperty("bannerprototype.adminEmail");
+		
 		pageModel.addAttribute("returnUrl", returnUrl);
 		pageModel.addAttribute("user", Context.getAuthenticatedUser());
 		pageModel.addAttribute("sofaDocument",sofaDocument);
@@ -128,6 +133,8 @@ public class NotesNLPPageController {
 		pageModel.addAttribute("bannerprototype",new bannerprototype());
 		pageModel.addAttribute("sofa",sofa);
 		pageModel.addAttribute("tagCloudWords", wordcloud.getTopWordsShuffled(30));
+		pageModel.addAttribute("patientMRN", patientMRN);
+		pageModel.addAttribute("adminEmail",adminEmail);
 		
 		
 		String modelFiles[] = new ClassPathResource("taggers/").getFile().list();
@@ -155,6 +162,10 @@ public class NotesNLPPageController {
 		}
 		*/
 			//System.out.println(cpr.getFile().listFiles().length);
+		
+		ReportGenerator rg = new ReportGenerator(allSofaDocuments);
+		String report = rg.generateAllNoteAndEntityReport();
+		System.out.println(report);
    }
    
    

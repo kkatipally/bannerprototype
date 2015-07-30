@@ -156,24 +156,10 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 		List<SofaDocument> sds = getAllSofaDocuments();
 		
 		System.out.println("About to Delete");
-		//s.delete(sds);
 		for(SofaDocument sd : sds)
 			s.delete(sd);
 		System.out.println("Deleted!");
-		/*
-		//Truncate Table sometimes hangs, disabling foreign keys momentarily seems to solve this
-		s.createSQLQuery("SET FOREIGN_KEY_CHECKS = 0;");
-		System.out.println("in Truncate Tables");
-		s.createSQLQuery("truncate table sofatext_mention_concept").executeUpdate();
-		System.out.println("a");
-		s.createSQLQuery("truncate table sofatext_mention").executeUpdate();
-		s.createSQLQuery("truncate table sofatext").executeUpdate();
-		System.out.println("b");
-		s.createSQLQuery("truncate table sofa_document").executeUpdate();
-		System.out.println("c");
-		s.createSQLQuery("SET FOREIGN_KEY_CHECKS = 1;");
-		s.flush();
-		*/
+
 		return;
 	}
 

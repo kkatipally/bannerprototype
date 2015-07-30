@@ -6,9 +6,9 @@
 	<artifactId>bannerprototype</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>banner prototype Module</name>
-	<description>prototype module with banner</description>
-	<url>https://wiki.openmrs.org/display/docs/banner+prototype+Module+Module</url>
+	<name>Visit Note Analysis Module</name>
+	<description>Module for Natural Language Processing of Visit Notes</description>
+	<url>https://wiki.openmrs.org/display/docs/visit+note+analysis+Module+Module</url>
 	
 	<developers>
 		<developer>

@@ -5,6 +5,8 @@
 </div>
 
 <script>
+var docDate = "";
+
 
 function updateDocumentFragmentHTML(docId) {
         jq.getJSON('${ ui.actionLink("getHTML") }',
@@ -17,10 +19,20 @@ function updateDocumentFragmentHTML(docId) {
 			highlightSelectedMention(mention);
 			var mention_text = mention.split("-")[0].replace("@","-");
 			var scroll =  jq(findSpan(mention_text)).position().top+ jq(".doc-viewer").scrollTop() - 100
-			console.log(scroll)
+			//console.log(scroll)
             jq('.doc-viewer').animate({
         		scrollTop: scroll
     			}, 1000);
+    		updateMailto();
+            })
+            
+            jq.getJSON('${ ui.actionLink("getDate") }',
+            {
+              'docId': docId
+            })
+        .success(function(data) {
+            docDate = data;
+            updateMailto();
             })
         }
         

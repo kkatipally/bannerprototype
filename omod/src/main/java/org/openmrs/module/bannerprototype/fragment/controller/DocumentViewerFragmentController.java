@@ -2,6 +2,7 @@ package org.openmrs.module.bannerprototype.fragment.controller;
 
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.bannerprototype.SofaDocument;
 import org.openmrs.module.bannerprototype.api.NLPService;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
@@ -21,16 +22,29 @@ public class DocumentViewerFragmentController {
 			@FragmentParam(value="docId", required=false) Integer docId) {
         
 		String html = "";
+		String docDate = "";
 		if(docId != null)
-			html=Context.getService(NLPService.class).getSofaDocumentById(docId).getAnnotatedHTML();
- 
+		{	
+			SofaDocument d = Context.getService(NLPService.class).getSofaDocumentById(docId);
+			html=d.getAnnotatedHTML();
+			
+		}
+		
+			
+		System.out.println(docDate);
         model.addAttribute("annotatedHTML", html);
+        model.addAttribute("docDate",docDate );
     }
 	
 	public String getHTML(@RequestParam(value="docId", required=false) Integer docId, FragmentActionUiUtils ui) {
-			//System.out.println("in getHTML: " + docId);
+			
 			String html= Context.getService(NLPService.class).getSofaDocumentById(docId).getAnnotatedHTML();
 			
 			return html;
 			}
+	
+	public String getDate(@RequestParam(value="docId", required=false) Integer docId, FragmentActionUiUtils ui)
+	{
+		return Context.getService(NLPService.class).getSofaDocumentById(docId).getDateCreated().toString();
+	}
 }

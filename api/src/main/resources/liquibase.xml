@@ -55,8 +55,7 @@
             <column name="mention_start" type="int"></column>
             <column name="mention_end" type="int"></column>
             <column name="mention_type" type="varchar(255)"></column>
-            <column name="mention_reviewed" type="boolean"></column>
-            <column name="mention_correct" type="boolean"></column> 
+            
         </createTable>
         
         <createTable tableName="sofatext_mention_concept">
@@ -66,8 +65,7 @@
             <column name="sofatext_mention_id" type="int"></column>
             <column name="concept_id" type="int"></column>
             <column name="uuid" type="varchar(255)"></column>
-            <column name="concept_reviewed" type="boolean"></column>
-            <column name="concept_correct" type="boolean"></column> 
+            
         </createTable>
     </changeSet>
     

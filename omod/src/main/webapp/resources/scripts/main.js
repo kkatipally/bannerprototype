@@ -209,33 +209,33 @@ function setSearchVals(text){
 function highlightSelectedMention(mention){
     var split = mention.split("-")
     mention = split[0].replace("@","-")
-	console.log("1")
+	//console.log("1")
 	clearMentionHighlights()
-	console.log("2")
+	//console.log("2")
     if(getConceptTabCookie() != split[1])
     {
         return false
     }
    
-    console.log("3")
+    //console.log("3")
     var mentionSpans = jq(".doc-viewer span");
-    console.log("4")
+    //console.log("4")
     mentionSpans = mentionSpans.add(jq(".table-mention"))
-    console.log("5")
+    //console.log("5")
 	
 	for(i = 0; i < mentionSpans.length; i++)
 	{
-		console.log(i)
+		//console.log(i)
 		if(mentionSpans[i].innerHTML == mention)
 		{	
-			console.log("!")
+			//console.log("!")
 			jq(mentionSpans[i]).addClass("highlighted-mention") 
-			console.log("!!")
+			//console.log("!!")
 		}	
 			
 	}
     
-    console.log("6")
+    //console.log("6")
     return false;
 	
 }
@@ -476,4 +476,31 @@ function getConceptTabCookie() {
         return unescape(cookies[1]);
     }
     return null;
+}
+
+function updateMailto()
+{
+	var docNum = getSelectedDocumentCookie();
+	//docDate
+	//patientMRN
+	
+	var email = adminEmail;
+	var subject = "Visit Notes Analysis Module Correction"
+	var body = "\n[describe problem here]\n\n***********************************"
+		       +"\nDocument Number: " + docNum
+	           +"\nDocument Date: "+docDate
+	           +"\nPatient MRN: " + patientMRN
+	           +"\nVisit Note Text:\n\n " + jq("#doc-viewer").text();
+		
+		
+		
+	var href = "mailto:"+email
+	           +"?subject="+escape(subject)
+	           +"&body="+escape(body);
+	
+	jq("#report-problem a").attr("href",href)
+	
+	//<span id=report-problem>See a problem? 
+	//		<A HREF="mailto:ryaneshleman@gmail.com?subject=Visit Notes Analysis Module Correction&body=Just testing">E-mail the administrator</A>
+	//		</span>
 }

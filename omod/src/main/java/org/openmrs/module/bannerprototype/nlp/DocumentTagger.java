@@ -7,7 +7,16 @@ import java.util.List;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.bannerprototype.SofaDocument;
 import org.openmrs.module.bannerprototype.SofaText;
-
+/**
+ * This class exposes the Named Entity Recognition functionality of the module.  
+ * <p>
+ * This class contains four internal Named Entity Recognizers, three ConceptClassTagger objects<br><br>
+ * Each ConceptClassTagger is initialized to recognize entities in text based on the concept class mappings <br>
+ * set in the Manage Visit Notes Analysis page accessible through the OpenMRS Administration page. <br>
+ * These mappings are stored and read via global properties.<br><br>
+ * The fourth tagger is an NERTagger object which uses the BANNER CRF library and model specified in the Manager Visit Notes Analysis page.
+ * 
+ */
 public class DocumentTagger implements Serializable {
 	private String document;
 	private List<SofaText> sofaTexts;
@@ -55,7 +64,13 @@ public class DocumentTagger implements Serializable {
 		initialized = true;
 		
 	}
-	
+	/**
+	 * This method executes the NER algorithm to find mentions of medical entities within the input text.  
+	 * Input is a simple String object.  Output is a populated SofaDocument including all children in the SofaDocument data hierarchy.
+	 * 
+	 * @param document Text to be tagged
+	 * @return  SofaDocument fully initialized with text and Named Entities recognized 
+	 */
 	public SofaDocument tagDocument(String document)
 	{
 		if(!initialized)

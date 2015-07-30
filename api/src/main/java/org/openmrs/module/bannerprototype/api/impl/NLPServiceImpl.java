@@ -52,7 +52,6 @@ public class NLPServiceImpl extends BaseOpenmrsService implements NLPService {
 		return dao.getSofaText(sofaTextId);
 	}
 
-	@Override
 	@Transactional(readOnly = true)
 	public Set<SofaText> getSofaTextsByEncounter(Encounter encounter) {
 		return dao.getSofaTextsByEncounter(encounter);

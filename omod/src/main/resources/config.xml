@@ -42,8 +42,9 @@
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>
 		
-		TempSofaText.hbm.xml
-		<!--		
+		banner.hbm.xml
+		<!--
+		TempSofaText.hbm.xml		
 		<file>SofaTextMention.hbm.xml</file>
 		<file>SofaTextMentionConcept.hbm.xml</file>
 		-->	
@@ -60,6 +61,14 @@
 		
 		<description>
 		Comma separated list of Concept Classes to be mapped to Problems
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>bannerprototype.adminEmail</property>
+		<defaultValue>Administrator@organization.com</defaultValue>
+		
+		<description>
+		Email of administrator to receive annotation correction notifications
 		</description>
 	</globalProperty>
 	

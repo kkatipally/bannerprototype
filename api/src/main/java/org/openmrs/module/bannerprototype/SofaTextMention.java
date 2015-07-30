@@ -18,8 +18,6 @@ public class SofaTextMention extends BaseOpenmrsObject implements Serializable {
 	private int mentionStart;
 	private int mentionEnd;
 	private String mentionType;
-	private boolean mentionReviewed = false;
-	private boolean mentionCorrect = false;
 	private String uuid;
 	
 	private Set<SofaTextMentionConcept> sofaTextMentionConcept = new HashSet<SofaTextMentionConcept>();
@@ -122,34 +120,6 @@ public class SofaTextMention extends BaseOpenmrsObject implements Serializable {
 	 */
 	public void setMentionType(String mentionType) {
 		this.mentionType = mentionType;
-	}
-
-	/**
-	 * @return the mentionReviewed
-	 */
-	public boolean isMentionReviewed() {
-		return mentionReviewed;
-	}
-
-	/**
-	 * @param mentionReviewed the mentionReviewed to set
-	 */
-	public void setMentionReviewed(boolean mentionReviewed) {
-		this.mentionReviewed = mentionReviewed;
-	}
-
-	/**
-	 * @return the mentionCorrect
-	 */
-	public boolean isMentionCorrect() {
-		return mentionCorrect;
-	}
-
-	/**
-	 * @param mentionCorrect the mentionCorrect to set
-	 */
-	public void setMentionCorrect(boolean mentionCorrect) {
-		this.mentionCorrect = mentionCorrect;
 	}
 
 
