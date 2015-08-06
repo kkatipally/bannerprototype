@@ -78,11 +78,11 @@ public class ReportGenerator {
 		
 		StringBuilder str = new StringBuilder();
 		
-		str.append("Entity&&Type,Frequency\n");
+		str.append("Entity,Type,Frequency\n");
 		
 		for(Entry<String, Integer> entry : entityFrequency.entrySet())
 		{
-			str.append(String.format("%s,%d\n", entry.getKey(),entry.getValue()));
+			str.append(String.format("%s,%d\n", entry.getKey().replace("&&", ","),entry.getValue()));
 		}
 		
 		return str.toString();

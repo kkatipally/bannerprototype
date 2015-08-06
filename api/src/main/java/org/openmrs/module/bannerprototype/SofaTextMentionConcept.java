@@ -6,7 +6,11 @@ import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.Concept;
 import org.openmrs.ConceptName;
 import org.openmrs.api.context.Context;
-
+/**
+ * Class references an OpenMRS concept that is associated with a SofaTextMention
+ * @author ryaneshleman
+ *
+ */
 public class SofaTextMentionConcept extends BaseOpenmrsObject implements
 		Serializable {
 	private int sofaTextMentionConceptId;
@@ -20,7 +24,11 @@ public class SofaTextMentionConcept extends BaseOpenmrsObject implements
 	{
 		//Default Constructor
 	}
-	
+	/**
+	 * 
+	 * @param sofaTextMention parent in data hierarchy
+	 * @param c
+	 */
 	public SofaTextMentionConcept(SofaTextMention sofaTextMention, Concept c) {
 		this.sofaTextMention = sofaTextMention;
 		
@@ -28,11 +36,14 @@ public class SofaTextMentionConcept extends BaseOpenmrsObject implements
 		
 		
 	}
-
+	/**
+	 * 
+	 * returns sofaTExtMentionConceptId value, required to implement BaseOpenmrsObject
+	 */
 	@Override
 	public Integer getId() {
 		// TODO Auto-generated method stub
-		return null;
+		return sofaTextMentionConceptId;
 	}
 
 	@Override
@@ -42,6 +53,7 @@ public class SofaTextMentionConcept extends BaseOpenmrsObject implements
 	}
 
 	/**
+	 * unique identifier for this object
 	 * @return the sofaTextMentionConceptId
 	 */
 	public int getSofaTextMentionConceptId() {
@@ -57,6 +69,7 @@ public class SofaTextMentionConcept extends BaseOpenmrsObject implements
 
 
 	/**
+	 * returns the id associated with the OpenMRS Concept contained in this object
 	 * @return the conceptId
 	 */
 	public int getConceptId() {
@@ -72,6 +85,7 @@ public class SofaTextMentionConcept extends BaseOpenmrsObject implements
 
 
 	/**
+	 * returns the OpenMRS concept associated with this object
 	 * @return the concept
 	 */
 	public Concept getConcept() {
@@ -84,6 +98,8 @@ public class SofaTextMentionConcept extends BaseOpenmrsObject implements
 	public void setConcept(Concept concept) {
 		this.concept = concept;
 		
+		//DocumentTagger performs NER and returns a populated SofaDocument obj
+
 		ConceptName cn = Context.getConceptService().getConceptName(concept.getId());
 		
 		if(cn != null)
@@ -93,6 +109,7 @@ public class SofaTextMentionConcept extends BaseOpenmrsObject implements
 	}
 
 	/**
+	 * get the parent SofaTextMention
 	 * @return the sofaTextMention
 	 */
 	public SofaTextMention getSofaTextMention() {
@@ -107,6 +124,7 @@ public class SofaTextMentionConcept extends BaseOpenmrsObject implements
 	}
 
 	/**
+	 * get the name of the concept, for example "tuberculosis"
 	 * @return the conceptName
 	 */
 	public String getConceptName() {
@@ -114,6 +132,7 @@ public class SofaTextMentionConcept extends BaseOpenmrsObject implements
 	}
 
 	/**
+	 * set the concept Name
 	 * @param conceptName the conceptName to set
 	 */
 	public void setConceptName(String conceptName) {

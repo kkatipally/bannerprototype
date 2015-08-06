@@ -14,6 +14,11 @@ import org.openmrs.Encounter;
 
 import banner.tagging.Mention;
 
+/**
+ * This class holds sentence level annotations contained in the SofaDocument
+ * @author ryaneshleman
+ *
+ */
 public class SofaText extends BaseOpenmrsObject implements Serializable,Comparable {
 	private int sofaTextId;
 	private Encounter encounter;
@@ -24,7 +29,9 @@ public class SofaText extends BaseOpenmrsObject implements Serializable,Comparab
 	private String uuid;
 	private Set<SofaTextMention> sofaTextMention = Collections.synchronizedSet(new HashSet<SofaTextMention>());
 
-	
+	/**
+	 * Default Constructor
+	 */
 	public SofaText()
 	{
 	}
@@ -39,20 +46,30 @@ public class SofaText extends BaseOpenmrsObject implements Serializable,Comparab
 		this.textStart = textStart;
 		this.textEnd = textEnd;
 	}
-	
+	/**
+	 * This method adds a new Mention and associated concepts to a SofaText, there can be overlap between concept names and multiple concepts can match a string, instead of choosing one concept, we record them all.
+	 * @param m
+	 * @param concepts
+	 */
 	public void addMentionAndConcepts(Mention m, List<Concept> concepts)
 	{
 		//System.out.println("Mention Text: " + m.getText());
 		ArrayList<SofaTextMention> toRemove = new ArrayList<SofaTextMention>();
+		
+		//check all SofaTextMentions
 		for(SofaTextMention stm : sofaTextMention)
 		{
-			//System.out.println("STM: " + stm.getMentionText());
 			
+			//if new mention is subsumed by existing mention, add associated concepts to subsuming mention
+			//and then return
 			if(stm.getMentionText().toLowerCase().indexOf(m.getText().toLowerCase()) != -1)
 			{	
 				stm.addConcepts(concepts);
 				return;
 			}
+			
+			// if new mention subsumes an existing mention, add existing mention to remove list but keep concepts
+			
 			if(m.getText().toLowerCase().indexOf(stm.getMentionText().toLowerCase()) != -1)
 			{	
 				concepts.addAll(stm.getConcepts());
@@ -63,36 +80,42 @@ public class SofaText extends BaseOpenmrsObject implements Serializable,Comparab
 			
 			
 		}
+		// remove mentions from remove list
 		sofaTextMention.removeAll(toRemove);
+		// add new mention to sofatext
 		sofaTextMention.add(new SofaTextMention(this,m,concepts));
 	}
 	
-	public void addBannerMention(Mention m) {
+	/**
+	 * BANNER mentions have a lower priority so use this method to add a mention made by BANNER
+	 * to a SofaText, it will not be added if the mention subsumes or is subsumed by a current mention
+	 * @param m
+	 */
+	public boolean addBannerMention(Mention m) {
 		for(SofaTextMention stm : sofaTextMention)
 		{
+			// if m is subsumed by an existing mention, return
 			if(stm.getMentionText().toLowerCase().indexOf(m.getText().toLowerCase()) != -1)
 			{	
-				return;
+				return false;
+			}
+			
+			// if m subsumes an existing mention, return
+			if(m.getText().toLowerCase().indexOf(stm.getMentionText().toLowerCase()) != -1)
+			{	
+				return false;
 			}
 
 		}
+		//add mention to SofaText 
 		sofaTextMention.add(new SofaTextMention(this,m,new ArrayList<Concept>()));
+		return true;
 		
 	}
-	
-	@Override
-	public Integer getId() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	@Override
-	public void setId(Integer arg0) {
-		// TODO Auto-generated method stub
-
-	}
 
 	/**
+	 * returns the text string for this SofaText obj
 	 * @return the text
 	 */
 	public String getText() {
@@ -100,6 +123,7 @@ public class SofaText extends BaseOpenmrsObject implements Serializable,Comparab
 	}
 
 	/**
+	 * sets teh text string for this SofaText obj
 	 * @param text the text to set
 	 */
 	public void setText(String text) {
@@ -107,6 +131,7 @@ public class SofaText extends BaseOpenmrsObject implements Serializable,Comparab
 	}
 
 	/**
+	 * returns the unique identifier for this SofaText object
 	 * @return the sofaTextId
 	 */
 	public int getSofaTextId() {
@@ -121,6 +146,7 @@ public class SofaText extends BaseOpenmrsObject implements Serializable,Comparab
 	}
 
 	/**
+	 * Visit Notes are saved via the EncounterService.saveEncounter() method, the encounter field records the associated encounter. 
 	 * @return the encounter
 	 */
 	public Encounter getEncounter() {
@@ -135,6 +161,7 @@ public class SofaText extends BaseOpenmrsObject implements Serializable,Comparab
 	}
 
 	/**
+	 * returns the mentions found in this SofaText, there can be overlap between concept names and multiple concepts match a string, instead of choosing one, we record them all.
 	 * @return the sofaTextMention
 	 */
 	public Set<SofaTextMention> getSofaTextMention() {
@@ -149,6 +176,7 @@ public class SofaText extends BaseOpenmrsObject implements Serializable,Comparab
 	}
 
 	/**
+	 * returns the parent SofaDocument object for this SofaText
 	 * @return the sofaDocument
 	 */
 	public SofaDocument getSofaDocument() {
@@ -163,6 +191,7 @@ public class SofaText extends BaseOpenmrsObject implements Serializable,Comparab
 	}
 
 	/**
+	 * returns the index into the parent SofaDocument that the SofaText begins at
 	 * @return the textStart
 	 */
 	public int getTextStart() {
@@ -177,6 +206,7 @@ public class SofaText extends BaseOpenmrsObject implements Serializable,Comparab
 	}
 
 	/**
+	 * returns the index into the parent SofaDocument that the SofaTExt ends at
 	 * @return the textEnd
 	 */
 	public int getTextEnd() {
@@ -189,7 +219,10 @@ public class SofaText extends BaseOpenmrsObject implements Serializable,Comparab
 	public void setTextEnd(int textEnd) {
 		this.textEnd = textEnd;
 	}
-
+	/**
+	 * Helper method to generate HTML, will be moved to controller in future, the html contains the text of the SofaText object with each mention wrapped in a span tag
+	 * @return
+	 */
 	public String getAnnotatedHTML() {
 		String html = new String(text);
 		String tagged;
@@ -218,12 +251,18 @@ public class SofaText extends BaseOpenmrsObject implements Serializable,Comparab
 		
 	}
 
-	//should probably use generics here
+	/**
+	 * returns 0 if two SofaText objects start at the same index, otherwise returns the distance in
+	 * characters between the start index of the two SofaTexts being compared.  + if current SofaText is before text being compared
+	 */
 	@Override
 	public int compareTo(Object st) {
 		return this.textStart - ((SofaText)st).getTextStart();
 	}
-
+	/**
+	 * returns all SofaTextMention objects with type "problem" in this SofaText object
+	 * @return
+	 */
 	public Collection<? extends SofaTextMention> getProblems() {
 		List<SofaTextMention> problems = new ArrayList<SofaTextMention>();
 		
@@ -235,7 +274,10 @@ public class SofaText extends BaseOpenmrsObject implements Serializable,Comparab
 		
 		return problems;
 	}
-
+	/**
+	 * returns all SofaTextMention objects with type "test" in this SofaText object
+	 * @return
+	 */
 	public Collection<? extends SofaTextMention> getTests() {
 		List<SofaTextMention> tests = new ArrayList<SofaTextMention>();
 		
@@ -247,7 +289,10 @@ public class SofaText extends BaseOpenmrsObject implements Serializable,Comparab
 		
 		return tests;
 	}
-
+	/**
+	 * returns all SofaTextMention objects with type "treatment" in this SofaText object
+	 * @return
+	 */
 	public Collection<? extends SofaTextMention> getTreatments() {
 		List<SofaTextMention> treatments = new ArrayList<SofaTextMention>();
 		
@@ -259,6 +304,21 @@ public class SofaText extends BaseOpenmrsObject implements Serializable,Comparab
 		
 		return treatments;
 	}
+	/**
+	 * returns sofaTextId value, this method is required to implement BaseOpenmrsObject
+	 */
+	@Override
+	public Integer getId() {
+		return sofaTextId;
+	}
+
+	@Override
+	public void setId(Integer id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 
 	
 

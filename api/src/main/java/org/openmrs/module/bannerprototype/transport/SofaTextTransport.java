@@ -10,8 +10,13 @@ import java.util.Set;
 import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
+import org.openmrs.Patient;
+import org.openmrs.api.context.Context;
+import org.openmrs.module.bannerprototype.SofaDocument;
 import org.openmrs.module.bannerprototype.SofaText;
 import org.openmrs.module.bannerprototype.SofaTextMention;
+import org.openmrs.module.bannerprototype.api.NLPService;
+import org.openmrs.module.bannerprototype.nlp.DocumentTagger;
 
 import banner.tagging.Mention;
 
@@ -201,7 +206,28 @@ public class SofaTextTransport  implements Serializable,Comparable {
 	@Override
 	public int compareTo(Object arg0) {
 		// TODO Auto-generated method stub
+		
+		//Patient patient = Context.getPatientService().getPatient(100);
+		String text = "The patient is a 47 year old male with "
+				+ "end stage liver diesease secondary to hepatitis C cirrhosis "
+				+ "diagnosed about 5 years prior to admission";
+
+		
+		Patient patient = Context.getPatientService().getPatient(100);
+		List<SofaDocument> documents = Context.getService(NLPService.class)
+				                              .getSofaDocumentsByPatient(patient);
+		
+		
+		
+		
+		
+		
 		return 0;
+		
+
+		
+		
+		
 	}
 
 	

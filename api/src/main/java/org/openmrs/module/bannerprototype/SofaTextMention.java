@@ -10,7 +10,11 @@ import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.Concept;
 
 import banner.tagging.Mention;
-
+/**
+ * This class carries information about annotations for specific SofaText objects
+ * @author ryaneshleman
+ *
+ */
 public class SofaTextMention extends BaseOpenmrsObject implements Serializable {
 	private int sofaTextMentionId;
 	private SofaText sofaText;
@@ -27,6 +31,12 @@ public class SofaTextMention extends BaseOpenmrsObject implements Serializable {
 		//Default Constructor
 	}
 	
+	/**
+	 * constructor,the provided list of OpenMRS concepts will be converted to a list of SofaTextMentionConcept objects, There may be several OpenMRS concepts associated with one mention due to overlapping concept names, instead of forcing the the algorithm to choose one concept we record them all  , Note: banner.tagging.mention m is an object returned from the BANNER tagging library after tagging a text
+	 * @param sofaText
+	 * @param m
+	 * @param concepts
+	 */
 	public SofaTextMention(SofaText sofaText, Mention m, List<Concept> concepts) {
 		this.sofaText = sofaText;
 		this.mentionText = m.getText();
@@ -37,22 +47,13 @@ public class SofaTextMention extends BaseOpenmrsObject implements Serializable {
 		for(Concept c : concepts)
 		{
 			sofaTextMentionConcept.add(new SofaTextMentionConcept(this,c));
-		}	
+		}
+		
 	}
-
-	@Override
-	public Integer getId() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setId(Integer arg0) {
-		// TODO Auto-generated method stub
-
-	}
+	
 
 	/**
+	 * unique identifier for this SofaTextMention object
 	 * @return the sofaTextMentionId
 	 */
 	public int getSofaTextMentionId() {
@@ -67,6 +68,7 @@ public class SofaTextMention extends BaseOpenmrsObject implements Serializable {
 	}
 
 	/**
+	 * return the text string associated with this mention, for example 'cirrhosis'
 	 * @return the mentionText
 	 */
 	public String getMentionText() {
@@ -81,6 +83,8 @@ public class SofaTextMention extends BaseOpenmrsObject implements Serializable {
 	}
 
 	/**
+	 * returns the index into the SofaText where the mention starts
+	 * index of start of mention within SofaText
 	 * @return the mentionStart
 	 */
 	public int getMentionStart() {
@@ -88,6 +92,7 @@ public class SofaTextMention extends BaseOpenmrsObject implements Serializable {
 	}
 
 	/**
+	 * set start index of mention
 	 * @param mentionStart the mentionStart to set
 	 */
 	public void setMentionStart(int mentionStart) {
@@ -95,6 +100,7 @@ public class SofaTextMention extends BaseOpenmrsObject implements Serializable {
 	}
 
 	/**
+	 * returns the index into the SofaTExt where the mentions ends
 	 * @return the mentionEnd
 	 */
 	public int getMentionEnd() {
@@ -109,6 +115,7 @@ public class SofaTextMention extends BaseOpenmrsObject implements Serializable {
 	}
 
 	/**
+	 * returns the mention type as a string, for example "problem"
 	 * @return the mentionType
 	 */
 	public String getMentionType() {
@@ -124,6 +131,7 @@ public class SofaTextMention extends BaseOpenmrsObject implements Serializable {
 
 
 	/**
+	 * returns the children SofaTextMentionConcept objects associated with the SofaTextMention object, it may be an empty set.
 	 * @return the sofaTextMentionConcept
 	 */
 	public Set<SofaTextMentionConcept> getSofaTextMentionConcept() {
@@ -138,6 +146,7 @@ public class SofaTextMention extends BaseOpenmrsObject implements Serializable {
 	}
 
 	/**
+	 * returns the parent SofaText for this object
 	 * @return the sofaText
 	 */
 	public SofaText getSofaText() {
@@ -150,7 +159,10 @@ public class SofaTextMention extends BaseOpenmrsObject implements Serializable {
 	public void setSofaText(SofaText sofaText) {
 		this.sofaText = sofaText;
 	}
-	
+	/**
+	 * helper method that returns the OpenMRS Concept objects associated with this SofaTextMention by extracting them from the SofaTextMentionConcept objects, Concepts are identified during the first String matching phase of the NER algorithm in DocumentTagger.tag()
+	 * @return
+	 */
 	public List<Concept> getConcepts()
 	{
 		List<Concept> concepts = new ArrayList<Concept>();
@@ -159,13 +171,32 @@ public class SofaTextMention extends BaseOpenmrsObject implements Serializable {
 		
 		return concepts;
 	}
-	
+	/**
+	 * Add list of associated OpenMRS Concept objects associated with this SofaTextMention, these Concepts are identified during the first String matching phase of the NER algorithm in DocumentTagger.tag()
+	 * @param concepts
+	 */
 	public void addConcepts(List<Concept> concepts)
 	{
 		for(Concept c : concepts){
 			
 			sofaTextMentionConcept.add(new SofaTextMentionConcept(this,c));
 		}
+	}
+
+	/**
+	 * returns sofaTextMentionId value, this method is required to implement BaseOpenmrsObject
+	 */
+	@Override
+	public Integer getId() {
+		// TODO Auto-generated method stub
+		return sofaTextMentionId;
+	}
+
+
+	@Override
+	public void setId(Integer id) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

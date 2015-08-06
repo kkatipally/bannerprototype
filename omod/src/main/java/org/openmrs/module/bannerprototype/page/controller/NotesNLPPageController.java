@@ -105,9 +105,8 @@ public class NotesNLPPageController {
 		
 		for(SofaDocument sd : allSofaDocuments)
 		{	
-			addToCloud(wordcloud, sd.getProblems());
-			addToCloud(wordcloud,sd.getTests());
-			addToCloud(wordcloud, sd.getTreatments());
+			addToCloud(wordcloud, sd.getAllMentions());
+			
 		}	
 		
 		
@@ -139,33 +138,6 @@ public class NotesNLPPageController {
 		
 		String modelFiles[] = new ClassPathResource("taggers/").getFile().list();
 
-		
-		//runReanalysis();
-		//return new ModelAndView("/module/bannerprototype/portlets/nlpPatientNotes", model);
-		
-		// ***************** TESTING *******************************
-		//runDocEvalTest();
-		
-		/*
-		ClassPathResource cpr = new ClassPathResource("taggers/");
-		for(File f : cpr.getFile().listFiles())
-		{	
-			
-			if(f.getPath().contains("newModel.ser"))
-			{
-				System.out.println(f.getPath());
-				FileInputStream fio = new FileInputStream(f);
-				InputStream buffer = new BufferedInputStream(fio);
-				ObjectInputStream ois = new ObjectInputStream (buffer);
-				ois.readObject();
-			}
-		}
-		*/
-			//System.out.println(cpr.getFile().listFiles().length);
-		
-		ReportGenerator rg = new ReportGenerator(allSofaDocuments);
-		String report = rg.generateAllNoteAndEntityReport();
-		System.out.println(report);
    }
    
    

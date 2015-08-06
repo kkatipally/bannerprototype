@@ -154,7 +154,7 @@ var userId = ${user}
 	</td>
 
 	<td>
-	<% document.getProblems().each { problem -> %>
+	<% document.getProblemMentions().each { problem -> %>
 	        <span onClick=doMentionSelected(this,${document.getSofaDocumentId()}) class="mention-type-problem table-mention">${problem.getMentionText()}</span>
 	    <% } %>    
 	</td>
@@ -186,7 +186,7 @@ var userId = ${user}
 	</td>
 
 	<td>
-	<% document.getTreatments().each { treatment -> %>
+	<% document.getTreatmentMentions().each { treatment -> %>
 	        <span onClick=doMentionSelected(this,${document.getSofaDocumentId()}) class="mention-type-treatment table-mention">${treatment.getMentionText()}</span>
 	    <% } %>    
 	</td>
@@ -219,7 +219,7 @@ var userId = ${user}
 	</td>
 
 	<td>
-	<% document.getTests().each { test -> %>
+	<% document.getTestMentions().each { test -> %>
 	        <span onClick=doMentionSelected(this,${document.getSofaDocumentId()}) class="mention-type-test table-mention">${test.getMentionText()}</span>
 	    <% } %>    
 	</td>
@@ -254,13 +254,13 @@ var userId = ${user}
 	</td>
 
 	<td>
-	<% document.getProblems().each { problem -> %>
+	<% document.getProblemMentions().each { problem -> %>
 	        <span onClick=doMentionSelected(this,${document.getSofaDocumentId()}) class="mention-type-problem table-mention">${problem.getMentionText()}</span>
 	    <% } %>
-	<% document.getTests().each { test -> %>
+	<% document.getTestMentions().each { test -> %>
 	        <span onClick=doMentionSelected(this,${document.getSofaDocumentId()}) class="mention-type-test table-mention">${test.getMentionText()}</span>
 	    <% } %> 
-	<% document.getTreatments().each { treatment -> %>
+	<% document.getTreatmentMentions().each { treatment -> %>
 	        <span onClick=doMentionSelected(this,${document.getSofaDocumentId()}) class="mention-type-treatment table-mention">${treatment.getMentionText()}</span>
 	    <% } %> 
 	

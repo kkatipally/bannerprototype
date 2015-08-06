@@ -52,7 +52,7 @@ public class VisitNoteAdvice implements MethodBeforeAdvice {
 					
 					SofaDocument sofaDocument = dt.tagDocument(sofa);
 					sofaDocument.setPatient(p);
-		
+					//sofaDocument.setEncounter((Encounter)args[0]);
 					Context.getService(NLPService.class).saveSofaDocument(sofaDocument);
 				}
 			}

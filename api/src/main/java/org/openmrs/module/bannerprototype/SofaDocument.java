@@ -12,6 +12,15 @@ import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.Encounter;
 import org.openmrs.Patient;
 
+/**
+ * This Class is the root of the SofaDocument data hierarchy.  This is the main data structure for the
+ * NER analysis carried out by this module.  The hierarchy contains all text, sentences, annotations and concepts
+ * for a tagged document.
+ * 
+ * Refer to the Developer's guide for more details on the data model.
+ * @author ryaneshleman
+ *
+ */
 public class SofaDocument extends BaseOpenmrsObject implements Serializable {
 	private int sofaDocumentId;
 	private Encounter encounter;
@@ -22,15 +31,20 @@ public class SofaDocument extends BaseOpenmrsObject implements Serializable {
 	private String uuid;
 	private Set<SofaText> sofaText = new HashSet<SofaText>();
 	
+	/**
+	 * Default constructor
+	 */
 	public SofaDocument()
 	{
 		setDateCreated(new Date());
 	}
-	
+	/**
+	 * This method is required to implement BaseOpenmrsObject, it returns the sofaDocumentId value
+	 */
 	@Override
 	public Integer getId() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return sofaDocumentId;
 	}
 
 	@Override
@@ -40,12 +54,18 @@ public class SofaDocument extends BaseOpenmrsObject implements Serializable {
 	}
 
 	/**
+	 * sofaDocumentId is a unique identifier for the SofaDocument
 	 * @return the sofaDocumentId
 	 */
 	public int getSofaDocumentId() {
 		return sofaDocumentId;
 	}
 	
+	/**
+	 * add a SofaText object to the set of SofaText objects for this SofaDocument
+	 * @param sofaText
+	 * @return
+	 */
 	public SofaText addSofaText(SofaText sofaText)
 	{
 		this.sofaText.add(sofaText);
@@ -60,6 +80,7 @@ public class SofaDocument extends BaseOpenmrsObject implements Serializable {
 	}
 
 	/**
+	 * Visit Notes are saved via the EncounterService.saveEncounter() method, the encounter field records the associated encounter. 
 	 * @return the encounter
 	 */
 	public Encounter getEncounter() {
@@ -74,6 +95,7 @@ public class SofaDocument extends BaseOpenmrsObject implements Serializable {
 	}
 
 	/**
+	 * Get the text of the SofaDocument.
 	 * @return the text
 	 */
 	public String getText() {
@@ -116,12 +138,13 @@ public class SofaDocument extends BaseOpenmrsObject implements Serializable {
 	}
 
 	/**
+	 * Helper method to generate HTML for controller.  This method will be moved to the controller class in the
 	 * @return the annotatedHTML
 	 */
 	public String getAnnotatedHTML() {
 		return generateAnnotatedHTML();
 	}
-
+	
 	private String generateAnnotatedHTML() {
 		StringBuffer out = new StringBuffer();
 		
@@ -150,8 +173,13 @@ public class SofaDocument extends BaseOpenmrsObject implements Serializable {
 	public void setPatient(Patient patient) {
 		this.patient = patient;
 	}
-
-	public List<SofaTextMention> getProblems()
+	
+	/**
+	 * Returns all of the SofaTextMention objects with type 'problem' found in all the SofaText objects
+	 * for this SofaDocument
+	 * @return
+	 */
+	public List<SofaTextMention> getProblemMentions()
 	{
 		List<SofaTextMention> problems = new ArrayList<SofaTextMention>();
 		
@@ -163,7 +191,12 @@ public class SofaDocument extends BaseOpenmrsObject implements Serializable {
 		return problems;
 				
 	}
-	public List<SofaTextMention> getTests()
+	/**
+	 * Returns all of the SofaTextMention objects with type 'test' found in all the SofaText objects
+	 * for this SofaDocument
+	 * @return
+	 */
+	public List<SofaTextMention> getTestMentions()
 	{
 		List<SofaTextMention> tests = new ArrayList<SofaTextMention>();
 		
@@ -174,7 +207,12 @@ public class SofaDocument extends BaseOpenmrsObject implements Serializable {
 		
 		return tests;
 	}
-	public List<SofaTextMention> getTreatments()
+	/**
+	 * Returns all of the SofaTextMention objects with type 'treatment' found in all the SofaText objects
+	 * for this SofaDocument
+	 * @return
+	 */
+	public List<SofaTextMention> getTreatmentMentions()
 	{
 		List<SofaTextMention> treatments = new ArrayList<SofaTextMention>();
 		
@@ -184,6 +222,19 @@ public class SofaDocument extends BaseOpenmrsObject implements Serializable {
 		}
 		
 		return treatments;
+	}
+	/**
+	 * Returns all of the SofaTextMention objects found in all the SofaText objects
+	 * for this SofaDocument
+	 * @return
+	 */
+	public List<SofaTextMention> getAllMentions() {
+		List<SofaTextMention> mentions = new ArrayList<SofaTextMention>();
+		
+		mentions.addAll(getTreatmentMentions());
+		mentions.addAll(getTestMentions());
+		mentions.addAll(getProblemMentions());
+		return mentions;
 	}
 
 }
