@@ -9,22 +9,22 @@ var docDate = "";
 
 
 function updateDocumentFragmentHTML(docId) {
-        jq.getJSON('${ ui.actionLink("getHTML") }',
-            {
-              'docId': docId
-            })
-        .success(function(data) {
+    var request = jq.ajax({
+    dataType: "json",
+    url: '${ ui.actionLink("getHTML") }',
+    data: {'docId': docId},
+    success: function(data) {
             jq('#doc-viewer').html(data);
             var mention = getSelectedMentionCookie();
-			highlightSelectedMention(mention);
-			var mention_text = mention.split("-")[0].replace("@","-");
-			var scroll =  jq(findSpan(mention_text)).position().top+ jq(".doc-viewer").scrollTop() - 100
-			//console.log(scroll)
+            highlightSelectedMention(mention);
+            var mention_text = mention.split("-")[0].replace("@","-");
+            var scroll =  jq(findSpan(mention_text)).position().top+ jq(".doc-viewer").scrollTop() - 100
+            
             jq('.doc-viewer').animate({
-        		scrollTop: scroll
-    			}, 1000);
-    		updateMailto();
-            })
+                scrollTop: scroll
+                }, 1000);
+            updateMailto();
+            
             
             jq.getJSON('${ ui.actionLink("getDate") }',
             {
@@ -34,6 +34,43 @@ function updateDocumentFragmentHTML(docId) {
             docDate = data;
             updateMailto();
             })
+            },
+    timeout: 2000
+})
+        
+        
+        
+        /*
+        jq.getJSON('${ ui.actionLink("getHTML") }',
+            {
+              'docId': docId
+            })
+        
+        .success(function(data) {
+            jq('#doc-viewer').html(data);
+            var mention = getSelectedMentionCookie();
+			highlightSelectedMention(mention);
+			var mention_text = mention.split("-")[0].replace("@","-");
+			var scroll =  jq(findSpan(mention_text)).position().top+ jq(".doc-viewer").scrollTop() - 100
+			
+            jq('.doc-viewer').animate({
+        		scrollTop: scroll
+    			}, 1000);
+    		updateMailto();
+            
+            
+            jq.getJSON('${ ui.actionLink("getDate") }',
+            {
+              'docId': docId
+            })
+        .success(function(data) {
+            docDate = data;
+            updateMailto();
+            })
+            })
+            
+            
+        */    
         }
         
 function findSpan(mention_text)

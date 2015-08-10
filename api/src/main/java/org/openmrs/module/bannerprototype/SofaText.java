@@ -229,12 +229,13 @@ public class SofaText extends BaseOpenmrsObject implements Serializable,Comparab
 		for(SofaTextMention m : sofaTextMention)
 		{
 			tagged = wrapInMentionTypeTag(m.getMentionText(),m.getMentionType());
+			//System.out.println(tagged);
 			
 			if(!m.getSofaTextMentionConcept().isEmpty())
 				tagged = wrapInConceptTag(tagged,m);
 			
 			html = html.replace(m.getMentionText(), tagged);
-			html = html.replaceAll("\\n", "<br/>");
+			//html = html.replaceAll("\\n", "<br/>");
 		}
 		return html;
 	}

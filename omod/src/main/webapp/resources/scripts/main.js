@@ -1,9 +1,17 @@
 
-//var userId = ${user.getId()}
 
 jq = jQuery;
- jq(function() { 
 
+ // setup function
+ jq(function() { 
+	 
+	 // set global variables
+	 currentDoc = "";
+	 conceptTab = "all";
+	 searchVal = "";
+	 curMention = "";
+	 
+	  // initialize data tables
       jq('#problems-table').dataTable({
             "sPaginationType": "full_numbers",
             "bPaginate": true,
@@ -37,22 +45,6 @@ jq = jQuery;
             "bJQueryUI": true
         });
         
-        var c = getConceptTabCookie();
-        setConceptTab(c)
-		
-		
-		var searchCookie = getsearchCookie();
-		setSearchVals(searchCookie)
-		changeConceptTypeTab(c);
-		
-		var mention = getSelectedMentionCookie();
-		highlightSelectedMention(mention)
-	
-		updateDocumentColors(c);
-		
-		
-		var doc = getSelectedDocumentCookie();
-		highlightDocument(doc);
 		
 		// set keyup event binding for search box
 		jq(".dataTables_filter input").keyup(searchKeyUp)
@@ -60,18 +52,19 @@ jq = jQuery;
 		refreshSearchBreadCrumb()
 		i2.emph();
 		
+		// without this, word-cloud coloring disappears
+		// there is probably a more elegant css-oriented way to solve this
 		jq("span.mention-type-problem").css({"color": "rgb(190, 53, 90)"})
 		jq("span.mention-type-test").css({"color": "rgb(17, 76, 126)"})
 		jq("span.mention-type-treatment").css({"color": "rgb(33, 119, 67)"})
 
-
-
-
-		
-		
-               
+      
 });
-
+ 
+/*
+ * function changes tabs in the Visit Notes and Entity List
+ * it is passed a string matching a key in the conMap dict, corresponding tab is rendered. 
+ */
 function setConceptTab(c){
 	var conMap = {"problem":0,
 	              "treatment":1,
@@ -111,39 +104,42 @@ function doWordCloudMentionSelected(obj)
 	
 	doMentionSelected(obj, -1)
 }
-
 function doMentionSelected(obj,docId){
 	
-	var queryString = window.location.href.slice(window.location.href.indexOf('?'))
-	var docIndex = queryString.indexOf("&docId")
-	if(docIndex != -1)
-		queryString =  queryString.substring(0,docIndex)
+	//var queryString = window.location.href.slice(window.location.href.indexOf('?'))
+	//var docIndex = queryString.indexOf("&docId")
+	//if(docIndex != -1)
+	//	queryString =  queryString.substring(0,docIndex)
 	
-	
-	var selectedMention = obj.innerHTML.replace("-","@")
-	//console.log("before setSelectedMentionCookie")
+	console.log(docId)
+	var selectedMention = obj.innerHTML.replace("-","@")//.replace("\n"," ")
+	console.log("before setSelectedMentionCookie")
 	setSelectedMentionCookie(selectedMention)
-	//console.log("before addSearchBreadCrumb")
+	console.log("before addSearchBreadCrumb")
 	addSearchBreadCrumb(selectedMention,docId)
 	
-	//console.log("before getSearchVal")
+	console.log("before getSearchVal")
 	var searchVal = getSearchVal();
-	//console.log("before setSearchCookie")
+	console.log("before setSearchCookie")
 	setSearchCookie(searchVal)
 	
-	//console.log("before setSelectedDocumentCookie")
-	setSelectedDocumentCookie(docId)
-	
+	console.log("before setSelectedDocumentCookie")	
 	//window.location="/openmrs/bannerprototype/notesNLP.page"+queryString+"&docId="+docId;
-	if(docId != -1)
+	console.log(currentDoc)
+	console.log(docId)
+	if(docId != -1 && docId != currentDoc)
 	{
 		updateDocumentFragmentHTML(docId);
-		highlightDocument(docId)
+		highlightDocument(docId);
+		currentDoc = docId;
 	}
 	console.log("before getSelectedMentionCookie")
 	var mention = getSelectedMentionCookie();
+	console.log(mention)
 	console.log("before highlightSelectedMention")
 	highlightSelectedMention(mention)
+
+			
 	console.log("ok!")
 }
 
@@ -212,10 +208,10 @@ function highlightSelectedMention(mention){
 	//console.log("1")
 	clearMentionHighlights()
 	//console.log("2")
-    if(getConceptTabCookie() != split[1])
-    {
-        return false
-    }
+    //if(getConceptTabCookie() != split[1])
+    //{
+    //    return false
+    //}
    
     //console.log("3")
     var mentionSpans = jq(".doc-viewer span");
@@ -331,7 +327,7 @@ function searchKeyUp(event){
 	if (event.which == 13 || event.keyCode == 13) {
 		addSearchBreadCrumb(searchVal)        
 
-        return
+        return;
     }
 
 	
@@ -427,55 +423,65 @@ function setBreadCrumbCookie(crumb){
 
 
 function setSelectedDocumentCookie(docId){
+	currentDoc = docId
     document.cookie = "doc-" + userId + "="+escape(docId);
 }
 
 
 function getSelectedDocumentCookie() {
-    var cookies = document.cookie.match('doc-' + userId + '=(.*?)(;|\$)');
-    if (cookies) {
-        return unescape(cookies[1]);
-    }
-    return "";
+    //var cookies = document.cookie.match('doc-' + userId + '=(.*?)(;|\$)');
+    //if (cookies) {
+    //    return unescape(cookies[1]);
+   // }
+    //return "";
+	
+	return currentDoc
 }
 
 function setSelectedMentionCookie(text){
-    document.cookie = "mention-"+ userId + "="+escape(text+"-"+getConceptTabCookie());
+	curMention = text+"-"+getConceptTabCookie()
+    //document.cookie = "mention-"+ userId + "="+escape(text+"-"+getConceptTabCookie());
 }
 
 function getSelectedMentionCookie() {
-    var cookies = document.cookie.match('mention-' + userId + '=(.*?)(;|\$)');
-    if (cookies) {
-        return unescape(cookies[1]);
-    }
-    return "";
+    //var cookies = document.cookie.match('mention-' + userId + '=(.*?)(;|\$)');
+    //if (cookies) {
+    //    return unescape(cookies[1]);
+    //}
+    //return "";
+	
+	return curMention;
 }
 
 
-function setSearchCookie(searchVal) {
-    document.cookie = "search-" + userId + "="+escape(searchVal);
+function setSearchCookie(searchValue) {
+	searchVal = searchValue
+    //document.cookie = "search-" + userId + "="+escape(searchVal);
 }
 
 function getsearchCookie() {
-    var cookies = document.cookie.match('search-' + userId + '=(.*?)(;|\$)');
-    if (cookies) {
-        return unescape(cookies[1]);
-    }
-    return "";
+    //var cookies = document.cookie.match('search-' + userId + '=(.*?)(;|\$)');
+    //if (cookies) {
+    //    return unescape(cookies[1]);
+    //}
+    //return "";
+	return searchVal;
 }
 
 
 function setConceptTabCookie(tabType) {
-    document.cookie = "conceptTab-" + userId + "="+escape(tabType);
+	conceptTab = tabType;
+    //document.cookie = "conceptTab-" + userId + "="+escape(tabType);
 }
 
 
 function getConceptTabCookie() {
-    var cookies = document.cookie.match('conceptTab-' + userId + '=(.*?)(;|\$)');
-    if (cookies) {
-        return unescape(cookies[1]);
-    }
-    return null;
+    //var cookies = document.cookie.match('conceptTab-' + userId + '=(.*?)(;|\$)');
+    //if (cookies) {
+    //   return unescape(cookies[1]);
+    //}
+    //return null;
+	return conceptTab
 }
 
 function updateMailto()

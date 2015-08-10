@@ -113,11 +113,20 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 	 */
 	public SofaDocument getSofaDocumentById(int sofaDocumentId)
 	{
-		Session session = sessionFactory.openSession();
-		SofaDocument sofaDocument = (SofaDocument) session.get(SofaDocument.class, sofaDocumentId);
+		System.out.println("in getSofaDocument");
+		//Session session = sessionFactory.openSession();
+		
+		//SofaDocument sofaDocument = (SofaDocument) session.get(SofaDocument.class, sofaDocumentId);
+		Criteria crit = sessionFactory.getCurrentSession().createCriteria(
+                SofaDocument.class);
+        crit.add(Restrictions.eq("sofaDocumentId", sofaDocumentId));
+		SofaDocument sofaDocument = (SofaDocument) crit.uniqueResult();
+        
+        
 		Hibernate.initialize(sofaDocument);
+		//session.close();
 
-
+		System.out.println("leaving getSofaDocument");
 		return sofaDocument;
 	}
 	
