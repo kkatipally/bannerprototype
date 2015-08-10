@@ -58,6 +58,7 @@ jq = jQuery;
 		jq("span.mention-type-test").css({"color": "rgb(17, 76, 126)"})
 		jq("span.mention-type-treatment").css({"color": "rgb(33, 119, 67)"})
 
+		setConceptTab("all")
       
 });
  
@@ -75,30 +76,30 @@ function setConceptTab(c){
   	active: conMap[c]
 	});
 }
-
+/*
+ * changes Concept Type tab, updates document rendering to show only entities of that type 
+ */
 function changeConceptTypeTab(cType) {
 	
-	setConceptTabCookie(cType)
-	
-	var searchVal = getSearchVal();
-	setSearchCookie(searchVal)
+	conceptTab = cType
+
 	setSearchVals(searchVal);
 	
 	updateDocumentColors(cType)
 	
 	updateTableStyle()
-	setConceptTabCookie(cType)
+
     highlightSelectedMention(getSelectedMentionCookie())
-    
-    
-	//updateKey(cType);
+
 	return false;
 }
-
+/*
+ * 
+ */
 function doWordCloudMentionSelected(obj)
 {
 	var selectedMention = obj.innerHTML
-	setSelectedMentionCookie(selectedMention)
+
 	setSearchVals(selectedMention)
 	setConceptTab(getClassFromElement(obj));
 	
@@ -106,43 +107,27 @@ function doWordCloudMentionSelected(obj)
 }
 function doMentionSelected(obj,docId){
 	
-	//var queryString = window.location.href.slice(window.location.href.indexOf('?'))
-	//var docIndex = queryString.indexOf("&docId")
-	//if(docIndex != -1)
-	//	queryString =  queryString.substring(0,docIndex)
-	
-	console.log(docId)
-	var selectedMention = obj.innerHTML.replace("-","@")//.replace("\n"," ")
-	console.log("before setSelectedMentionCookie")
-	setSelectedMentionCookie(selectedMention)
-	console.log("before addSearchBreadCrumb")
+	var selectedMention = obj.innerHTML.replace("-","@")
+
+	curMention = selectedMention
+
 	addSearchBreadCrumb(selectedMention,docId)
 	
-	console.log("before getSearchVal")
-	var searchVal = getSearchVal();
-	console.log("before setSearchCookie")
-	setSearchCookie(searchVal)
-	
-	console.log("before setSelectedDocumentCookie")	
-	//window.location="/openmrs/bannerprototype/notesNLP.page"+queryString+"&docId="+docId;
-	console.log(currentDoc)
-	console.log(docId)
+	//docID == -1 if mention selected from Word Cloud
+	//update Visit Note Rendering
 	if(docId != -1 && docId != currentDoc)
 	{
 		updateDocumentFragmentHTML(docId);
 		highlightDocument(docId);
 		currentDoc = docId;
 	}
-	console.log("before getSelectedMentionCookie")
-	var mention = getSelectedMentionCookie();
-	console.log(mention)
-	console.log("before highlightSelectedMention")
-	highlightSelectedMention(mention)
 
-			
-	console.log("ok!")
+	highlightSelectedMention(curMention)
+
 }
 
+
+// returns entity class
 function getClassFromElement(obj)
 {
 	var classList =jq(obj).attr('class').split(" ")
@@ -156,15 +141,17 @@ function getClassFromElement(obj)
 
 }
 
-
+// returns text in search box of data tables.  
+// this is complicated by the fact that there are 4 of them, 3 hidden at any 1 time.
 function getSearchVal()
 {
-	var currentCookie = getsearchCookie();
+
 
 	
 	var searchInputs = jq(".dataTables_filter input");
 	var allBlank = true;
 	
+	// check if they are blank
 	for(i = 0; i<searchInputs.length; i++)
 	{
 		if (searchInputs[i].value != "" ){
@@ -177,65 +164,54 @@ function getSearchVal()
 	
 	for(i = 0; i<searchInputs.length; i++)
 	{
-		if (searchInputs[i].value != currentCookie){
+		if (searchInputs[i].value != searchVal){
 			return searchInputs[i].value;
 		}
 	}
 
-	return currentCookie;
+	return searchVal;
 	
 }
 
-
+// sets the text of the search boxes to the input text
+// then triggers a keyup event to make datatables perform search
 function setSearchVals(text){
 	var searchInputs = jq(".dataTables_filter input");
-	inputstmp = searchInputs
-	//alert(searchInputs)
 
 	for(i = 0; i<searchInputs.length; i++)
 	{	
-		
-		
 		searchInputs[i].value = text;
 	}
 	var e = jq.Event("keyup");
 	jq(searchInputs).trigger(e)
 }
 
+// finds mentions matching the input, highlights them on the screen
 function highlightSelectedMention(mention){
     var split = mention.split("-")
     mention = split[0].replace("@","-")
-	//console.log("1")
+
 	clearMentionHighlights()
-	//console.log("2")
-    //if(getConceptTabCookie() != split[1])
-    //{
-    //    return false
-    //}
-   
-    //console.log("3")
+
     var mentionSpans = jq(".doc-viewer span");
-    //console.log("4")
+
     mentionSpans = mentionSpans.add(jq(".table-mention"))
-    //console.log("5")
+
 	
 	for(i = 0; i < mentionSpans.length; i++)
 	{
-		//console.log(i)
 		if(mentionSpans[i].innerHTML == mention)
 		{	
-			//console.log("!")
 			jq(mentionSpans[i]).addClass("highlighted-mention") 
-			//console.log("!!")
 		}	
 			
 	}
-    
-    //console.log("6")
-    return false;
+
 	
 }
-
+/*
+ * clears the highlights on mentions
+ */
 function clearMentionHighlights()
 {
     var mentionSpans = jq(".doc-viewer span");
@@ -297,22 +273,25 @@ function updateDocumentColors(c)
 			
 }
 
+/*
+ * datatables css overrides page css, so resetting css is necessary
+ */
 function updateTableStyle(){
 	jq("#conceptTabs tbody td").css("background-color","rgb(245, 242, 242)");
 	jq("#conceptTabs table").css("background-color","rgb(200, 200, 200)");
-	
-	var doc = getSelectedDocumentCookie();
-	highlightDocument(doc);
+
+	highlightDocument(currentDoc);
 	
 }
 
 function doDocumentSelected(docId){
-	var queryString = window.location.href.slice(window.location.href.indexOf('?'))
-	var searchVal = getSearchVal();
-	setSearchCookie(searchVal)
 	
-	setSelectedDocumentCookie(docId)
-	updateDocumentFragmentHTML(docId);
+	//var queryString = window.location.href.slice(window.location.href.indexOf('?'))
+	searchVal = getSearchVal();
+	//setSearchCookie(searchVal)
+	currentDoc = docId;
+	//setSelectedDocumentCookie(docId)
+	updateDocumentFragmentHTML(docId)
 	highlightDocument(docId);
 	
 	

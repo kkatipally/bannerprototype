@@ -14,18 +14,28 @@ function updateDocumentFragmentHTML(docId) {
     url: '${ ui.actionLink("getHTML") }',
     data: {'docId': docId},
     success: function(data) {
+    		console.log("1")
             jq('#doc-viewer').html(data);
+            console.log("2")
             var mention = getSelectedMentionCookie();
+            console.log("3")
             highlightSelectedMention(mention);
+            console.log("4")
             var mention_text = mention.split("-")[0].replace("@","-");
-            var scroll =  jq(findSpan(mention_text)).position().top+ jq(".doc-viewer").scrollTop() - 100
+            console.log("5")
             
-            jq('.doc-viewer').animate({
-                scrollTop: scroll
-                }, 1000);
+            if(span != null)
+			{
+				var scroll =  jq(findSpan(mention_text)).position().top+ jq(".doc-viewer").scrollTop() - 100
+			
+            	jq('.doc-viewer').animate({
+        			scrollTop: scroll
+    				}, 1000);
+    		}
+    		
             updateMailto();
             
-            
+            console.log("1")
             jq.getJSON('${ ui.actionLink("getDate") }',
             {
               'docId': docId
@@ -51,11 +61,15 @@ function updateDocumentFragmentHTML(docId) {
             var mention = getSelectedMentionCookie();
 			highlightSelectedMention(mention);
 			var mention_text = mention.split("-")[0].replace("@","-");
-			var scroll =  jq(findSpan(mention_text)).position().top+ jq(".doc-viewer").scrollTop() - 100
+			var span = findSpan(mention_text)
+			if(span != null)
+			{
+				var scroll =  jq(findSpan(mention_text)).position().top+ jq(".doc-viewer").scrollTop() - 100
 			
-            jq('.doc-viewer').animate({
-        		scrollTop: scroll
-    			}, 1000);
+            	jq('.doc-viewer').animate({
+        			scrollTop: scroll
+    				}, 1000);
+    		}
     		updateMailto();
             
             
@@ -82,6 +96,7 @@ function findSpan(mention_text)
 		if(jq(spans[index]).text() == mention_text)
 			return spans[index];
 	}
+	return null
 }
 
 </script>
