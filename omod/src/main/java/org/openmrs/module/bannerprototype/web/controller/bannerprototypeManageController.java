@@ -93,7 +93,6 @@ public class  bannerprototypeManageController {
 	List<SofaDocument> allSofaDocuments;
 	int sofaDocumentId=0;
 	
-	//protected final Log log = LogFactory.getLog(getClass());
 	String sofa = "";
 	
 	public bannerprototypeManageController(){
@@ -157,48 +156,7 @@ public class  bannerprototypeManageController {
 		model.addAttribute("bannerprototype",new bannerprototype());
 		model.addAttribute("sofa",sofa);
 	}
-	
-	@RequestMapping(value = "/module/bannerprototype/analyze", method = RequestMethod.POST)
-	public ModelAndView bannerpost(HttpServletRequest request,
-            @ModelAttribute("bannerprototype") bannerprototype bannerprototype, BindingResult ntErrors)
-    {        
-           
-			int patientID = Integer.parseInt(request.getParameter("patientID"));
-			sofa = request.getParameter("text");
-			
-			
-			DocumentTagger dt = new DocumentTagger();
-			sofaDocument = dt.tagDocument(sofa);
-			sofaDocument.setPatient(Context.getPatientService().getPatientIdentifier(patientID).getPatient());
-    		
-    		Context.getService(NLPService.class).saveSofaDocument(sofaDocument);
 
-
-            return new ModelAndView("redirect:/module/bannerprototype/banner.form");
-    }
-	
-	/**
-	 * ReST endpoint
-	 * @param docId
-	 * @return
-	 */
-	@Transactional
-	@RequestMapping(value = "/module/bannerprototype/choose", method = RequestMethod.GET)
-	public @ResponseBody String bannerchoosedocument(@RequestParam(value="docId", defaultValue="1") String docId)
-    {        
-			//System.out.println(request.getParameter("document"));
-			int sofaDocumentId = Integer.parseInt(docId);
-
-			
-			for(SofaDocument sd : allSofaDocuments)
-				if(sd.getSofaDocumentId() == sofaDocumentId)
-				{	
-					sofaDocument = Context.getService(NLPService.class).getSofaDocumentById(sofaDocumentId);
-					break;
-				}
-            return sofaDocument.getAnnotatedHTML();
-    }
-	
     
 	@RequestMapping(value = "/module/bannerprototype/upload", method = RequestMethod.POST)
     public @ResponseBody String handleFileUpload(@RequestParam("name") String name,
@@ -233,9 +191,7 @@ public class  bannerprototypeManageController {
 	
 	@RequestMapping(value = "/module/bannerprototype/reanalyze", method = RequestMethod.POST)
     public @ResponseBody String handleReanalyzeCorpus() throws IOException{
-        System.out.println("in ReanalyzeCorpus");
-        
-        
+
         runReanalysis();
         
 		return "Analysis Complete!";
@@ -244,24 +200,25 @@ public class  bannerprototypeManageController {
 	
 	
 	private void runReanalysis() {
-		   //System.out.println("1");
+
 		   DocumentTagger dt = new DocumentTagger();
-		   //System.out.println("2");
+
 		   List<Concept> concepts = new ArrayList<Concept>();
-		   //System.out.println("3");
+
 		   concepts.add(Context.getConceptService().getConceptByName("Text of encounter note"));
-		   //System.out.println("4");
-		   Context.getService(NLPService.class).truncateNLPtables();
-		   //System.out.println("5");
 		   
+		   //this deletes all current SofaDocument and related objects
+		   Context.getService(NLPService.class).truncateNLPtables();
+
 		   
 		   System.out.println("Running Analysis");
+		   
+		   //get observations that represent Visit Notes
 		   List<Obs> obs =  Context.getObsService().getObservations(null, null, concepts,null, null, null, null, null, null, null, null, false);
-		   //System.out.println(obs.size());
+
 		   for(Obs o : obs)
 		   {   
 			   SofaDocument sd = dt.tagDocument(o.getValueText());
-			   System.out.println(o.getId());
 			   sd.setPatient((Patient) o.getPerson());
 			   Context.getService(NLPService.class).saveSofaDocument(sd);
 			   
@@ -310,7 +267,9 @@ public class  bannerprototypeManageController {
 	}
 	
 	
-	
+	/**
+	 * this URL is used to send data from OpenMRS to the Training application
+	 */
 	@RequestMapping(value = "/module/bannerprototype/transport", method = RequestMethod.GET)
 	public @ResponseBody String bannerDataDump() throws JsonGenerationException, JsonMappingException, IOException
     {        
@@ -326,7 +285,10 @@ public class  bannerprototypeManageController {
 
 			ObjectMapper mapper = new ObjectMapper();
 			
+			//translate Java objects to JSON objects for transport
 			String out = mapper.writeValueAsString(transports);
+			
+			//per jsonp protocol, must wrap in callback function call.
 			out = "sendJsonData("+out+");";
 					
 			return out;

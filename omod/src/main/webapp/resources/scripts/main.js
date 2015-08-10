@@ -298,6 +298,9 @@ function doDocumentSelected(docId){
 	
 }
 
+/*
+ * highlights mentions that match current state of search box 
+ */
 function searchKeyUp(event){
 	
 	var searchVal = getSearchVal();
@@ -371,7 +374,8 @@ function doBreadCrumbClicked(crumb)
 	var mention = crumb_vals[0].replace("@","-")
 	
     setSearchVals(mention)
-    setSelectedMentionCookie(mention)
+    curMention = mention
+
     setConceptTab(crumb_vals[2])
     doDocumentSelected(crumb_vals[1])
     highlightSelectedMention(mention)
@@ -385,89 +389,13 @@ function clearSearchHistory()
 	refreshSearchBreadCrumb();
 }
 
-
-// ****************** COOKIE MANAGEMENT FUNCTIONS ****************************
-
-function getBreadCrumbCookie() {
-    var cookies = document.cookie.match('searchBreadCrumb-' + userId + '=(.*?)(;|\$)');
-    if (cookies) {
-        return unescape(cookies[1]);
-    }
-    return "";
-}
-
-function setBreadCrumbCookie(crumb){
-    document.cookie = "searchBreadCrumb-" + userId + "="+escape(crumb);
-}
-
-
-function setSelectedDocumentCookie(docId){
-	currentDoc = docId
-    document.cookie = "doc-" + userId + "="+escape(docId);
-}
-
-
-function getSelectedDocumentCookie() {
-    //var cookies = document.cookie.match('doc-' + userId + '=(.*?)(;|\$)');
-    //if (cookies) {
-    //    return unescape(cookies[1]);
-   // }
-    //return "";
-	
-	return currentDoc
-}
-
-function setSelectedMentionCookie(text){
-	curMention = text+"-"+getConceptTabCookie()
-    //document.cookie = "mention-"+ userId + "="+escape(text+"-"+getConceptTabCookie());
-}
-
-function getSelectedMentionCookie() {
-    //var cookies = document.cookie.match('mention-' + userId + '=(.*?)(;|\$)');
-    //if (cookies) {
-    //    return unescape(cookies[1]);
-    //}
-    //return "";
-	
-	return curMention;
-}
-
-
-function setSearchCookie(searchValue) {
-	searchVal = searchValue
-    //document.cookie = "search-" + userId + "="+escape(searchVal);
-}
-
-function getsearchCookie() {
-    //var cookies = document.cookie.match('search-' + userId + '=(.*?)(;|\$)');
-    //if (cookies) {
-    //    return unescape(cookies[1]);
-    //}
-    //return "";
-	return searchVal;
-}
-
-
-function setConceptTabCookie(tabType) {
-	conceptTab = tabType;
-    //document.cookie = "conceptTab-" + userId + "="+escape(tabType);
-}
-
-
-function getConceptTabCookie() {
-    //var cookies = document.cookie.match('conceptTab-' + userId + '=(.*?)(;|\$)');
-    //if (cookies) {
-    //   return unescape(cookies[1]);
-    //}
-    //return null;
-	return conceptTab
-}
-
+/*
+ * sets values for e-mail to administrator button
+ */
 function updateMailto()
 {
 	var docNum = getSelectedDocumentCookie();
-	//docDate
-	//patientMRN
+
 	
 	var email = adminEmail;
 	var subject = "Visit Notes Analysis Module Correction"
@@ -485,7 +413,67 @@ function updateMailto()
 	
 	jq("#report-problem a").attr("href",href)
 	
-	//<span id=report-problem>See a problem? 
-	//		<A HREF="mailto:ryaneshleman@gmail.com?subject=Visit Notes Analysis Module Correction&body=Just testing">E-mail the administrator</A>
-	//		</span>
+
 }
+
+
+// ****************** COOKIE and GLOBAL VARIABLE MANAGEMENT FUNCTIONS ****************************
+
+function getBreadCrumbCookie() {
+    var cookies = document.cookie.match('searchBreadCrumb-' + userId + '=(.*?)(;|\$)');
+    if (cookies) {
+        return unescape(cookies[1]);
+    }
+    return "";
+}
+
+function setBreadCrumbCookie(crumb){
+    document.cookie = "searchBreadCrumb-" + userId + "="+escape(crumb);
+}
+
+
+function setSelectedDocumentCookie(docId){
+	currentDoc = docId
+
+}
+
+
+function getSelectedDocumentCookie() {
+
+	
+	return currentDoc
+}
+
+function setSelectedMentionCookie(text){
+	curMention = text+"-"+getConceptTabCookie()
+
+}
+
+function getSelectedMentionCookie() {
+
+	return curMention;
+}
+
+
+function setSearchCookie(searchValue) {
+	searchVal = searchValue
+
+}
+
+function getsearchCookie() {
+
+	return searchVal;
+}
+
+
+function setConceptTabCookie(tabType) {
+	conceptTab = tabType;
+
+}
+
+
+function getConceptTabCookie() {
+
+	return conceptTab
+}
+

@@ -1,5 +1,10 @@
 package org.openmrs.module.bannerprototype.web.wordcloud;
 
+/**
+ * this class represents entities/frequencies for the Word Cloud
+ * @author ryaneshleman
+ *
+ */
 public class Word implements Comparable<Word> {
 	private String word;
 	private int count;
@@ -30,6 +35,9 @@ public class Word implements Comparable<Word> {
 		this.count++;	
 	}
 
+	/**
+	 * compareTo implemented to compare word counts, for sorting by frequency
+	 */
 	@Override
 	public int compareTo(Word w) {
 		if(w.getCount() < this.count)

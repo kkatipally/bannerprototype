@@ -36,6 +36,12 @@ public class DocumentViewerFragmentController {
         model.addAttribute("docDate",docDate );
     }
 	
+	/**
+	 * returns HTML for a given docID, this HTML has span elements around all mentions
+	 * @param docId
+	 * @param ui
+	 * @return
+	 */
 	public String getHTML(@RequestParam(value="docId", required=false) Integer docId, FragmentActionUiUtils ui) {
 			System.out.println("getting document"+docId);
 			SofaDocument sd = Context.getService(NLPService.class).getSofaDocumentById(docId);
@@ -45,6 +51,12 @@ public class DocumentViewerFragmentController {
 			return html;
 			}
 	
+	/**
+	 * returns date created field for a given docId
+	 * @param docId
+	 * @param ui
+	 * @return
+	 */
 	public String getDate(@RequestParam(value="docId", required=false) Integer docId, FragmentActionUiUtils ui)
 	{
 		System.out.println("date: docId: "+docId);

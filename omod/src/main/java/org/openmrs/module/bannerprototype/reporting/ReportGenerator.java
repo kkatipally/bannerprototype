@@ -19,7 +19,7 @@ public class ReportGenerator {
 	}
 	
 	/**
-	 * returns a hashmap of <mentionString,Frequency> values
+	 * returns a map of <mentionString,Frequency> values
 	 * 
 	 */
 	private Map<String,Integer> getEntityFrequencies()
@@ -30,14 +30,17 @@ public class ReportGenerator {
 		
 		for(SofaDocument sd : documents)
 		{
-			for(SofaTextMention stm : getMentions(sd))
+			for(SofaTextMention stm : sd.getAllMentions())
 			{
 				entry = String.format("%s&&%s",stm.getMentionText(),stm.getMentionType());
+				
+				// if entry in map, increment counter
 				if(entityFrequency.containsKey(entry))
 				{
 					tmp = entityFrequency.get(entry);
 					entityFrequency.put(entry,tmp + 1);
 				}
+				// if entry not in map, place in map, set counter to 1
 				else
 				{
 					entityFrequency.put(entry,1);
@@ -52,15 +55,19 @@ public class ReportGenerator {
 	public String generateAllNoteAndEntityReport()
 	{
 		StringBuilder out = new StringBuilder();
+		
+		//report header
 		out.append("patientID,DocID,date,entities&&types\n");
 		
 		for(SofaDocument sd : documents)
 		{
+			//append document info
 			out.append(String.format("%d,%d,%s,",sd.getPatient().getPatientId(),
 					                            sd.getSofaDocumentId(),
 					                            sd.getDateCreated().toString()));
 			
-			for(SofaTextMention stm : getMentions(sd))
+			//append mentions info
+			for(SofaTextMention stm : sd.getAllMentions())
 				out.append(String.format("%s&&%s|", stm.getMentionText(),stm.getMentionType()));
 			
 			out.deleteCharAt(out.length()-1);  // delete trailing |
@@ -81,22 +88,11 @@ public class ReportGenerator {
 		str.append("Entity,Type,Frequency\n");
 		
 		for(Entry<String, Integer> entry : entityFrequency.entrySet())
-		{
 			str.append(String.format("%s,%d\n", entry.getKey().replace("&&", ","),entry.getValue()));
-		}
 		
 		return str.toString();
 	}
 	
-	private List<SofaTextMention> getMentions(SofaDocument sd)
-	{
-		List<SofaTextMention> mentions = new ArrayList<SofaTextMention>();
-		for(SofaText st : sd.getSofaText())
-		{
-			mentions.addAll(st.getSofaTextMention());
-		}
-		return mentions;
-	}
 	
 	
 }
