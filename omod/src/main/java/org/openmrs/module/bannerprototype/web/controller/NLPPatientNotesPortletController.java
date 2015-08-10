@@ -1,28 +1,18 @@
 package org.openmrs.module.bannerprototype.web.controller;
 
-import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.bannerprototype.SofaDocument;
-import org.openmrs.module.bannerprototype.bannerprototype;
-import org.openmrs.module.bannerprototype.api.NLPService;
-import org.openmrs.module.bannerprototype.nlp.DocumentTagger;
-import org.openmrs.module.bannerprototype.nlp.NERTagger;
 
-import org.springframework.transaction.annotation.Transactional;
+import org.openmrs.module.bannerprototype.api.NLPService;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import banner.tokenization.Tokenizer;
@@ -72,8 +62,7 @@ public class NLPPatientNotesPortletController {
 		model.addAttribute("sofaDocument",sofaDocument);
 		model.addAttribute("allSofaDocuments",allSofaDocuments);
 		model.addAttribute("sofaDocumentId", sofaDocumentId);
-		model.addAttribute("bannerprototype",new bannerprototype());
-		model.addAttribute("sofa",sofa);
+
 		return new ModelAndView("/module/bannerprototype/portlets/nlpPatientNotes", model);
 	}
 	

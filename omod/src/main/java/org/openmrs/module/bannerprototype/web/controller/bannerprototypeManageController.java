@@ -41,7 +41,6 @@ import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.bannerprototype.SofaDocument;
 import org.openmrs.module.bannerprototype.SofaText;
-import org.openmrs.module.bannerprototype.bannerprototype;
 import org.openmrs.module.bannerprototype.api.NLPService;
 import org.openmrs.module.bannerprototype.nlp.ConceptClassTagger;
 import org.openmrs.module.bannerprototype.nlp.DocumentTagger;
@@ -153,7 +152,7 @@ public class  bannerprototypeManageController {
 		model.addAttribute("sofaDocument",sofaDocument);
 		model.addAttribute("allSofaDocuments",allSofaDocuments);
 		model.addAttribute("sofaDocumentId", sofaDocumentId);
-		model.addAttribute("bannerprototype",new bannerprototype());
+
 		model.addAttribute("sofa",sofa);
 	}
 
@@ -292,8 +291,6 @@ public class  bannerprototypeManageController {
 			out = "sendJsonData("+out+");";
 					
 			return out;
-			
-			
 			
     }
 	
