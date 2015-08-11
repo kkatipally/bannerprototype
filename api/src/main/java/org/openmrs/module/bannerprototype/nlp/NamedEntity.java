@@ -16,6 +16,11 @@ import org.openmrs.api.context.Context;
 
 import banner.tagging.Mention;
 
+/**
+ * These objects are used in an intermediary step in the tagging process.  holds identified mention info
+ * @author ryaneshleman
+ *
+ */
 public class NamedEntity implements Serializable {
 	private Mention mention;
 	private Set<Concept> conceptMatches;

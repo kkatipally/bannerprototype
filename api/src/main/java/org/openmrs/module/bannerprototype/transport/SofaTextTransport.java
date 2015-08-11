@@ -20,6 +20,11 @@ import org.openmrs.module.bannerprototype.nlp.DocumentTagger;
 
 import banner.tagging.Mention;
 
+/**
+ * transport object to send data from Module to Training application
+ * @author ryaneshleman
+ *
+ */
 public class SofaTextTransport  implements Serializable,Comparable {
 	private int sofaTextId;
 

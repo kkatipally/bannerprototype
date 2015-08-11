@@ -11,7 +11,11 @@ import org.openmrs.Concept;
 import org.openmrs.module.bannerprototype.SofaTextMention;
 
 import banner.tagging.Mention;
-
+/**
+ * data transport object to send data from OpenMRS to Training application
+ * @author ryaneshleman
+ *
+ */
 public class SofaTextMentionTransport implements Serializable {
 	private int sofaTextMentionId;
 	private SofaTextTransport sofaText;

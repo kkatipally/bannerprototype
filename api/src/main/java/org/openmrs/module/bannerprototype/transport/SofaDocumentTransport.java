@@ -15,6 +15,11 @@ import org.openmrs.Patient;
 import org.openmrs.module.bannerprototype.SofaDocument;
 import org.openmrs.module.bannerprototype.SofaText;
 
+/**
+ * transport object to send data from OpenMRS app to Training app
+ * @author ryaneshleman
+ *
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SofaDocumentTransport implements Serializable {
 	private int sofaDocumentId;

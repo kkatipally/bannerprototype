@@ -36,6 +36,9 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
         return sessionFactory;
     }
 	
+    /**
+     * save SofaDocument as well as all children in the data hierarchy
+     */
     public SofaDocument saveSofaDocument(SofaDocument sofaDocument)
     {
     	sessionFactory.getCurrentSession().flush();
@@ -46,6 +49,9 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
     	return sofaDocument;
     }
     
+    /**
+     * Save SofaText as well as all children SofaTextMention objects
+     */
 	@Override
 	public SofaText saveSofaText(SofaText sofaText) {
 		
@@ -54,9 +60,8 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 		
 		for(SofaTextMention stm : sofaText.getSofaTextMention())
 		{	
-			s.saveOrUpdate(stm);
-			for(SofaTextMentionConcept stmc : stm.getSofaTextMentionConcept())
-				s.saveOrUpdate(stmc);
+			saveSofaTextMention(stm);
+			
 		}
 		
 		return sofaText;
@@ -65,6 +70,12 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 	@Override
 	public SofaTextMention saveSofaTextMention(SofaTextMention sofaTextMention) {
 		sessionFactory.getCurrentSession().saveOrUpdate(sofaTextMention);
+		for(SofaTextMentionConcept stmc : sofaTextMention.getSofaTextMentionConcept())
+		{	
+			System.out.println("saving concept");
+			saveSofaTextMentionConcept(stmc);
+		}
+		
         return sofaTextMention;
 	}
 

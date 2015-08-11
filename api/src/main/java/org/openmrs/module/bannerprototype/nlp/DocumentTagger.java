@@ -7,6 +7,7 @@ import java.util.List;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.bannerprototype.SofaDocument;
 import org.openmrs.module.bannerprototype.SofaText;
+import org.openmrs.module.bannerprototype.SofaTextMention;
 /**
  * This class exposes the Named Entity Recognition functionality of the module.  
  * <p>
@@ -33,17 +34,20 @@ public class DocumentTagger implements Serializable {
 	
 	private void initialize(){
 		
+		//get the BANNER CRF tagger
 		this.tagger = new NERTagger();
 		
 		
 		ArrayList<String> problemClasses = new ArrayList<String>();
+		
+		//get OpenMRS problem concept classes from global properties
 		String problems[] =  Context.getAdministrationService()
 									.getGlobalProperty("bannerprototype.conceptClassMappingProblem")
 									.split(",");
 		for(String s : problems)
 			problemClasses.add(s);
 		
-		
+		//tests
 		ArrayList<String> testClasses = new ArrayList<String>();
 		String tests[] =  Context.getAdministrationService()
 									.getGlobalProperty("bannerprototype.conceptClassMappingTest")
@@ -51,6 +55,7 @@ public class DocumentTagger implements Serializable {
 		for(String s : tests)
 			testClasses.add(s);
 		
+		//treatment
 		ArrayList<String> treatmentClasses = new ArrayList<String>();
 		String treatments[] =  Context.getAdministrationService()
 									.getGlobalProperty("bannerprototype.conceptClassMappingTreatment")
@@ -58,6 +63,7 @@ public class DocumentTagger implements Serializable {
 		for(String s : treatments)
 			treatmentClasses.add(s);
 		
+		//initialize ConceptClassTagger objects
 		this.testClassTagger = new ConceptClassTagger(testClasses,"test");
 		this.problemClassTagger = new ConceptClassTagger(problemClasses,"problem");
 		this.treatmentClassTagger = new ConceptClassTagger(treatmentClasses,"treatment");
@@ -81,11 +87,12 @@ public class DocumentTagger implements Serializable {
 		SofaDocument sofaDocument = new SofaDocument();
 		sofaDocument.setText(document);
 		
-		
+		// iterate over sofaTexts and tag
 		for(SofaText st : sofaTexts)
 		{	
 			namedEntities = new ArrayList<NamedEntity>();
-			//namedEntities.addAll(tagger.tag(st.getText()));
+		
+			//tag text with ConceptClassTaggers first
 			namedEntities.addAll(testClassTagger.tag(st.getText()));
 			namedEntities.addAll(problemClassTagger.tag(st.getText()));
 			namedEntities.addAll(treatmentClassTagger.tag(st.getText()));
@@ -99,12 +106,18 @@ public class DocumentTagger implements Serializable {
 				st.addBannerMention(ne.getMention());
 			
 			st.setSofaDocument(sofaDocument);
+			
+			
 			sofaDocument.addSofaText(st);
 		}
 		
 		return sofaDocument;
 	}
-
+	/**
+	 * naively split sentences
+	 * @param document
+	 * @return
+	 */
 	private ArrayList<SofaText> splitSentences(String document) {
 		int prevPeriod = -1;
 		int nextPeriod = document.indexOf('.');

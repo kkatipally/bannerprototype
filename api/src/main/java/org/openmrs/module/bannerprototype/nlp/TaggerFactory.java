@@ -20,16 +20,15 @@ import com.sfsu.bannertrain.train.CRFTagger;
 
 public class TaggerFactory {
 	private static CRFTagger tagger = null;
-	//private static Log log = LogFactory.getLog(TaggerFactory.class);
+
 	private static String taggerName;
 	private static Tokenizer tokenizer = new WhitespaceTokenizer();
 
+	//  
 	public static CRFTagger getTagger()
 	{
 		
 		String taggerProp ="taggers/"+ Context.getAdministrationService().getGlobalProperty("bannerprototype.tagger");
-
-		//If no tagger has been initailized or tagger property has changed, initialize tagger
 		
 		tagger = (CRFTagger)deserialize(taggerProp);
 		
@@ -71,7 +70,9 @@ public class TaggerFactory {
 				FileInputStream fio = new FileInputStream(f);
 				InputStream buffer = new BufferedInputStream(fio);
 				ObjectInputStream ois = new ObjectInputStream (buffer);
-				return ois.readObject();
+				Object o = ois.readObject();
+				ois.close();
+				return o;
 				
 				
 			} catch (IOException e1) {

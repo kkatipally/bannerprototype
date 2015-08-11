@@ -19,7 +19,11 @@ import banner.tagging.MentionType;
 import banner.tokenization.Tokenizer;
 import banner.tokenization.WhitespaceTokenizer;
 
-
+/**
+ * this Class implements the Concept Dictionary class string matching
+ * @author ryaneshleman
+ *
+ */
 public class ConceptClassTagger implements Serializable {
 	
 	private List<Concept> concepts;
@@ -27,6 +31,12 @@ public class ConceptClassTagger implements Serializable {
 	private Tokenizer tokenizer;
 	private Map<Concept,ArrayList<String>> nameMap = new HashMap<Concept,ArrayList<String>>();
 	
+	/**
+	 * constructor is passed a list of OpenMRS concept classes and a mention class. 
+	 * it reads all concepts for each concept class and builds a list of concept names to map to mention-class
+	 * @param conceptClassStrs
+	 * @param mention_class
+	 */
 	public ConceptClassTagger(ArrayList<String> conceptClassStrs,String mention_class){
 
 		this.concepts = getConceptsByClass(conceptClassStrs);
@@ -51,19 +61,23 @@ public class ConceptClassTagger implements Serializable {
 		
 	}
 
-
+	/**
+	 * returns a list of all OpenMRS concepts that fall into one of the classes listed in the conceptClassStrs
+	 * 
+	 * @param conceptClassStrs list of OpenMRS concept classes
+	 * @return
+	 */
 	private List<Concept> getConceptsByClass(ArrayList<String> conceptClassStrs) {
-		//System.out.println("1");
+
 		ConceptService cs = Context.getConceptService();
-		//System.out.println("2");
+
 		List<ConceptClass> cses =  cs.getAllConceptClasses();
-		//System.out.println("ConceptClasses: "+cses.size());
+
 		
 		List<Concept> out = new ArrayList<Concept>();
 		
 		for(ConceptClass c_class : cses)
 		{
-			//System.out.println(c_class.getName());
 			if(conceptClassStrs.contains(c_class.getName()))
 				out.addAll(cs.getConceptsByClass(c_class));
 		}
@@ -85,11 +99,12 @@ public class ConceptClassTagger implements Serializable {
 		{
 			for(String name : nameMap.get(c))
 			{
-				//System.out.println(cn.getName());
+				
 				name = name.toLowerCase();
-				//this is a hack and needs to be cleaned up
-				if(lower_str.contains(" "+name+" "))
+				
+				if(lower_str.contains(" "+name))
 				{
+					
 					try{
 					Mention m = getMention(str,lower_str,name);
 					entities.add(new NamedEntity(m,c,name));
@@ -99,18 +114,25 @@ public class ConceptClassTagger implements Serializable {
 					}
 					
 				}
-				else
-					continue;
+				
 				
 			}	
 			
 		}
+
+		
 		
 		return entities;
 		
 	}
 
-
+	/**
+	 * constructs a mention from the provided arguments
+	 * @param str
+	 * @param lower_str
+	 * @param name
+	 * @return
+	 */
 	private Mention getMention(String str, String lower_str, String name) {
 		int token_index = 0;
 		int string_index = lower_str.indexOf(name);
@@ -120,10 +142,6 @@ public class ConceptClassTagger implements Serializable {
 			if(lower_str.charAt(i) ==' ')
 				token_index++;
 		
-		//System.out.println(token_index);
-		//System.out.println(str);
-		//System.out.println(name);
-		//System.out.println(num_tokens);
 		Sentence s = new Sentence(str);
 		tokenizer.tokenize(s);
 		

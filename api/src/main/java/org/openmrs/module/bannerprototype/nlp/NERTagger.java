@@ -14,15 +14,18 @@ import banner.tokenization.Tokenizer;
 import banner.tagging.Mention;
 import com.sfsu.bannertrain.train.CRFTagger;
 
+/**
+ * this is a wrapper class for the BANNER CRF tagger
+ * @author ryaneshleman
+ *
+ */
 public class NERTagger implements Serializable {
 	CRFTagger tagger;
 	String taggerName;
 	Tokenizer tokenizer;
 	ArrayList<Mention> mentions;
 	ArrayList<NamedEntity> namedEntities;
-	//ConceptService conceptService;
-	
-	
+
 	public NERTagger()
 	{
 		tagger = TaggerFactory.getTagger();
@@ -37,6 +40,7 @@ public class NERTagger implements Serializable {
 	
 	public ArrayList<NamedEntity> tag(String sofa)
 	{
+		// if the global configuration has changed since tagger was initialized
 		if(TaggerFactory.isNewtaggerRequired(taggerName))
 		{	
 			tagger = TaggerFactory.getTagger();
@@ -45,39 +49,30 @@ public class NERTagger implements Serializable {
 		
 		
 		namedEntities.clear();
-		//conceptService = Context.getConceptService();
+
 		List<Concept> matchedConcepts = new ArrayList<Concept>();
 		String mentionText;
 		
 		mentions.clear();
 		Sentence sentence = new Sentence(sofa);
 		tokenizer.tokenize(sentence);
-		System.out.println(taggerName);
-		tagger.tag(sentence);
 		
+		//perform CRF tagging
+		tagger.tag(sentence);
 		
 		mentions.addAll(sentence.getMentions());
 		
-		
+		//extract tags and construct NamedEntity objects
 		for(Mention m : mentions)
 		{
 			mentionText = m.getText();
-			mentionText = cleanText(mentionText);
-			//System.out.println(mentionText);
-			//matchedConcepts = conceptService.getConceptsByName(mentionText);
+
+
 			namedEntities.add(new NamedEntity(m,matchedConcepts));
 		}
 		
 		return namedEntities;
 		
 	}
-	
-	public String cleanText(String text)
-	{
-		if(text.endsWith("s"))
-			text = text.substring(0,text.lastIndexOf("s"));
-		
-		return text;
-		
-	}
+
 }
