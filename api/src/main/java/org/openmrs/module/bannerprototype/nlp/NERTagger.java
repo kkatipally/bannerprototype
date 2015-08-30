@@ -38,6 +38,13 @@ public class NERTagger implements Serializable {
 		
 	}
 	
+	/**
+	 * Executes the BANNER CRF tagging.
+	 * Takes a string as input and returns a list of NamedEntity objects found in the sentence.
+	 * 
+	 * @param sofa
+	 * @return
+	 */
 	public ArrayList<NamedEntity> tag(String sofa)
 	{
 		// if the global configuration has changed since tagger was initialized
@@ -51,7 +58,6 @@ public class NERTagger implements Serializable {
 		namedEntities.clear();
 
 		List<Concept> matchedConcepts = new ArrayList<Concept>();
-		String mentionText;
 		
 		mentions.clear();
 		Sentence sentence = new Sentence(sofa);
@@ -65,9 +71,6 @@ public class NERTagger implements Serializable {
 		//extract tags and construct NamedEntity objects
 		for(Mention m : mentions)
 		{
-			mentionText = m.getText();
-
-
 			namedEntities.add(new NamedEntity(m,matchedConcepts));
 		}
 		

@@ -114,7 +114,7 @@ public class DocumentTagger implements Serializable {
 		return sofaDocument;
 	}
 	/**
-	 * naively split sentences
+	 * naively split sentences on periods
 	 * @param document
 	 * @return
 	 */

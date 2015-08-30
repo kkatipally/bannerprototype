@@ -18,13 +18,21 @@ import banner.tokenization.Tokenizer;
 import banner.tokenization.WhitespaceTokenizer;
 import com.sfsu.bannertrain.train.CRFTagger;
 
+/**
+ * This class is used to instantiate the BANNER CRFTagger object.
+ * @author ryaneshleman
+ *
+ */
 public class TaggerFactory {
 	private static CRFTagger tagger = null;
 
 	private static String taggerName;
 	private static Tokenizer tokenizer = new WhitespaceTokenizer();
 
-	//  
+	/**
+	 * Instantiates and returns the BANNER CRFTagger
+	 * @return
+	 */
 	public static CRFTagger getTagger()
 	{
 		
@@ -41,6 +49,11 @@ public class TaggerFactory {
 		return tokenizer;
 	}
 	
+	/**
+	 * checks if the name of the current tagger matches the the global property.
+	 * @param tagger_name
+	 * @return
+	 */
 	public static boolean isNewtaggerRequired(String tagger_name)
 	{
 		String taggerProp ="taggers/"+ Context.getAdministrationService().getGlobalProperty("bannerprototype.tagger");
@@ -48,7 +61,11 @@ public class TaggerFactory {
 	}
 	
 	
-	
+	/**
+	 * deserializes an object with the given file name, finds the file name in the ClassPathResource class.
+	 * @param file_name
+	 * @return
+	 */
 	private static Object deserialize(String file_name)
 	{
 			
@@ -88,7 +105,6 @@ public class TaggerFactory {
 	}
 
 	public static String getTaggerName() {
-		// TODO Auto-generated method stub
 		return taggerName;
 	}
 }

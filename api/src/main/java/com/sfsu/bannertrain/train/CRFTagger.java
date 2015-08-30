@@ -4,6 +4,12 @@
  This software is provided under the terms of the Common Public License, version 1.0, as published by http://www.opensource.org.  For further information, see the file 'LICENSE.txt' included with this distribution.
  */
 
+/**
+ * This is a slightly modified version of the CRFTagger class distributed with the BANNER source code.  
+ * 
+ * It is unlikely that future OpenMRS developers will want to modify this file.  
+ * Changes will most likely be made to classes in the in the org.openmrs.module.bannerprototype.nlp package
+ */
 package com.sfsu.bannertrain.train;
 
 import java.io.File;
