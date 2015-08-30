@@ -219,6 +219,7 @@ public class  bannerprototypeManageController {
 		   {   
 			   SofaDocument sd = dt.tagDocument(o.getValueText());
 			   sd.setPatient((Patient) o.getPerson());
+			   sd.setDateCreated(o.getDateCreated());
 			   Context.getService(NLPService.class).saveSofaDocument(sd);
 			   
 		   }

@@ -29,9 +29,7 @@ public class DocumentViewerFragmentController {
 			html=d.getAnnotatedHTML();
 			
 		}
-		
-			
-		System.out.println("docId: "+docId);
+
         model.addAttribute("annotatedHTML", html);
         model.addAttribute("docDate",docDate );
     }
@@ -43,11 +41,16 @@ public class DocumentViewerFragmentController {
 	 * @return
 	 */
 	public String getHTML(@RequestParam(value="docId", required=false) Integer docId, FragmentActionUiUtils ui) {
-			System.out.println("getting document"+docId);
+			
+		    if(!Context.isAuthenticated())
+		    {
+		    	return "Not Authenticated";
+		    }
+		    
 			SofaDocument sd = Context.getService(NLPService.class).getSofaDocumentById(docId);
-			System.out.println("getting html"+docId);
+			
 			String html= sd.getAnnotatedHTML();
-			System.out.println("html docId: "+docId);
+			
 			return html;
 			}
 	
@@ -59,9 +62,9 @@ public class DocumentViewerFragmentController {
 	 */
 	public String getDate(@RequestParam(value="docId", required=false) Integer docId, FragmentActionUiUtils ui)
 	{
-		System.out.println("date: docId: "+docId);
+		
 		String out = Context.getService(NLPService.class).getSofaDocumentById(docId).getDateCreated().toString();
-		System.out.println("leaving getDate");
+		
 		return out;
 	}
 }

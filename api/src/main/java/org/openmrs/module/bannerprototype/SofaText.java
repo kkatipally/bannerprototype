@@ -62,21 +62,25 @@ public class SofaText extends BaseOpenmrsObject implements Serializable,Comparab
 			
 			//if new mention is subsumed by existing mention, add associated concepts to subsuming mention
 			//and then return
-			if(stm.getMentionText().toLowerCase().indexOf(m.getText().toLowerCase()) != -1)
-			{	
-				stm.addConcepts(concepts);
-				return;
-			}
+
 			
-			// if new mention subsumes an existing mention, add existing mention to remove list but keep concepts
-			
-			if(m.getText().toLowerCase().indexOf(stm.getMentionText().toLowerCase()) != -1)
-			{	
-				concepts.addAll(stm.getConcepts());
-				//sofaTextMention.remove(stm);
-				toRemove.add(stm);
-				//System.out.println("removed");
-			}
+			//test for overlap
+			if(isOverlapping(stm,m))
+			{// there is overlap, keep the larger of the two mentions
+				
+				if(stm.getMentionEnd() - stm.getMentionStart() < m.getEnd() - m.getStart())// mention is larger
+				{
+					System.out.println("1");
+					concepts.addAll(stm.getConcepts());
+					toRemove.add(stm);
+				}
+				else{
+					System.out.println("2");
+					stm.addConcepts(concepts);
+					return;
+				}
+				
+			}	
 			
 			
 		}
@@ -84,6 +88,23 @@ public class SofaText extends BaseOpenmrsObject implements Serializable,Comparab
 		sofaTextMention.removeAll(toRemove);
 		// add new mention to sofatext
 		sofaTextMention.add(new SofaTextMention(this,m,concepts));
+		
+		
+	}
+	
+	private boolean isOverlapping(SofaTextMention stm, Mention m)
+	{
+		if(stm.getMentionStart() == m.getStart()   //same start token
+				   ||  stm.getMentionEnd() == m.getEnd()   //same end token
+				   ||  (stm.getMentionStart() <= m.getStart() && stm.getMentionEnd() >= m.getStart())
+				   ||  (stm.getMentionStart() >= m.getStart() && stm.getMentionStart() <= m.getEnd())
+				  )
+			{
+			return true;
+			
+			}
+		return false;
+		
 	}
 	
 	/**
@@ -94,15 +115,8 @@ public class SofaText extends BaseOpenmrsObject implements Serializable,Comparab
 	public boolean addBannerMention(Mention m) {
 		for(SofaTextMention stm : sofaTextMention)
 		{
-			// if m is subsumed by an existing mention, return
-			if(stm.getMentionText().toLowerCase().indexOf(m.getText().toLowerCase()) != -1)
-			{	
-				return false;
-			}
-			
-			// if m subsumes an existing mention, return
-			if(m.getText().toLowerCase().indexOf(stm.getMentionText().toLowerCase()) != -1)
-			{	
+			if(isOverlapping(stm,m))
+			{
 				return false;
 			}
 
