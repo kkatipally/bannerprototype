@@ -22,7 +22,6 @@ dateISOFormatted = new java.text.SimpleDateFormat("yyyy-MM-dd")
 %>
 
 <head>
-<script type="text/javascript" src="/openmrs/dwr/interface/DWRNLPService.js">
 <script src="/openmrs/dwr/engine.js" type="text/javascript" ></script>
 <!--
 <script type="text/javascript" src="http://i2ui.com/Scripts/Downloads/i2ui-1.0.0.js"></script>

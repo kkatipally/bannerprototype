@@ -100,21 +100,7 @@
 	</globalProperty>
 	
 	
-	<dwr>
-        <allow>
-            <create creator="new" javascript="DWRNLPService">
-                <param name="class" value="org.openmrs.module.bannerprototype.web.DWRNLPService"/>
-                <include method="getSofaDocument"/>
-            </create>
-        </allow>
- 
-        <signatures>
-            <![CDATA[
-            import org.openmrs.module.bannerprototype.web.DWRNLPService;
-            DWRNLPService.getSofaDocument(int docId);
-            ]]>
-        </signatures>
-    </dwr>
+
 	
 
 	<!-- Internationalization -->

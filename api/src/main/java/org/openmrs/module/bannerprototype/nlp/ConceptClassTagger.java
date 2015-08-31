@@ -102,7 +102,9 @@ public class ConceptClassTagger implements Serializable {
 				
 				name = name.toLowerCase();
 				
-				if(lower_str.contains(" "+name))
+				
+				//if(lower_str.contains(" "+name))
+				if(lower_str.matches("(.*) "+name+"[\\s,.?!$](.*)"))
 				{
 					
 					try{

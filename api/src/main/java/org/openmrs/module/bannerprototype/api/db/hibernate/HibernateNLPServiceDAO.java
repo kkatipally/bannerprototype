@@ -72,7 +72,6 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 		sessionFactory.getCurrentSession().saveOrUpdate(sofaTextMention);
 		for(SofaTextMentionConcept stmc : sofaTextMention.getSofaTextMentionConcept())
 		{	
-			System.out.println("saving concept");
 			saveSofaTextMentionConcept(stmc);
 		}
 		
@@ -124,8 +123,6 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 	 */
 	public SofaDocument getSofaDocumentById(int sofaDocumentId)
 	{
-		System.out.println("in getSofaDocument");
-		//Session session = sessionFactory.openSession();
 		
 		//SofaDocument sofaDocument = (SofaDocument) session.get(SofaDocument.class, sofaDocumentId);
 		Criteria crit = sessionFactory.getCurrentSession().createCriteria(
@@ -135,9 +132,7 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
         
         
 		Hibernate.initialize(sofaDocument);
-		//session.close();
 
-		System.out.println("leaving getSofaDocument");
 		return sofaDocument;
 	}
 	
@@ -175,10 +170,10 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 		
 		List<SofaDocument> sds = getAllSofaDocuments();
 		
-		System.out.println("About to Delete");
+		
 		for(SofaDocument sd : sds)
 			s.delete(sd);
-		System.out.println("Deleted!");
+		
 
 		return;
 	}

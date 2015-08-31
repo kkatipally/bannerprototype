@@ -144,9 +144,9 @@ public class  bannerprototypeManageController {
 	
 	@RequestMapping(value = "/module/bannerprototype/banner", method = RequestMethod.GET)
 	public void banner(ModelMap model) {
-		System.out.println("loading AllSofaDocuments");
+		
 		allSofaDocuments = Context.getService(NLPService.class).getAllSofaDocuments();
-		System.out.println("AllSofaDocuments Loaded");
+
 		
 		model.addAttribute("user", Context.getAuthenticatedUser());
 		model.addAttribute("sofaDocument",sofaDocument);
@@ -160,8 +160,7 @@ public class  bannerprototypeManageController {
 	@RequestMapping(value = "/module/bannerprototype/upload", method = RequestMethod.POST)
     public @ResponseBody String handleFileUpload(@RequestParam("name") String name,
             @RequestParam("file") MultipartFile file) throws IOException{
-        //System.out.println("in upload");
-        //System.out.println(name);
+        
         String path = new ClassPathResource("taggers/").getURL().getPath();
         if (!file.isEmpty()) {
             try {
@@ -170,7 +169,7 @@ public class  bannerprototypeManageController {
                         new BufferedOutputStream(new FileOutputStream(new File(path+name)));
                 stream.write(bytes);
                 stream.close();
-                //System.out.println("uploaded!");
+                
                 return "You successfully uploaded " + name + "!\n<a href=manage.form>back</a>";
             }   catch(FileNotFoundException ex)
             {
@@ -210,7 +209,7 @@ public class  bannerprototypeManageController {
 		   Context.getService(NLPService.class).truncateNLPtables();
 
 		   
-		   System.out.println("Running Analysis");
+		   
 		   
 		   //get observations that represent Visit Notes
 		   List<Obs> obs =  Context.getObsService().getObservations(null, null, concepts,null, null, null, null, null, null, null, null, false);
