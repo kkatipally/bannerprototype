@@ -33,10 +33,10 @@ public class DocumentTagger implements Serializable {
 	}
 	
 	private void initialize(){
-		
+		System.out.println("initializing tagger");
 		//get the BANNER CRF tagger
 		this.tagger = new NERTagger();
-		
+		System.out.println("initializing class taggers");
 		
 		ArrayList<String> problemClasses = new ArrayList<String>();
 		

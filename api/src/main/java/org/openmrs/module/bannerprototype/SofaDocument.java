@@ -179,14 +179,19 @@ public class SofaDocument extends BaseOpenmrsObject implements Serializable {
 	 * for this SofaDocument
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public List<SofaTextMention> getProblemMentions()
 	{
 		List<SofaTextMention> problems = new ArrayList<SofaTextMention>();
+		List<SofaText> sortedSofaTexts = new ArrayList<SofaText>(sofaText);
+		Collections.sort(sortedSofaTexts);
 		
-		for(SofaText st : sofaText)
+		for(SofaText st : sortedSofaTexts)
 		{
 			problems.addAll(st.getProblems());
 		}
+		
+		
 		
 		return problems;
 				
@@ -196,15 +201,19 @@ public class SofaDocument extends BaseOpenmrsObject implements Serializable {
 	 * for this SofaDocument
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public List<SofaTextMention> getTestMentions()
 	{
 		List<SofaTextMention> tests = new ArrayList<SofaTextMention>();
+		List<SofaText> sortedSofaTexts = new ArrayList<SofaText>(sofaText);
+		Collections.sort(sortedSofaTexts);
 		
-		for(SofaText st : sofaText)
+		for(SofaText st : sortedSofaTexts)
 		{
 			tests.addAll(st.getTests());
 		}
 		
+		Collections.sort(tests);
 		return tests;
 	}
 	/**
@@ -212,15 +221,19 @@ public class SofaDocument extends BaseOpenmrsObject implements Serializable {
 	 * for this SofaDocument
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public List<SofaTextMention> getTreatmentMentions()
 	{
 		List<SofaTextMention> treatments = new ArrayList<SofaTextMention>();
+		List<SofaText> sortedSofaTexts = new ArrayList<SofaText>(sofaText);
+		Collections.sort(sortedSofaTexts);
 		
-		for(SofaText st : sofaText)
+		for(SofaText st : sortedSofaTexts)
 		{
 			treatments.addAll(st.getTreatments());
 		}
 		
+		Collections.sort(treatments);
 		return treatments;
 	}
 	/**
@@ -228,12 +241,21 @@ public class SofaDocument extends BaseOpenmrsObject implements Serializable {
 	 * for this SofaDocument
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public List<SofaTextMention> getAllMentions() {
 		List<SofaTextMention> mentions = new ArrayList<SofaTextMention>();
 		
-		mentions.addAll(getTreatmentMentions());
-		mentions.addAll(getTestMentions());
-		mentions.addAll(getProblemMentions());
+		List<SofaText> sortedSofaTexts = new ArrayList<SofaText>(sofaText);
+		Collections.sort(sortedSofaTexts);
+		
+		for(SofaText st : sortedSofaTexts)
+		{
+			mentions.addAll(st.getProblems());
+			mentions.addAll(st.getTreatments());
+			mentions.addAll(st.getTests());
+			
+		}	
+
 		return mentions;
 	}
 

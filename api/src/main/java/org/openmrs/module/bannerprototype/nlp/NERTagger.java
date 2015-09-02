@@ -28,7 +28,9 @@ public class NERTagger implements Serializable {
 
 	public NERTagger()
 	{
+		System.out.println("getting Tagger");
 		tagger = TaggerFactory.getTagger();
+		
 		taggerName = TaggerFactory.getTaggerName();
 		tokenizer = TaggerFactory.getTokenizer();
 		
@@ -50,6 +52,7 @@ public class NERTagger implements Serializable {
 		// if the global configuration has changed since tagger was initialized
 		if(TaggerFactory.isNewtaggerRequired(taggerName))
 		{	
+			System.out.println("New Tagger Required");
 			tagger = TaggerFactory.getTagger();
 			taggerName = TaggerFactory.getTaggerName();
 		}
@@ -64,6 +67,7 @@ public class NERTagger implements Serializable {
 		tokenizer.tokenize(sentence);
 		
 		//perform CRF tagging
+		System.out.println("Tagging Sentence with BANNER");
 		tagger.tag(sentence);
 		
 		mentions.addAll(sentence.getMentions());

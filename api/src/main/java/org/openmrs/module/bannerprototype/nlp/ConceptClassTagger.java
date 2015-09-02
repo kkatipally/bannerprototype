@@ -140,9 +140,14 @@ public class ConceptClassTagger implements Serializable {
 		int string_index = lower_str.indexOf(name);
 		int num_tokens = name.split(" ").length;
 		
-		for(int i=0; i<string_index + 1; i++)
-			if(lower_str.charAt(i) ==' ')
+		
+		
+		for(int i=1; i<string_index + 1; i++)
+			if(lower_str.charAt(i) ==' ' && lower_str.charAt(i-1) != ' ')
 				token_index++;
+		
+		System.out.println(name);
+		System.out.println("TOKEN INDEX: "+ token_index);
 		
 		Sentence s = new Sentence(str);
 		tokenizer.tokenize(s);

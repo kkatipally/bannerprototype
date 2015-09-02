@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -34,6 +35,7 @@ import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.hibernate.Hibernate;
 import org.openmrs.Concept;
 import org.openmrs.GlobalProperty;
 import org.openmrs.Obs;
@@ -200,28 +202,59 @@ public class  bannerprototypeManageController {
 	private void runReanalysis() {
 
 		   DocumentTagger dt = new DocumentTagger();
+		   System.out.println("flushing");
+		   dt.tagDocument("test");
+		   System.out.println("1");
 
 		   List<Concept> concepts = new ArrayList<Concept>();
-
+		   System.out.println("2");
 		   concepts.add(Context.getConceptService().getConceptByName("Text of encounter note"));
-		   
+		   System.out.println("3");
 		   //this deletes all current SofaDocument and related objects
 		   Context.getService(NLPService.class).truncateNLPtables();
-
+		   System.out.println("4");
 		   
 		   
 		   
 		   //get observations that represent Visit Notes
 		   List<Obs> obs =  Context.getObsService().getObservations(null, null, concepts,null, null, null, null, null, null, null, null, false);
-
+		   
+		   List<Patient> patients = new ArrayList<Patient>();
+		   List<String> texts = new ArrayList<String>();
+		   List<Date> dates = new ArrayList<Date>();
+		   
+		   System.out.println("initializeing lists");
 		   for(Obs o : obs)
-		   {   
-			   SofaDocument sd = dt.tagDocument(o.getValueText());
-			   sd.setPatient((Patient) o.getPerson());
-			   sd.setDateCreated(o.getDateCreated());
-			   Context.getService(NLPService.class).saveSofaDocument(sd);
+		   {	   
+			   Hibernate.initialize(o);
+			   patients.add((Patient)o.getPerson());
+			   texts.add(o.getValueText());
+			   dates.add(o.getDateCreated());
 			   
 		   }
+		   
+		   System.out.println("5");
+		   for(int i = 0; i< patients.size(); i++)
+		   {   
+			   System.out.println("getting text");
+			   String text = texts.get(i);
+			   System.out.println("tagging text");
+			   
+			   SofaDocument sd = dt.tagDocument(text);
+			   System.out.println("SofaDocument: "+sd.getSofaDocumentId());
+			   System.out.println("getting patient");
+			  
+			   Patient p = patients.get(i);
+			   System.out.println("Setting patient");
+			   sd.setPatient(p);
+			   System.out.println("loop 1");
+			   sd.setDateCreated(dates.get(i));
+			   System.out.println("loop 2");
+			   Context.getService(NLPService.class).saveSofaDocument(sd);
+			   System.out.println("loop 3");
+			   
+		   }
+		   System.out.println("6");
 	}
 	
 	 

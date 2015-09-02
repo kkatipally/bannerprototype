@@ -15,7 +15,7 @@ import banner.tagging.Mention;
  * @author ryaneshleman
  *
  */
-public class SofaTextMention extends BaseOpenmrsObject implements Serializable {
+public class SofaTextMention extends BaseOpenmrsObject implements Serializable,Comparable {
 	private int sofaTextMentionId;
 	private SofaText sofaText;
 	private String mentionText;
@@ -198,5 +198,12 @@ public class SofaTextMention extends BaseOpenmrsObject implements Serializable {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public int compareTo(Object stm)
+	{
+		return this.getMentionStart() - ((SofaTextMention)stm).getMentionStart();
+	}
+
 
 }
