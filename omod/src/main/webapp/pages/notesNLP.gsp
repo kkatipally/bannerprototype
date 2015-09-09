@@ -82,6 +82,29 @@ var userId = ${user}
 
 
   jq(function() {
+  	if(patientMRN == "NONE")
+  	{
+  		patientID = document.cookie.match('prevPatient=(.*?)(;|\$)')[0]
+  		patientID = patientID.replace("prevPatient","patientId")
+  		patientID = patientID.replace(";","")
+  		
+  		returnUrl = document.cookie.match('returnUrl=(.*?)(;|\$)')[0]
+  		returnUrl = returnUrl.replace(";","")
+  		
+  		url = window.location.href
+  		url = url.substr(0,url.indexOf("?")+1)
+  		url = url +"&"+patientID+"&"+returnUrl
+  		
+  		window.location.href = url
+  		
+  	}
+  	else
+  	{
+  		document.cookie = "prevPatient=${patientId}"
+  		document.cookie = "returnUrl=${returnUrl}"
+  	}
+  	
+  
     jq( "#conceptTabs" ).tabs();
   });
   

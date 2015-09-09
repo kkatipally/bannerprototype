@@ -42,6 +42,8 @@ public class DocumentViewerFragmentController {
 	 */
 	public String getHTML(@RequestParam(value="docId", required=false) Integer docId, FragmentActionUiUtils ui) {
 			
+			//Context.logout();
+		
 		    if(!Context.isAuthenticated())
 		    {
 		    	return "Not Authenticated";
