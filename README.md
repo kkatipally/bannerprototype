@@ -6,7 +6,7 @@ before packaging this module, you must install the following library to your loc
 
 maven command:
 
-mvn install:install-file -Dfile=<path-to-file> -DgroupId=org.sfsu.banner -DartifactId=banner -Dversion=.1 -Dpackaging=jar
+mvn install:install-file -Dfile=path/to/banner-.1.jar -DgroupId=org.sfsu.banner -DartifactId=banner -Dversion=.1 -Dpackaging=jar
 
 to build the .omod file, execute:
 
