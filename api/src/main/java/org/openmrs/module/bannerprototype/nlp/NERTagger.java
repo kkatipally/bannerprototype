@@ -16,18 +16,22 @@ import com.sfsu.bannertrain.train.CRFTagger;
 
 /**
  * this is a wrapper class for the BANNER CRF tagger
+ * 
  * @author ryaneshleman
- *
  */
 public class NERTagger implements Serializable {
+	
 	CRFTagger tagger;
+	
 	String taggerName;
+	
 	Tokenizer tokenizer;
+	
 	ArrayList<Mention> mentions;
+	
 	ArrayList<NamedEntity> namedEntities;
-
-	public NERTagger()
-	{
+	
+	public NERTagger() {
 		System.out.println("getting Tagger");
 		tagger = TaggerFactory.getTagger();
 		
@@ -37,29 +41,25 @@ public class NERTagger implements Serializable {
 		mentions = new ArrayList<Mention>();
 		namedEntities = new ArrayList<NamedEntity>();
 		
-		
 	}
 	
 	/**
-	 * Executes the BANNER CRF tagging.
-	 * Takes a string as input and returns a list of NamedEntity objects found in the sentence.
+	 * Executes the BANNER CRF tagging. Takes a string as input and returns a list of NamedEntity
+	 * objects found in the sentence.
 	 * 
 	 * @param sofa
 	 * @return
 	 */
-	public ArrayList<NamedEntity> tag(String sofa)
-	{
+	public ArrayList<NamedEntity> tag(String sofa) {
 		// if the global configuration has changed since tagger was initialized
-		if(TaggerFactory.isNewtaggerRequired(taggerName))
-		{	
+		if (TaggerFactory.isNewtaggerRequired(taggerName)) {
 			System.out.println("New Tagger Required");
 			tagger = TaggerFactory.getTagger();
 			taggerName = TaggerFactory.getTaggerName();
 		}
 		
-		
 		namedEntities.clear();
-
+		
 		List<Concept> matchedConcepts = new ArrayList<Concept>();
 		
 		mentions.clear();
@@ -73,13 +73,12 @@ public class NERTagger implements Serializable {
 		mentions.addAll(sentence.getMentions());
 		
 		//extract tags and construct NamedEntity objects
-		for(Mention m : mentions)
-		{
-			namedEntities.add(new NamedEntity(m,matchedConcepts));
+		for (Mention m : mentions) {
+			namedEntities.add(new NamedEntity(m, matchedConcepts));
 		}
 		
 		return namedEntities;
 		
 	}
-
+	
 }
