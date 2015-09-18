@@ -7,7 +7,6 @@ import java.util.List;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.bannerprototype.SofaDocument;
 import org.openmrs.module.bannerprototype.SofaText;
-import org.openmrs.module.bannerprototype.SofaTextMention;
 
 /**
  * This class exposes the Named Entity Recognition functionality of the module.
