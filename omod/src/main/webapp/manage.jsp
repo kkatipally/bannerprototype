@@ -21,6 +21,7 @@ td input {
 <openmrs:globalProperty key="bannerprototype.conceptClassMappingTest" var="testClasses"/>
 <openmrs:globalProperty key="bannerprototype.conceptClassMappingTreatment" var="treatmentClasses"/>
 <openmrs:globalProperty key="bannerprototype.adminEmail" var="adminEmail"/>
+<openmrs:globalProperty key="bannerprototype.noteConceptId" var="noteConceptId"/>
 
 <div class=boxHeader>Manage Tagger</div>
 <div class="class-mapping box">
@@ -72,6 +73,14 @@ td input {
 		<tr>
 			<td></td>
 			<td class=description>This address will be used to report incorrect annotations </td>
+		</tr>
+                <tr>
+			<td>Concept Id for Encounter note</td>
+			<td><input type=text id=noteConceptId value=${noteConceptId}> </td>
+		</tr>
+		<tr>
+			<td></td>
+			<td class=description>Concept id for Text of Encounter Note. All obs under this concept is used by the module</td>
 		</tr>
 	</table>
 <button onClick=saveProperties()>Save </button>

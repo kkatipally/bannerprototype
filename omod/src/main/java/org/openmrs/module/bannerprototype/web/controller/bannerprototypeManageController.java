@@ -1,83 +1,52 @@
 /**
- * The contents of this file are subject to the OpenMRS Public License
- * Version 1.0 (the "License"); you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://license.openmrs.org
+ * The contents of this file are subject to the OpenMRS Public License Version
+ * 1.0 (the "License"); you may not use this file except in compliance with the
+ * License. You may obtain a copy of the License at http://license.openmrs.org
  *
- * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for
+ * the specific language governing rights and limitations under the License.
  *
- * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+ * Copyright (C) OpenMRS, LLC. All Rights Reserved.
  */
 package org.openmrs.module.bannerprototype.web.controller;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Scanner;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.hibernate.Hibernate;
 import org.openmrs.Concept;
-import org.openmrs.GlobalProperty;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.bannerprototype.SofaDocument;
-import org.openmrs.module.bannerprototype.SofaText;
 import org.openmrs.module.bannerprototype.api.NLPService;
-import org.openmrs.module.bannerprototype.nlp.ConceptClassTagger;
 import org.openmrs.module.bannerprototype.nlp.DocumentTagger;
-import org.openmrs.module.bannerprototype.nlp.NERTagger;
-import org.openmrs.module.bannerprototype.nlp.NamedEntity;
-import org.openmrs.module.bannerprototype.nlp.TaggerFactory;
 import org.openmrs.module.bannerprototype.reporting.ReportGenerator;
 import org.openmrs.module.bannerprototype.transport.SofaDocumentTransport;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.util.SerializationUtils;
-
-import dragon.nlp.tool.HeppleTagger;
-import dragon.nlp.tool.Lemmatiser;
-import dragon.nlp.tool.MedPostTagger;
-import dragon.nlp.tool.lemmatiser.EngLemmatiser;
-import banner.BannerProperties;
-import banner.Sentence;
-import banner.tagging.CRFTagger;
-import banner.tagging.Mention;
-import banner.tagging.TaggedToken;
-import banner.tokenization.Token;
 import banner.tokenization.Tokenizer;
-import banner.tokenization.WhitespaceTokenizer;
 
 /**
  * The main controller.
@@ -116,12 +85,13 @@ public class bannerprototypeManageController {
 		}
 		
 		//set curModel as first element in array
-		for (int i = 0; i < modelFiles.length; i++)
+		for (int i = 0; i < modelFiles.length; i++) {
 			if (modelFiles[i].equals(curModel)) {
 				modelFiles[i] = modelFiles[0];
 				modelFiles[0] = curModel;
 				break;
 			}
+		}
 		
 		model.addAttribute("modelFiles", modelFiles);
 		model.addAttribute("user", Context.getAuthenticatedUser());
@@ -135,12 +105,14 @@ public class bannerprototypeManageController {
 		String problem = request.getParameter("problem");
 		String treatment = request.getParameter("treatment");
 		String adminEmail = request.getParameter("adminEmail");
+		String noteConceptId = request.getParameter("noteConceptId");
 		
 		Context.getAdministrationService().setGlobalProperty("bannerprototype.tagger", model);
 		Context.getAdministrationService().setGlobalProperty("bannerprototype.conceptClassMappingProblem", problem);
 		Context.getAdministrationService().setGlobalProperty("bannerprototype.conceptClassMappingTreatment", treatment);
 		Context.getAdministrationService().setGlobalProperty("bannerprototype.conceptClassMappingTest", test);
 		Context.getAdministrationService().setGlobalProperty("bannerprototype.adminEmail", adminEmail);
+		Context.getAdministrationService().setGlobalProperty("bannerprototype.noteConceptId", noteConceptId);
 	}
 	
 	@RequestMapping(value = "/module/bannerprototype/banner", method = RequestMethod.GET)
@@ -204,7 +176,14 @@ public class bannerprototypeManageController {
 		
 		List<Concept> concepts = new ArrayList<Concept>();
 		System.out.println("2");
-		concepts.add(Context.getConceptService().getConceptByName("Text of encounter note"));
+		Concept c = null;
+		String noteConceptId = Context.getAdministrationService().getGlobalProperty("bannerprototype.noteConceptId");
+		if (noteConceptId != null || !noteConceptId.isEmpty()) {
+			c = Context.getConceptService().getConcept(Integer.parseInt(noteConceptId));
+		} else {
+			c = Context.getConceptService().getConcept("Text of encounter note");
+		}
+		concepts.add(c);
 		System.out.println("3");
 		//this deletes all current SofaDocument and related objects
 		Context.getService(NLPService.class).truncateNLPtables();

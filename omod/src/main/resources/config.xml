@@ -63,6 +63,13 @@
 		Comma separated list of Concept Classes to be mapped to Problems
 		</description>
 	</globalProperty>
+        
+        <globalProperty>
+		<property>bannerprototype.noteConceptId</property>
+		<defaultValue></defaultValue>
+		<description>Concept id for Text of Encounter Note. All obs under this concept is used by the module</description>
+	</globalProperty>
+        
 	<globalProperty>
 		<property>bannerprototype.adminEmail</property>
 		<defaultValue>Administrator@organization.com</defaultValue>

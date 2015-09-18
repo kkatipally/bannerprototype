@@ -13,8 +13,6 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.bannerprototype.SofaDocument;
 import org.openmrs.module.bannerprototype.api.NLPService;
 import org.openmrs.module.bannerprototype.nlp.DocumentTagger;
-import org.openmrs.module.bannerprototype.nlp.NERTagger;
-import org.openmrs.module.bannerprototype.nlp.TaggerFactory;
 import org.springframework.aop.MethodBeforeAdvice;
 
 /**
@@ -39,7 +37,13 @@ public class VisitNoteAdvice implements MethodBeforeAdvice {
 			Set<Obs> obs = ((Encounter) args[0]).getAllObs();
 			
 			//get VisitNote concept
-			Concept c = Context.getConceptService().getConceptByName("Text of encounter note");
+			Concept c = null;
+			String noteConceptId = Context.getAdministrationService().getGlobalProperty("bannerprototype.noteConceptId");
+			if (noteConceptId != null || !noteConceptId.isEmpty()) {
+				c = Context.getConceptService().getConcept(Integer.parseInt(noteConceptId));
+			} else {
+				c = Context.getConceptService().getConcept("Text of encounter note");
+			}
 			
 			for (Obs o : obs) {
 				Concept obs_concept = o.getConcept();
