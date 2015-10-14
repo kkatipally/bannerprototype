@@ -9,7 +9,6 @@ import java.util.Map;
 import org.openmrs.Concept;
 import org.openmrs.ConceptClass;
 import org.openmrs.ConceptName;
-import org.openmrs.annotation.Authorized;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
 

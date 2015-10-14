@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openmrs.Concept;
-import org.openmrs.api.ConceptService;
-import org.openmrs.api.context.Context;
-
 import banner.Sentence;
 //import banner.tagging.CRFTagger;
 import banner.tokenization.Tokenizer;

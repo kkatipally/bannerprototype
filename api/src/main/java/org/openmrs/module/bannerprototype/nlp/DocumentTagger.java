@@ -3,6 +3,8 @@ package org.openmrs.module.bannerprototype.nlp;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.openmrs.api.context.Context;
 import org.openmrs.module.bannerprototype.SofaDocument;
@@ -23,8 +25,6 @@ import org.openmrs.module.bannerprototype.SofaText;
  */
 public class DocumentTagger implements Serializable {
 	
-	private String document;
-	
 	private List<SofaText> sofaTexts;
 	
 	private NERTagger tagger;
@@ -37,37 +37,41 @@ public class DocumentTagger implements Serializable {
 	
 	private boolean initialized = false;
 	
+	private static final Log log = LogFactory.getLog(DocumentTagger.class);
+	
 	public DocumentTagger() {
 		
 	}
 	
 	private void initialize() {
-		System.out.println("initializing tagger");
 		//get the BANNER CRF tagger
 		this.tagger = new NERTagger();
-		System.out.println("initializing class taggers");
+		log.debug("Initializing class taggers");
 		
 		ArrayList<String> problemClasses = new ArrayList<String>();
 		
 		//get OpenMRS problem concept classes from global properties
 		String problems[] = Context.getAdministrationService()
 		        .getGlobalProperty("bannerprototype.conceptClassMappingProblem").split(",");
-		for (String s : problems)
+		for (String s : problems) {
 			problemClasses.add(s);
+		}
 		
 		//tests
 		ArrayList<String> testClasses = new ArrayList<String>();
 		String tests[] = Context.getAdministrationService().getGlobalProperty("bannerprototype.conceptClassMappingTest")
 		        .split(",");
-		for (String s : tests)
+		for (String s : tests) {
 			testClasses.add(s);
+		}
 		
 		//treatment
 		ArrayList<String> treatmentClasses = new ArrayList<String>();
 		String treatments[] = Context.getAdministrationService()
 		        .getGlobalProperty("bannerprototype.conceptClassMappingTreatment").split(",");
-		for (String s : treatments)
+		for (String s : treatments) {
 			treatmentClasses.add(s);
+		}
 		
 		//initialize ConceptClassTagger objects
 		this.testClassTagger = new ConceptClassTagger(testClasses, "test");
@@ -112,7 +116,6 @@ public class DocumentTagger implements Serializable {
 				st.addBannerMention(ne.getMention());
 			
 			st.setSofaDocument(sofaDocument);
-			
 			sofaDocument.addSofaText(st);
 		}
 		

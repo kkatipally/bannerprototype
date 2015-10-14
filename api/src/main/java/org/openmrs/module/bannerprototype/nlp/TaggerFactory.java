@@ -6,11 +6,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
-import java.util.List;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.openmrs.GlobalProperty;
 import org.openmrs.api.context.Context;
 import org.springframework.core.io.ClassPathResource;
 
@@ -38,10 +33,10 @@ public class TaggerFactory {
 	 */
 	public static CRFTagger getTagger() {
 		
-		String taggerProp = "taggers/" + Context.getAdministrationService().getGlobalProperty("bannerprototype.tagger");
+		String taggerProp = "taggers" + File.separatorChar
+		        + Context.getAdministrationService().getGlobalProperty("bannerprototype.tagger");
 		
 		tagger = (CRFTagger) deserialize(taggerProp);
-		
 		taggerName = taggerProp;
 		return tagger;
 	}
@@ -57,7 +52,8 @@ public class TaggerFactory {
 	 * @return
 	 */
 	public static boolean isNewtaggerRequired(String tagger_name) {
-		String taggerProp = "taggers/" + Context.getAdministrationService().getGlobalProperty("bannerprototype.tagger");
+		String taggerProp = "taggers" + File.separatorChar
+		        + Context.getAdministrationService().getGlobalProperty("bannerprototype.tagger");
 		return !tagger_name.equals(taggerProp);
 	}
 	
@@ -74,13 +70,13 @@ public class TaggerFactory {
 		try {
 			//hack because ClassPathResource() doesnt find 
 			// newly uploaded files, must find manually
-			ClassPathResource cpr = new ClassPathResource("taggers/");
-			for (File fi : cpr.getFile().listFiles())
+			ClassPathResource cpr = new ClassPathResource("taggers");
+			for (File fi : cpr.getFile().listFiles()) {
 				if (fi.getPath().contains(file_name)) {
 					f = fi;
 					break;
 				}
-			
+			}
 			if (f == null)
 				throw new IOException();
 			

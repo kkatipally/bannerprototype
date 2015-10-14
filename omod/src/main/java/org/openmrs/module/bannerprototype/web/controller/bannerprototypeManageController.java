@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.hibernate.Hibernate;
 import org.openmrs.Concept;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
@@ -117,7 +116,6 @@ public class bannerprototypeManageController {
 	
 	@RequestMapping(value = "/module/bannerprototype/banner", method = RequestMethod.GET)
 	public void banner(ModelMap model) {
-		
 		allSofaDocuments = Context.getService(NLPService.class).getAllSofaDocuments();
 		
 		model.addAttribute("user", Context.getAuthenticatedUser());
@@ -154,23 +152,18 @@ public class bannerprototypeManageController {
 		} else {
 			return "You failed to upload " + name + " because the file was empty.";
 		}
-		
 	}
 	
 	@RequestMapping(value = "/module/bannerprototype/reanalyze", method = RequestMethod.POST)
 	public @ResponseBody
 	String handleReanalyzeCorpus() throws IOException {
-		
 		runReanalysis();
-		
 		return "Analysis Complete!";
-		
 	}
 	
 	private void runReanalysis() {
 		
 		DocumentTagger dt = new DocumentTagger();
-		System.out.println("flushing");
 		dt.tagDocument("test");
 		System.out.println("1");
 		
@@ -197,34 +190,23 @@ public class bannerprototypeManageController {
 		List<String> texts = new ArrayList<String>();
 		List<Date> dates = new ArrayList<Date>();
 		
-		System.out.println("initializeing lists");
 		for (Obs o : obs) {
-			Hibernate.initialize(o);
-			patients.add((Patient) o.getPerson());
+			patients.add(Context.getPatientService().getPatient(o.getPersonId()));
 			texts.add(o.getValueText());
 			dates.add(o.getDateCreated());
-			
 		}
 		
 		System.out.println("5");
 		for (int i = 0; i < patients.size(); i++) {
-			System.out.println("getting text");
 			String text = texts.get(i);
-			System.out.println("tagging text");
-			
 			SofaDocument sd = dt.tagDocument(text);
-			System.out.println("SofaDocument: " + sd.getSofaDocumentId());
-			System.out.println("getting patient");
-			
 			Patient p = patients.get(i);
-			System.out.println("Setting patient");
 			sd.setPatient(p);
 			System.out.println("loop 1");
 			sd.setDateCreated(dates.get(i));
 			System.out.println("loop 2");
 			Context.getService(NLPService.class).saveSofaDocument(sd);
 			System.out.println("loop 3");
-			
 		}
 		System.out.println("6");
 	}
