@@ -13,8 +13,7 @@
  */
 package org.openmrs.module.bannerprototype;
 
-
-import org.apache.commons.logging.Log; 
+import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.ModuleActivator;
 
@@ -24,7 +23,7 @@ import org.openmrs.module.ModuleActivator;
 public class bannerprototypeActivator implements ModuleActivator {
 	
 	protected Log log = LogFactory.getLog(getClass());
-		
+	
 	/**
 	 * @see ModuleActivator#willRefreshContext()
 	 */
@@ -66,5 +65,5 @@ public class bannerprototypeActivator implements ModuleActivator {
 	public void stopped() {
 		log.info("banner prototype Module stopped");
 	}
-		
+	
 }

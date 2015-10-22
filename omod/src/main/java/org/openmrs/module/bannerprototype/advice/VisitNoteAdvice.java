@@ -13,56 +13,54 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.bannerprototype.SofaDocument;
 import org.openmrs.module.bannerprototype.api.NLPService;
 import org.openmrs.module.bannerprototype.nlp.DocumentTagger;
-import org.openmrs.module.bannerprototype.nlp.NERTagger;
-import org.openmrs.module.bannerprototype.nlp.TaggerFactory;
 import org.springframework.aop.MethodBeforeAdvice;
- 
+
 /**
  * VisitNoteAdvice interrupts the EncounterService to run NER over Visit Notes as they arrive
+ * 
  * @author ryaneshleman
- *
  */
 public class VisitNoteAdvice implements MethodBeforeAdvice {
- 
-    DocumentTagger dt = new DocumentTagger();
-    Log log = LogFactory.getLog(getClass());
-
+	
+	DocumentTagger dt = new DocumentTagger();
+	
+	Log log = LogFactory.getLog(getClass());
+	
 	@Override
 	public void before(Method method, Object[] args, Object arg2) throws Throwable {
-        log.info("Tagging Document");
-        
-        // if "saveEncounter" was called
-		if (method != null && method.getName().equals("saveEncounter"))
-		{    
-            		
-		    //get observations from Encounter object
-			Set<Obs> obs = ((Encounter)args[0]).getAllObs();
+		log.info("Tagging Document");
+		
+		// if "saveEncounter" was called
+		if (method != null && method.getName().equals("saveEncounter")) {
+			
+			//get observations from Encounter object
+			Set<Obs> obs = ((Encounter) args[0]).getAllObs();
 			
 			//get VisitNote concept
-			Concept c = Context.getConceptService().getConceptByName("Text of encounter note");
+			Concept c = null;
+			String noteConceptId = Context.getAdministrationService().getGlobalProperty("bannerprototype.noteConceptId");
+			if (noteConceptId != null || !noteConceptId.isEmpty()) {
+				c = Context.getConceptService().getConcept(Integer.parseInt(noteConceptId));
+			} else {
+				c = Context.getConceptService().getConcept("Text of encounter note");
+			}
 			
-			for(Obs o : obs)
-			{	
+			for (Obs o : obs) {
 				Concept obs_concept = o.getConcept();
 				
 				//if the concept associated with the observation is the VisitNote Concept, proceed
-				if(obs_concept.equals(c))
-				{
+				if (obs_concept.equals(c)) {
 					// extract VisitNote Text
 					String sofa = o.getValueText();
 					Patient p = o.getPatient();
 					
-					
 					SofaDocument sofaDocument = dt.tagDocument(sofa);
 					sofaDocument.setPatient(p);
-
+					
 					Context.getService(NLPService.class).saveSofaDocument(sofaDocument);
 				}
 			}
 		}
-    }
-
- 
-
-
+	}
+	
 }

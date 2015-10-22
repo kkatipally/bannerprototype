@@ -15,63 +15,61 @@ import org.openmrs.module.bannerprototype.api.db.NLPServiceDAO;
 import org.springframework.transaction.annotation.Transactional;
 
 public class NLPServiceImpl extends BaseOpenmrsService implements NLPService {
-
 	
 	private NLPServiceDAO dao;
-
-    /**
-     * @param dao the dao to set
-     */
-    public void setDao(NLPServiceDAO dao) {
-        this.dao = dao;
-    }
-
-    /**
-     * @return the dao
-     */
-    public NLPServiceDAO getDao() {
-        return dao;
-    }
 	
+	/**
+	 * @param dao the dao to set
+	 */
+	public void setDao(NLPServiceDAO dao) {
+		this.dao = dao;
+	}
+	
+	/**
+	 * @return the dao
+	 */
+	public NLPServiceDAO getDao() {
+		return dao;
+	}
 	
 	@Override
 	public SofaText saveSofaText(SofaText sofaText) {
 		dao.saveSofaText(sofaText);
 		return sofaText;
 	}
-
+	
 	@Override
 	public SofaTextMention saveSofaTextMention(SofaTextMention sofaTextMention) {
 		dao.saveSofaTextMention(sofaTextMention);
 		return sofaTextMention;
 	}
-
+	
 	@Override
 	@Transactional(readOnly = true)
 	public SofaText getSofaText(int sofaTextId) {
 		return dao.getSofaText(sofaTextId);
 	}
-
+	
 	@Transactional(readOnly = true)
 	public Set<SofaText> getSofaTextsByEncounter(Encounter encounter) {
 		return dao.getSofaTextsByEncounter(encounter);
 	}
-
+	
 	@Override
 	public SofaDocument saveSofaDocument(SofaDocument sofaDocument) {
 		return dao.saveSofaDocument(sofaDocument);
 	}
-
+	
 	@Override
 	public Set<SofaText> getSofaTextByDocument(SofaDocument sofaDocument) {
 		return dao.getSofaTextByDocument(sofaDocument);
 	}
-
+	
 	@Override
 	public List<SofaDocument> getAllSofaDocuments() {
 		return dao.getAllSofaDocuments();
 	}
-
+	
 	@Override
 	@Transactional
 	public SofaDocument getSofaDocumentById(int sofaDocumentId) {
@@ -87,7 +85,7 @@ public class NLPServiceImpl extends BaseOpenmrsService implements NLPService {
 	public SessionFactory getSessionFactory() {
 		return dao.getSessionFactory();
 	}
-
+	
 	@Override
 	public void truncateNLPtables() {
 		dao.truncateNLPTables();
@@ -95,6 +93,4 @@ public class NLPServiceImpl extends BaseOpenmrsService implements NLPService {
 		
 	}
 	
-	
-
 }

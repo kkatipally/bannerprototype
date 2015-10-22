@@ -22,66 +22,58 @@ public class NLPPatientNotesPortletController {
 	String loadModelFileName;
 	
 	Tokenizer tokenizer;
-
 	
 	SofaDocument sofaDocument = new SofaDocument();
+	
 	List<SofaDocument> allSofaDocuments;
-	int sofaDocumentId=0;
+	
+	int sofaDocumentId = 0;
 	
 	boolean reloadDocuments = true;
 	
 	//protected final Log log = LogFactory.getLog(getClass());
 	String sofa = "";
 	
-	public NLPPatientNotesPortletController(){
-		
+	public NLPPatientNotesPortletController() {
 		
 	}
 	
-	
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView banner(HttpServletRequest request, HttpServletResponse response,ModelMap model) {
+	public ModelAndView banner(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
 		
 		Integer patientId = Integer.valueOf(request.getParameter("patientId"));
 		Patient patient = Context.getPatientService().getPatient(patientId);
 		System.out.println("loading AllSofaDocuments");
 		
-		if(reloadDocuments)
+		if (reloadDocuments)
 			allSofaDocuments = Context.getService(NLPService.class).getSofaDocumentsByPatient(patient);
-
-		reloadDocuments = true; // if not redirected from POST, reload documents
-		if(sofaDocument != null)
-		{
-			model.addAttribute("docHtml",sofaDocument.getAnnotatedHTML());
-		}
-		else
-			model.addAttribute("docHtml","");
 		
+		reloadDocuments = true; // if not redirected from POST, reload documents
+		if (sofaDocument != null) {
+			model.addAttribute("docHtml", sofaDocument.getAnnotatedHTML());
+		} else
+			model.addAttribute("docHtml", "");
 		
 		model.addAttribute("user", Context.getAuthenticatedUser());
-		model.addAttribute("sofaDocument",sofaDocument);
-		model.addAttribute("allSofaDocuments",allSofaDocuments);
+		model.addAttribute("sofaDocument", sofaDocument);
+		model.addAttribute("allSofaDocuments", allSofaDocuments);
 		model.addAttribute("sofaDocumentId", sofaDocumentId);
-
+		
 		return new ModelAndView("/module/bannerprototype/portlets/nlpPatientNotes", model);
 	}
 	
-
 	@RequestMapping(method = RequestMethod.POST)
-    public String updateDocument(HttpServletRequest request,HttpServletResponse response,ModelMap model)
-    {
-        Integer docId = Integer.valueOf(request.getParameter("docId"));
-        for(SofaDocument sd : allSofaDocuments)
-			if(sd.getSofaDocumentId() == docId)
-			{	
+	public String updateDocument(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
+		Integer docId = Integer.valueOf(request.getParameter("docId"));
+		for (SofaDocument sd : allSofaDocuments)
+			if (sd.getSofaDocumentId() == docId) {
 				sofaDocument = Context.getService(NLPService.class).getSofaDocumentById(docId);
 				break;
 			}
-        
-        reloadDocuments=false;
-        return "OK";
-        
-    }
+		
+		reloadDocuments = false;
+		return "OK";
+		
+	}
 	
-
 }

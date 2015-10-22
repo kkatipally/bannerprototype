@@ -17,44 +17,50 @@ import org.openmrs.module.bannerprototype.SofaText;
 
 /**
  * transport object to send data from OpenMRS app to Training app
+ * 
  * @author ryaneshleman
- *
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SofaDocumentTransport implements Serializable {
+	
 	private int sofaDocumentId;
+	
 	//private Encounter encounter;
 	//private Patient patient;
 	private Date dateCreated;
+	
 	private String text;
+	
 	private String annotatedHTML;
+	
 	private String uuid;
+	
 	private Set<SofaTextTransport> sofaText = new HashSet<SofaTextTransport>();
+	
 	private String patientID;
+	
 	private String patientGivenName;
+	
 	private String patientFamilyName;
 	
-	public SofaDocumentTransport()
-	{
+	public SofaDocumentTransport() {
 		
 	}
 	
-	public SofaDocumentTransport(SofaDocument sd)
-	{
+	public SofaDocumentTransport(SofaDocument sd) {
 		this.sofaDocumentId = sd.getSofaDocumentId();
 		this.dateCreated = sd.getDateCreated();
-		this.text=sd.getText();
+		this.text = sd.getText();
 		this.uuid = sd.getUuid();
 		this.setPatientID(sd.getPatient().getPatientIdentifier().getIdentifier());
 		this.setPatientGivenName(sd.getPatient().getGivenName());
 		this.setPatientFamilyName(sd.getPatient().getFamilyName());
 		
-		for(SofaText st : sd.getSofaText())
+		for (SofaText st : sd.getSofaText())
 			sofaText.add(new SofaTextTransport(st));
 		
-		
 	}
-
+	
 	/**
 	 * @return the sofaDocumentId
 	 */
@@ -62,85 +68,81 @@ public class SofaDocumentTransport implements Serializable {
 		return sofaDocumentId;
 	}
 	
-	public SofaTextTransport addSofaText(SofaTextTransport sofaText)
-	{
+	public SofaTextTransport addSofaText(SofaTextTransport sofaText) {
 		this.sofaText.add(sofaText);
 		return sofaText;
 	}
-
+	
 	/**
 	 * @param sofaDocumentId the sofaDocumentId to set
 	 */
 	public void setSofaDocumentId(int sofaDocumentId) {
 		this.sofaDocumentId = sofaDocumentId;
 	}
-
-
-
+	
 	/**
 	 * @return the text
 	 */
 	public String getText() {
 		return text;
 	}
-
+	
 	/**
 	 * @param text the text to set
 	 */
 	public void setText(String text) {
 		this.text = text;
 	}
-
+	
 	/**
 	 * @return the sofaText
 	 */
 	public Set<SofaTextTransport> getSofaText() {
 		return sofaText;
 	}
-
+	
 	/**
 	 * @param sofaText the sofaText to set
 	 */
 	public void setSofaText(Set<SofaTextTransport> sofaText) {
 		this.sofaText = sofaText;
 	}
-
+	
 	/**
 	 * @return the dateCreated
 	 */
 	public Date getDateCreated() {
 		return dateCreated;
 	}
-
+	
 	/**
 	 * @param dateCreated the dateCreated to set
 	 */
 	public void setDateCreated(Date dateCreated) {
 		this.dateCreated = dateCreated;
 	}
-
+	
 	/**
 	 * @return the annotatedHTML
 	 */
 	public String getAnnotatedHTML() {
 		return generateAnnotatedHTML();
 	}
-
+	
 	private String generateAnnotatedHTML() {
 		StringBuffer out = new StringBuffer();
 		
 		List<SofaTextTransport> sortedSofaTexts = new ArrayList<SofaTextTransport>(sofaText);
 		Collections.sort(sortedSofaTexts);
 		
-		for(SofaTextTransport st : sortedSofaTexts)
-		{	
+		for (SofaTextTransport st : sortedSofaTexts) {
 			
 			out.append(st.getAnnotatedHTML());
-		}	
-	
-	return new String(out);
+		}
+		
+		return new String(out);
 	}
-
+	
 	/**
 	 * @param annotatedHTML the annotatedHTML to set
 	 */
@@ -148,31 +150,29 @@ public class SofaDocumentTransport implements Serializable {
 	public void setAnnotatedHTML(String annotatedHTML) {
 		this.annotatedHTML = annotatedHTML;
 	}
-
+	
 	public String getPatientGivenName() {
 		return patientGivenName;
 	}
-
+	
 	public void setPatientGivenName(String patientGivenName) {
 		this.patientGivenName = patientGivenName;
 	}
-
+	
 	public String getPatientFamilyName() {
 		return patientFamilyName;
 	}
-
+	
 	public void setPatientFamilyName(String patientFamilyName) {
 		this.patientFamilyName = patientFamilyName;
 	}
-
+	
 	public String getPatientID() {
 		return patientID;
 	}
-
+	
 	public void setPatientID(String string) {
 		this.patientID = string;
 	}
-
 	
-
 }
