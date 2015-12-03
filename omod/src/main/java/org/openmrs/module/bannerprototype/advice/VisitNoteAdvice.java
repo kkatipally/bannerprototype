@@ -39,7 +39,7 @@ public class VisitNoteAdvice implements MethodBeforeAdvice {
 			//get VisitNote concept
 			Concept c = null;
 			String noteConceptId = Context.getAdministrationService().getGlobalProperty("bannerprototype.noteConceptId");
-			if (noteConceptId != null || !noteConceptId.isEmpty()) {
+			if (noteConceptId != null  && !noteConceptId.isEmpty()) {
 				c = Context.getConceptService().getConcept(Integer.parseInt(noteConceptId));
 			} else {
 				c = Context.getConceptService().getConcept("Text of encounter note");
