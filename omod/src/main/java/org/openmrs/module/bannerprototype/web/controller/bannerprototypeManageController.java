@@ -161,7 +161,7 @@ public class bannerprototypeManageController {
 		return "Analysis Complete!";
 	}
 	
-	private void runReanalysis() {
+	private void runReanalysis() throws IOException {
 		
 		DocumentTagger dt = new DocumentTagger();
 		dt.tagDocument("test");

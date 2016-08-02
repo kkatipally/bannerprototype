@@ -15,100 +15,104 @@
 	<require_version>${openMRSVersion}</require_version>
 	<!-- / Module Properties -->
 
-	
+
 	<!-- Module Activator -->
 	<activator>${project.parent.groupId}.${project.parent.artifactId}.bannerprototypeActivator</activator>
-	
+
 	<extension>
-        <point>org.openmrs.patientDashboardTab</point>
-        <class>${project.parent.groupId}.${project.parent.artifactId}.extension.html.NLPPatientDashboardTab</class>
-    </extension>
-    
-    <require_modules>
-    	<require_module>
-        	org.openmrs.module.uiframework
-    	</require_module>
+		<point>org.openmrs.patientDashboardTab</point>
+		<class>${project.parent.groupId}.${project.parent.artifactId}.extension.html.NLPPatientDashboardTab</class>
+	</extension>
+
+	<require_modules>
+		<require_module>
+			org.openmrs.module.uiframework
+		</require_module>
 	</require_modules>
-	
-	
-	
-	
+
+
+
+
 	<!-- Adds link to admin page -->
 	<extension>
 		<point>org.openmrs.admin.list</point>
 		<class>${project.parent.groupId}.${project.parent.artifactId}.extension.html.AdminList</class>
 	</extension>
-	
+
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>
-		
+
 		banner.hbm.xml
-		<!--
-		TempSofaText.hbm.xml		
-		<file>SofaTextMention.hbm.xml</file>
-		<file>SofaTextMentionConcept.hbm.xml</file>
-		-->	
+		<!-- TempSofaText.hbm.xml <file>SofaTextMention.hbm.xml</file> <file>SofaTextMentionConcept.hbm.xml</file> -->
 	</mappingFiles>
-	
+
 	<advice>
 		<point>org.openmrs.api.EncounterService</point>
 		<class>org.openmrs.module.bannerprototype.advice.VisitNoteAdvice</class>
 	</advice>
-	
+
 	<globalProperty>
 		<property>bannerprototype.conceptClassMappingProblem</property>
 		<defaultValue>Diagnosis,Symptom,Symptom/Finding</defaultValue>
-		
+
 		<description>
-		Comma separated list of Concept Classes to be mapped to Problems
+			Comma separated list of Concept Classes to be mapped to Problems
 		</description>
 	</globalProperty>
-        
-        <globalProperty>
+
+	<globalProperty>
 		<property>bannerprototype.noteConceptId</property>
 		<defaultValue></defaultValue>
-		<description>Concept id for Text of Encounter Note. All obs under this concept is used by the module</description>
+		<description>Concept id for Text of Encounter Note. All obs under this
+			concept is used by the module</description>
 	</globalProperty>
-        
+
 	<globalProperty>
 		<property>bannerprototype.adminEmail</property>
 		<defaultValue>Administrator@organization.com</defaultValue>
-		
+
 		<description>
-		Email of administrator to receive annotation correction notifications
+			Email of administrator to receive annotation correction notifications
 		</description>
 	</globalProperty>
-	
+
 	<globalProperty>
 		<property>bannerprototype.conceptClassMappingTreatment</property>
 		<defaultValue>Procedure,Drug</defaultValue>
-		
+
 		<description>
-		Comma separated list of Concept Classes to be mapped to Treatment
+			Comma separated list of Concept Classes to be mapped to Treatment
 		</description>
 	</globalProperty>
-	
+
 	<globalProperty>
 		<property>bannerprototype.conceptClassMappingTest</property>
 		<defaultValue>Test</defaultValue>
-		
+
 		<description>
-		Comma separated list of Concept Classes to be mapped to Test
+			Comma separated list of Concept Classes to be mapped to Test
 		</description>
 	</globalProperty>
-	
+
 	<globalProperty>
 		<property>bannerprototype.tagger</property>
 		<defaultValue>defaultTagger.ser</defaultValue>
-		
+
 		<description>
-		Which banner model to be used for tagging text
+			Which banner model to be used for tagging text
 		</description>
 	</globalProperty>
-	
-	
 
-	
+	<globalProperty>
+		<property>bannerprototype.sentenceDetectorModel</property>
+		<defaultValue>en-sent.bin</defaultValue>
+
+		<description>
+			The model used by the openNLP sentence detector to split sentences
+		</description>
+	</globalProperty>
+
+
 
 	<!-- Internationalization -->
 	<!-- All message codes should start with ${project.parent.artifactId}. -->

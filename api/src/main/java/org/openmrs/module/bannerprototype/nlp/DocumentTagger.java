@@ -1,11 +1,19 @@
 package org.openmrs.module.bannerprototype.nlp;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
 import java.io.Serializable;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import opennlp.tools.sentdetect.SentenceDetectorME;
+import opennlp.tools.sentdetect.SentenceModel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
+import org.apache.poi.util.SystemOutLogger;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.bannerprototype.SofaDocument;
 import org.openmrs.module.bannerprototype.SofaText;
@@ -89,7 +97,7 @@ public class DocumentTagger implements Serializable {
 	 * @param document Text to be tagged
 	 * @return SofaDocument fully initialized with text and Named Entities recognized
 	 */
-	public SofaDocument tagDocument(String document) {
+	public SofaDocument tagDocument(String document) throws IOException {
 		if (!initialized)
 			initialize();
 		
@@ -128,18 +136,36 @@ public class DocumentTagger implements Serializable {
 	 * @param document
 	 * @return
 	 */
-	private ArrayList<SofaText> splitSentences(String document) {
-		int prevPeriod = -1;
-		int nextPeriod = document.indexOf('.');
+	ArrayList<SofaText> splitSentences(String document) throws FileNotFoundException, IOException {
+		
+		//int prevPeriod = -1;
+		//int nextPeriod = document.indexOf('.');
 		SofaText sofa;
 		ArrayList<SofaText> sofaTexts = new ArrayList<SofaText>();
-		while (nextPeriod != -1) {
+		/* while (nextPeriod != -1) {
 			sofa = new SofaText(document.substring(prevPeriod + 1, nextPeriod + 1), prevPeriod + 1, nextPeriod + 1);
 			sofaTexts.add(sofa);
 			prevPeriod = nextPeriod;
 			nextPeriod = document.indexOf('.', prevPeriod + 1);
+		}*/
+		
+		//List<String> sentenceList = new ArrayList<String>();
+		long startTime = System.nanoTime(); 
+		String openNLPmodel = this.getClass().getClassLoader().getResource("en-sent.bin").getFile();
+		InputStream is = new FileInputStream(openNLPmodel);
+		SentenceModel model = new SentenceModel(is);
+		SentenceDetectorME sdetector = new SentenceDetectorME(model);
+		
+		String sentences[] = sdetector.sentDetect(document);
+		
+		for (String sentence : sentences) {
+			sofa = new SofaText(sentence);
+			sofaTexts.add(sofa);
+			//sentenceList.add(sentenceString.toString());
 		}
 		
+		long timeTaken = System.nanoTime() - startTime;
+		System.out.println(timeTaken);
 		return sofaTexts;
 	}
 }
