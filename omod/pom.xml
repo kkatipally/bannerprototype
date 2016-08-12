@@ -140,14 +140,14 @@
                     <exclude>**/*.properties</exclude>
                 </excludes>
             </testResource>
-            <!--<testResource>
+            <testResource>
                 <directory>src/test/resources</directory>
                 <filtering>true</filtering>
                 <includes>
                     <include>**/*.xml</include>
                     <include>**/*.properties</include>
                 </includes>
-            </testResource>-->
+            </testResource>
         </testResources>
 
         <pluginManagement>
@@ -202,7 +202,11 @@
                         </lifecycleMappingMetadata>
                     </configuration>
                 </plugin>
-            <plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+        <plugin>
                 <groupId>org.openmrs.maven.plugins</groupId>
                 <artifactId>maven-openmrs-plugin</artifactId>
                 <extensions>true</extensions>
@@ -248,7 +252,6 @@
                 <artifactId>maven-java-formatter-plugin</artifactId>
             </plugin>
         </plugins>
-        </pluginManagement>
     </build>
 
 </project>
