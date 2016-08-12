@@ -140,14 +140,14 @@
                     <exclude>**/*.properties</exclude>
                 </excludes>
             </testResource>
-            <testResource>
+            <!--<testResource>
                 <directory>src/test/resources</directory>
                 <filtering>true</filtering>
                 <includes>
                     <include>**/*.xml</include>
                     <include>**/*.properties</include>
                 </includes>
-            </testResource>
+            </testResource>-->
         </testResources>
 
         <pluginManagement>

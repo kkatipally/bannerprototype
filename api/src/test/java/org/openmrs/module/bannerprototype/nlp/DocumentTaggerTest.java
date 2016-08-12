@@ -33,52 +33,16 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class DocumentTaggerTest extends BaseModuleContextSensitiveTest {
 	
-	public DocumentTaggerTest() {
-	}
-	
-	/*
-	@BeforeClass
-	public static void setUpClass() {
-	}
-	
-	@AfterClass
-	public static void tearDownClass() {
-	}
-	
-	@Before
-	public void setUp() {
-	}
-	
-	@After
-	public void tearDown() {
-	}*/
-	
-	/**
-	 * Test of tagDocument method, of class DocumentTagger.
-	 */
-	public void testTagDocument() throws Exception {
-		/* System.out.println("tagDocument");
-		 String document = "";
-		 DocumentTagger instance = new DocumentTagger();
-		 SofaDocument expResult = null;
-		 SofaDocument result = instance.tagDocument(document);
-		 assertEquals(expResult, result);
-		 // TODO review the generated test code and remove the default call to fail.
-		 fail("The test case is a prototype.");*/
-	}
-	
-	/**
-     *
-     */
 	@Test
 	public void testsplitSentences() throws IOException {
 		
 		System.out.println("splitSentences");
-		BufferedReader br = new BufferedReader(new FileReader(this.getClass().getClassLoader().getResource("visitnote.txt").getFile()));
+		BufferedReader br = new BufferedReader(new FileReader(this.getClass().getClassLoader().getResource("visitnote.txt")
+		        .getFile()));
 		StringBuilder sb = new StringBuilder();
 		String line = br.readLine();
 		
-		while(line!= null){
+		while (line != null) {
 			sb.append(line);
 			sb.append(System.lineSeparator());
 			line = br.readLine();
@@ -100,10 +64,6 @@ public class DocumentTaggerTest extends BaseModuleContextSensitiveTest {
 		SentenceDetectorME sdetector = new SentenceDetectorME(model);
 		
 		long startTime = System.nanoTime();
-		
-		
-		
-		
 		
 		String sentences[] = sdetector.sentDetect(document);
 		
