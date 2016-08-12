@@ -13,7 +13,6 @@ import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.sentdetect.SentenceModel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.util.SystemOutLogger;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.bannerprototype.SofaDocument;
 import org.openmrs.module.bannerprototype.SofaText;
@@ -150,7 +149,7 @@ public class DocumentTagger implements Serializable {
 		}*/
 		
 		//List<String> sentenceList = new ArrayList<String>();
-		long startTime = System.nanoTime(); 
+		long startTime = System.nanoTime();
 		String openNLPmodel = this.getClass().getClassLoader().getResource("en-sent.bin").getFile();
 		InputStream is = new FileInputStream(openNLPmodel);
 		SentenceModel model = new SentenceModel(is);
