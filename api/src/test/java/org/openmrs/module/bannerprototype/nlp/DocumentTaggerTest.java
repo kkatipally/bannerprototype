@@ -49,6 +49,7 @@ public class DocumentTaggerTest extends BaseModuleContextSensitiveTest {
 		}
 		
 		String document = sb.toString();
+		br.close();
 		
 		int prevPeriod = -1;
 		int nextPeriod = document.indexOf('.');
@@ -62,6 +63,7 @@ public class DocumentTaggerTest extends BaseModuleContextSensitiveTest {
 		InputStream is = new FileInputStream(openNLPmodel);
 		SentenceModel model = new SentenceModel(is);
 		SentenceDetectorME sdetector = new SentenceDetectorME(model);
+		is.close();
 		
 		long startTime = System.nanoTime();
 		
@@ -82,5 +84,6 @@ public class DocumentTaggerTest extends BaseModuleContextSensitiveTest {
 		
 		long timeTaken = System.nanoTime() - startTime;
 		System.out.println("Time taken: " + timeTaken);
+		
 	}
 }

@@ -141,6 +141,8 @@ public class DocumentTagger implements Serializable {
 		//int nextPeriod = document.indexOf('.');
 		SofaText sofa;
 		ArrayList<SofaText> sofaTexts = new ArrayList<SofaText>();
+		int sentenceStart = 0;
+		int sentenceEnd;
 		/* while (nextPeriod != -1) {
 			sofa = new SofaText(document.substring(prevPeriod + 1, nextPeriod + 1), prevPeriod + 1, nextPeriod + 1);
 			sofaTexts.add(sofa);
@@ -154,17 +156,21 @@ public class DocumentTagger implements Serializable {
 		InputStream is = new FileInputStream(openNLPmodel);
 		SentenceModel model = new SentenceModel(is);
 		SentenceDetectorME sdetector = new SentenceDetectorME(model);
+		is.close();
 		
 		String sentences[] = sdetector.sentDetect(document);
 		
 		for (String sentence : sentences) {
-			sofa = new SofaText(sentence);
+			sentenceEnd = sentenceStart + sentence.length();
+			sofa = new SofaText(sentence, sentenceStart + 1, sentenceEnd);
 			sofaTexts.add(sofa);
 			//sentenceList.add(sentenceString.toString());
+			sentenceStart = sentenceEnd;
 		}
 		
 		long timeTaken = System.nanoTime() - startTime;
 		System.out.println(timeTaken);
+		
 		return sofaTexts;
 	}
 }
