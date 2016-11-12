@@ -49,7 +49,10 @@ jq = jQuery;
 		// set keyup event binding for search box
 		jq(".dataTables_filter input").keyup(searchKeyUp)
 		updateTableStyle();
-		refreshSearchBreadCrumb()
+		//added clearSearchHistory and commented out refreshSearchBreadCrumb to fix a bug.
+		//The breadcrumbs can be clean for a new user
+		//refreshSearchBreadCrumb()
+		clearSearchHistory();
 		i2.emph();
 		
 		// without this, word-cloud coloring disappears
