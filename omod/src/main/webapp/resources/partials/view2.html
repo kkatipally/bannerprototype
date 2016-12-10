@@ -1,0 +1,153 @@
+<ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="#">Search History</a></li>
+    <li class="breadcrumb-item"><a href="#">Hypothyroidism</a></li>
+    <li class="breadcrumb-item">interferon</li>
+</ol>
+
+<div class="container-fluid">
+    <div class="row">
+        <button id="clearHistory" type="button" class="btn btn-secondary" ng-click="clearHistory()">Clear History
+        </button>
+        <button id="backButton" type="button" class="btn btn-secondary" ng-click="backToSearchPage()">Back to Search
+            Page
+        </button>
+    </div>
+    <div id="heatmapsection">
+        <div class="row" ng-controller="datepickerController">
+            <h6 class="col-xs-2"><span class="label label-default">Start Date:</span></h6>
+            <div class="col-xs-3">
+                <!--{{startDate.name}}-->
+                <p class="input-group">
+                    <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="startDate.name"
+                           is-open="popup1.opened" datepicker-options="dateOptions1" close-text="Close"/>
+                    <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="open1()"><i
+                    class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+                </p>
+            </div>
+
+            <h6 class="col-xs-2"><span class="label label-default">End Date:</span></h6>
+            <div class="col-xs-3">
+                <!--{{endDate}}-->
+                <p class="input-group">
+                    <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="endDate"
+                           is-open="popup2.opened" datepicker-options="dateOptions2" close-text="Close"/>
+                    <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="open2()"><i
+                    class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+                </p>
+            </div>
+        </div>
+
+        <div ng-controller="heatmapController">
+            <!--<div class="dropdown dropdownpage2 col-xs-1">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    {{dateSel.datename}}
+                    <span class="caret"></span></button>
+                <ul class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenuButton">
+                    <li ng-repeat="date in dateSelOptions">
+                        <a class="dropdown-item" href="#" ng-click="selectDateSel(date)">{{date.datename}}</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="dropdown dropdownpage2 col-xs-2">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    {{termSel.termname}}
+                    <span class="caret"></span></button>
+                <ul class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenuButton">
+                    <li ng-repeat="term in termSelOptions">
+                        <a class="dropdown-item" href="#" ng-click="selectTermSel(term)">{{term.termname}}</a>
+                    </li>
+                </ul>
+            </div>-->
+
+            <select ng-model="dateSel" ng-options="date.datename for date in dateSelOptions">
+            </select>
+
+            <select ng-model="termSel" ng-options="term.termname for term in termSelOptions">
+            </select>
+            <!--<button id="reset" type="button" class="btn btn-secondary col-xs-1" ng-click="resetHeatMap()">Reset</button>-->
+
+            <heat-map id="heatmapdir" val="val" date-sel="dateSel" term-sel="termSel">
+            </heat-map>
+        </div>
+    </div>
+
+    <div id="visit-note" class="row">
+        <div id="visit-note-list" class="col-xs-6">
+            <h6>Visit Note List</h6>
+            <!-- <form class="form-inline" ng-submit="visitListSearch(visitListSearchInput)">
+                <div class="form-group">
+                    <input type="text" class="form-control" ng-model="visitListSearchInput" placeholder="Search">
+                    <input type="submit" class="form-control">
+                </div>
+                <!--<button type="submit" class="btn btn-default">
+                  <span class="glyphicon glyphicon-search"></span> Go
+                </button>
+            </form>-->
+            <form class="form-inline" ng-submit="page1Submit(searchInput)">
+        <!-- <div class="form-group"> -->
+        <div class="row"> 
+        <div class="col-md-2">
+            <input type="text" class="form-control" ng-model="searchInput" placeholder="Search">
+        </div>
+        <div class="col-md-2">
+            <input type="submit" class="form-control">
+            </div>
+        </div>
+    	</form>
+            <table class="table table-bordered table-hover table-sm">
+                <thead class="thead-default">
+                <tr>
+                    <th>Date</th>
+                    <th>Diagnosis</th>
+                    <th>Provider</th>
+                    <th>Location</th>
+                </tr>
+                </thead>
+                <tbody ng-repeat="visitNote in visitNotes">
+                <tr>
+                    <td>{{visitNote.date}}</td>
+                    <td>{{visitNote.diagnosis}}</td>
+                    <td>{{visitNote.provider}}</td>
+                    <td>{{visitNote.location}}</td>
+                </tr>
+                </tbody>
+            </table>
+            <nav aria-label="Page navigation">
+                <ul class="pagination pagination-sm">
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">4</a></li>
+                    <li class="page-item"><a class="page-link" href="#">5</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <div id="visit-note-rendering" class="col-xs-6">
+            <h6>Visit Note Rendering</h6>
+            <p>{{rendering}}</p>
+        </div>
+    </div>
+</div>
+
+<!--<button type="button" class="reset">Reset</button>
+    <button type="button" class="resetzoom">Reset Zoom</button>-->

@@ -1,0 +1,197 @@
+.center {
+  margin-top: 10px;
+  /*margin-left: 100px;*/
+  margin-right: 190px;
+  margin-bottom: 10px;
+  border: 1px solid grey;
+  padding: 10px;
+  border-radius: 15px;
+}
+
+article{
+  padding:20px;
+  margin-left: 100px;
+  margin-right: 100px;
+}
+
+.ui-rangeSlider-bar{
+  background: #009384;
+}
+
+.btn-group {
+  margin-left: 100px;
+  margin-top: 25px;
+  /*margin-bottom: 25px;*/
+}
+
+#dropdownpage1 {
+  float: right;
+  margin-right: 100px;
+  margin-top: 25px;
+  margin-bottom: 5px;
+}
+
+.dropdown-menu {
+    width: 50px;
+}
+
+#cloud {
+  margin-left: 100px;
+  margin-right: 100px;
+}
+
+#cloudborder{
+  margin-top: 25px;
+  /*margin-left: 100px;*/
+  margin-right: 190px;
+  border: 1px solid grey;
+  padding: 20px;
+  border-radius: 15px;
+}
+
+.searchbottom {
+  margin-top: 25px;
+  margin-left: 350px;
+  /*margin-bottom: 100px;*/
+}
+
+.breadcrumb{
+  margin-bottom: 5px;	
+}
+
+#clearHistory {
+  float: left;
+  margin-left: 5px;
+  margin-bottom: 5px;
+}
+
+#backButton {
+  float: right;
+  margin-right: 190px;
+  margin-bottom: 5px;
+}
+
+rect.bar {
+  stroke: #E6E6E6;
+  stroke-width:2px;
+}
+
+/*#heatmap {
+  height: 450px;
+  border: 1px solid grey;
+  border-radius: 5px;
+  margin: 5px;
+  padding: 5px;
+}*/
+
+h6 {
+  background-color: #eceeef;
+//background-color: #1abc9c;
+}
+
+#visit-note {
+  margin-right: 190px;
+}
+
+#visit-note-list {
+  border: 1px solid grey;
+  border-radius: 5px;
+//margin: 5px;
+  padding: 5px;
+  float: left;
+//width: 375px;
+}
+
+.pagination {
+  float: right;
+}
+
+#visit-note-rendering {
+  border: 1px solid grey;
+  border-radius: 5px;
+//margin: 5px;
+  padding: 5px;
+  float: right;
+//width: 175px;
+//background-color: #474e5d;
+//color: #ffffff;
+}
+
+.problem{
+  color: red
+}
+
+.treatment{
+  color: green
+}
+
+.test{
+  color: blue
+}
+
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; } /*for ui bootstrap*/
+
+.dropdownpage2 {
+  margin-bottom: 20px;
+}
+
+p{
+  font-family: sans-serif;
+  font-size:12px;
+}
+.problem {
+  fill: red;
+}
+.treatment {
+  fill: green;
+}
+.test {
+  fill: blue;
+}
+.hide {
+  visibility: hidden;
+}
+.show{
+  visibility: visible;
+}
+.g_main {
+  cursor:pointer;
+  pointer-events: all;
+}
+
+/*heatmap:hover
+  {
+     visibility: hidden;
+  }*/
+
+#heatmapdir {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+#reset{
+  float: right;
+}
+
+div.tooltip {
+  position: absolute;
+  max-width: 200px;
+  height: auto;
+  padding: 5px;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+  pointer-events: none; /* VERY IMPORTANT! */
+  font-family: sans-serif;
+  font-size:12px;
+}
+
+#heatmapsection {
+  margin-top: 10px;
+  /*margin-left: 10px;*/
+  margin-right: 190px;
+  margin-bottom: 10px;
+  border: 1px solid grey;
+  padding: 30px;
+  border-radius: 15px;
+}
