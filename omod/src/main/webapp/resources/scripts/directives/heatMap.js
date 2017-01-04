@@ -30,8 +30,10 @@ visitNotesApp.directive('heatMap', function($compile){
                 gridHeight = 20,
                 entityTypes = ['red', 'green', 'blue'],
                 buckets = 9,
-                colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"]; // alternatively colorbrewer.YlGnBu[9]
-
+                //colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"], // alternatively colorbrewer.YlGnBu[9]
+            	AllRect = [],
+            	legendElementWidth = 100;
+            
             function getDate(d){
 
                 //20150101
@@ -46,6 +48,8 @@ visitNotesApp.directive('heatMap', function($compile){
 
             function buildviz(data){
 
+            	var colorScale;
+            	
                 d3.select("svg").remove();
 
                 var filterSearchTerm = data.filter(function(d) { return d.expand === "show" });
@@ -54,7 +58,7 @@ visitNotesApp.directive('heatMap', function($compile){
 
                 var svg = d3.select("#heatmapdir").append("svg")
                     .attr("width", width + margin.left + margin.right)
-                    .attr("height", ((searchTerms.length+3)*gridHeight) + margin.top + margin.bottom)
+                    .attr("height", ((searchTerms.length+6)*gridHeight) + margin.top + margin.bottom)
                     /*.call(d3.zoom().on("zoom", function () {
                      svg.attr("transform", d3.event.transform)
                      }))*/
@@ -110,7 +114,83 @@ visitNotesApp.directive('heatMap', function($compile){
 
                 var j = 0;
                 nested
-                    .each(function(d1, i) {
+                .each(function(d1, i) {
+                    
+                    var grps = Math.ceil(numMonths/groupMonths);
+                    var startRect, endRect, lengthRect, yRect, totFreq, addFreq, currentDate;
+                    var startIndex = 0;
+                    var DataRect = [];
+                    
+                    function getVisitDate(d, i){ return d[i]['date'];}
+                    
+                    function gettotFreq(d, i){ return d[i]['freq'];}
+                    
+                    startRect = new Date(minDate.getTime());
+                    endRect = new Date(minDate.getTime());
+                    //console.log("Init startRect: " + startRect);
+                    
+                    for(i=0; i<grps; i++){
+                        var listDates = [];
+                        var newdate;
+                        addFreq = 0;
+                        yRect = j;
+                        endRect.setMonth(startRect.getMonth() + groupMonths);
+                        endRect = new Date(Math.min(endRect, maxDate));
+                        //var maxDate=new Date(Math.max.apply(null,dates));
+                        //console.log("endRect: " + endRect);
+                        
+                        //TODO: add corresponding dates for each heatmapRect to newdata. also modify loop below
+                        for(k=0; k<d1.counts.length; k++){ 
+                            currentDate = getDate(getVisitDate(d1.counts, k));
+                            //console.log("currentDate, startRect, endRect: " + currentDate, startRect, endRect);
+                            
+                            if((currentDate >= startRect) && (currentDate < endRect)){
+                                addFreq += gettotFreq(d1.counts, k);
+                                //console.log("startRect, endRect, yRect, k, currentDate, addFreq: " + startRect, endRect, yRect, k, currentDate, addFreq);
+                                newdate = {
+                                    "date": new Date(currentDate.getTime()),
+                                    "yDate": j,
+                                    "dateFreq": gettotFreq(d1.counts, k)
+                                }
+                                //console.log("newdate.date: " + newdate.date);
+                                //listDates.push(newdate);
+                            }
+                            else if (currentDate >=  endRect){
+                                //startIndex = k;
+                                break;
+                            }
+                        }
+                        var newdata = {
+                            "startRect":  new Date(startRect.getTime()),
+                            "endRect": new Date(endRect.getTime()),
+                            "yRect": yRect,
+                            "lengthRect": lengthRect,
+                            "totFreq":  addFreq
+                            //"listDates": listDates
+                        }
+                        //console.log("newdata.startRect: " + newdata.startRect);
+                        //console.log("newdata.endRect: " + newdata.endRect);
+                        //console.log("newdata.totFreq: " + newdata.totFreq);
+                        //console.log("newdata.yRect: " + newdata.yRect);
+                        //console.log("newdata.listDates: " + newdata.listDates);
+                        AllRect.push(newdata);
+                        startRect.setMonth(startRect.getMonth() + groupMonths);
+                        //console.log("startRect: " + startRect);
+                    }
+                    //AllRect.push(DataRect);
+                    //console.log("Build DataRect: " + JSON.stringify(DataRect));
+                });
+                
+                //console.log("Build AllRect: " + JSON.stringify(AllRect));
+                //console.log("max color: " + d3.max(AllRect, function(d){ return d.totFreq;}));
+
+                colorScale = d3.scaleLinear()
+                                .domain([0, d3.max(AllRect, function(d){ return d.totFreq;})])
+                                //.domain([0, d3.max(totFreq)])
+                                //.range(['#ffffd9', '#081d58']); blue
+                                .range(['#ffffd9', '#ff0033']); //pink
+                
+                nested.each(function(d1, i) {
 
                         var grps = Math.ceil(numMonths/groupMonths);
                         var startRect, endRect, lengthRect, yRect, totFreq, addFreq, currentDate;
@@ -174,11 +254,11 @@ visitNotesApp.directive('heatMap', function($compile){
                             //console.log("startRect: " + startRect);
                         }
 
-                        var colorScale = d3.scaleLinear()
+                        /*var colorScale = d3.scaleLinear()
                             .domain([0, d3.max(DataRect, function(d){ return d.totFreq;})])
                             //.domain([0, d3.max(totFreq)])
                             //.range(['#ffffd9', '#081d58']); blue
-                            .range(['#ffffd9', '#ff0033']); //pink
+                            .range(['#ffffd9', '#ff0033']); //pink*/
 
                         //console.log("Build d1: " + JSON.stringify(d1));
                         //console.log("Build DataRect: " + JSON.stringify(DataRect));
@@ -291,6 +371,36 @@ visitNotesApp.directive('heatMap', function($compile){
                 var xAxis = svg.append("g").call(xAxisGen)
                     .attr("class","Xaxis")
                     .attr("transform", "translate(" + 1.5*termWidth + "," + (j+2)*gridHeight + ")");
+            
+                var colors = [], element;
+                for (var c=0; c<5 ;c++){
+                    element = {"index": Math.round(d3.max(AllRect, function(d){ return d.totFreq;})*(c/4),0), "color": colorScale(Math.round(d3.max(AllRect, function(d){ return d.totFreq;})*(c/4)),0)};
+                    colors.push(element);
+                } 
+                
+                console.log("colors: " + JSON.stringify(colors));
+
+                var legend = svg.append("g")
+                               .attr("class", "legend");
+
+                 legend.selectAll('rect')
+                   .data(colors)
+                   .enter().append('rect')
+                   .attr("x", function(d, i) { return legendElementWidth * i; })
+                   .attr("y", (j+4)*gridHeight)
+                   .attr("width", legendElementWidth)
+                   .attr("height", gridHeight)
+                   .style("fill", function(d, i) { return d.color });
+
+                 legend.selectAll('text')
+                   .data(colors)
+                   .enter().append('text')
+                   .attr("class", "legendtext")
+                   .text(function(d) { return d.index; })
+                   .attr("x", function(d, i) { return legendElementWidth * (i + (1/2)); })
+                   .attr("y", (j+6)*gridHeight );
+
+                 legend.exit().remove();
             } //end of buildviz
 
             function updateviz(origData, dateSel, termSel, xdeleteArray, negToggleArray, searchTerms){
@@ -298,6 +408,7 @@ visitNotesApp.directive('heatMap', function($compile){
                 var data1 = JSON.parse(JSON.stringify(origData));
                 var data2, data, termfound;
                 var toggleArray = [];
+                var AllRect = [];
 
                 //TODO - Set to num months in history from today. Change json data to add 2016
                 var maxDate = getDate('20161101');
@@ -379,7 +490,7 @@ visitNotesApp.directive('heatMap', function($compile){
 
                 var svg = d3.select("#heatmapdir").append("svg")
                     .attr("width", width + margin.left + margin.right)
-                    .attr("height", ((allTerms.length+3)*gridHeight) + margin.top + margin.bottom)
+                    .attr("height", ((allTerms.length+6)*gridHeight) + margin.top + margin.bottom)
                     /*.call(d3.zoom().on("zoom", function () {
                      svg.attr("transform", d3.event.transform)
                      }))*/
@@ -440,6 +551,81 @@ visitNotesApp.directive('heatMap', function($compile){
                     .range([0, width-termWidth*2]);
 
                 var j = 0;
+                nested
+                .each(function(d1, i) {
+                    
+                    var grps = Math.ceil(dateSel/groupMonths);
+                    var startRect, endRect, lengthRect, yRect, totFreq, addFreq, currentDate;
+                    var startIndex = 0;
+                    var DataRect = [];
+                    
+                    function getVisitDate(d, i){ return d[i]['date'];}
+                    
+                    function gettotFreq(d, i){ return d[i]['freq'];}
+                    
+                    startRect = new Date(minDate.getTime());
+                    endRect = new Date(minDate.getTime());
+                    //console.log("Init startRect: " + startRect);
+                    
+                    for(i=0; i<grps; i++){
+                        var listDates = [];
+                        var newdate;
+                        addFreq = 0;
+                        yRect = j;
+                        endRect.setMonth(startRect.getMonth() + groupMonths);
+                        endRect = new Date(Math.min(endRect, maxDate));
+                        //console.log("endRect: " + endRect);
+                        
+                        for(k=0; k<d1.counts.length; k++){ 
+                            currentDate = getDate(getVisitDate(d1.counts, k));
+                            //console.log("currentDate, startRect, endRect: " + currentDate, startRect, endRect);
+                            
+                            if((currentDate >= startRect) && (currentDate < endRect)){
+                                addFreq += gettotFreq(d1.counts, k);
+                                //console.log("startRect, endRect, yRect, k, currentDate, addFreq: " + startRect, endRect, yRect, k, currentDate, addFreq);
+                                newdate = {
+                                    "date": new Date(currentDate.getTime()),
+                                    "yDate": j,
+                                    "dateFreq": gettotFreq(d1.counts, k)
+                                }
+                                //console.log("newdate.date: " + newdate.date);
+                                //listDates.push(newdate);
+                            }
+                            else if (currentDate >=  endRect){
+                                //startIndex = k;
+                                break;
+                            }
+                        }
+                        var newdata = {
+                            "startRect":  new Date(startRect.getTime()),
+                            "endRect": new Date(endRect.getTime()),
+                            "yRect": yRect,
+                            "lengthRect": lengthRect,
+                            "totFreq":  addFreq
+                            //"listDates": listDates
+                        }
+                        //console.log("newdata.startRect: " + newdata.startRect);
+                        //console.log("newdata.endRect: " + newdata.endRect);
+                        //console.log("newdata.totFreq: " + newdata.totFreq);
+                        //console.log("newdata.yRect: " + newdata.yRect);
+                        //console.log("newdata.listDates: " + newdata.listDates);
+                        //DataRect.push(newdata);
+                        AllRect.push(newdata);
+                        startRect.setMonth(startRect.getMonth() + groupMonths);
+                        //console.log("startRect: " + startRect);
+                    }
+                });
+                
+                    //console.log("Build AllRect: " + JSON.stringify(AllRect));
+                    //console.log("max color: " + d3.max(AllRect, function(d){ return d.totFreq;}));
+                    
+                    
+                    var colorScale = d3.scaleLinear()
+                                .domain([0, d3.max(AllRect, function(d){ return d.totFreq;})])
+                                //.domain([0, d3.max(totFreq)])
+                                //.range(['#ffffd9', '#081d58']); blue
+                                .range(['#ffffd9', '#ff0033']); //pink
+                    
                 nested
                     .each(function(d1, i) {
 
@@ -503,11 +689,11 @@ visitNotesApp.directive('heatMap', function($compile){
                             //console.log("startRect: " + startRect);
                         }
 
-                        var colorScale = d3.scaleLinear()
+                        /*var colorScale = d3.scaleLinear()
                             .domain([0, d3.max(DataRect, function(d){ return d.totFreq;})])
                             //.domain([0, d3.max(totFreq)])
                             //.range(['#ffffd9', '#081d58']); blue
-                            .range(['#ffffd9', '#ff0033']); //pink
+                            .range(['#ffffd9', '#ff0033']); //pink*/
 
                         //console.log("Update d1: " + JSON.stringify(d1));
                         //console.log("Update DataRect: " + JSON.stringify(DataRect));
@@ -630,6 +816,38 @@ visitNotesApp.directive('heatMap', function($compile){
                     .attr("class","Xaxis")
                     .attr("transform", "translate(" + 1.5*termWidth + "," + (j+2)*gridHeight + ")");
 
+                svg.selectAll(".legend").remove();
+                
+                var colors = [], element;
+                 for (var c=0; c<5 ;c++){
+                     element = {"index": Math.round(d3.max(AllRect, function(d){ return d.totFreq;})*(c/4),0), "color": colorScale(Math.round(d3.max(AllRect, function(d){ return d.totFreq;})*(c/4)),0)};
+                     colors.push(element);
+                 } 
+                 
+                 console.log("colors: " + JSON.stringify(colors));
+
+                 var legend = svg.append("g")
+                                .attr("class", "legend");
+
+                  legend.selectAll('rect')
+                    .data(colors)
+                    .enter().append('rect')
+                    .attr("x", function(d, i) { return legendElementWidth * i; })
+                    .attr("y", (j+4)*gridHeight)
+                    .attr("width", legendElementWidth)
+                    .attr("height", gridHeight)
+                    .style("fill", function(d, i) { return d.color });
+
+                  legend.selectAll('text')
+                    .data(colors)
+                    .enter().append('text')
+                    .attr("class", "legendtext")
+                    .text(function(d) { return d.index; })
+                    .attr("x", function(d, i) { return legendElementWidth * (i + (1/2)); })
+                    .attr("y", (j+6)*gridHeight );
+
+                  legend.exit().remove();
+                  
                 d3.selectAll(".Xdelete")
                     .on("click", function(d, i){
                         //var dateSel = d3.select('#date-option').node().value;

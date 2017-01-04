@@ -117,18 +117,6 @@ h6 {
 //color: #ffffff;
 }
 
-.problem{
-  color: red
-}
-
-.treatment{
-  color: green
-}
-
-.test{
-  color: blue
-}
-
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; } /*for ui bootstrap*/
 
 .dropdownpage2 {
@@ -166,7 +154,7 @@ p{
 
 #heatmapdir {
   margin-top: 5px;
-  margin-bottom: 5px;
+  margin-bottom: 1px;
 }
 
 #reset{
@@ -194,4 +182,9 @@ div.tooltip {
   border: 1px solid grey;
   padding: 30px;
   border-radius: 15px;
+}
+
+.legendtext {
+  font-family: sans-serif;
+  font-size:12px;
 }
