@@ -12,13 +12,12 @@
             Page
         </button>
     </div>
-    <div id="heatmapsection">
-        <div class="row" ng-controller="datepickerController">
+    <div id="heatmapsection" ng-controller="heatmapController">
+        <div class="row">
             <h6 class="col-xs-2"><span class="label label-default">Start Date:</span></h6>
             <div class="col-xs-3">
-                <!--{{startDate.name}}-->
                 <p class="input-group">
-                    <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="startDate.name"
+                    <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="startDate.name" ng-model-options="{timezone: 'utc'}"
                            is-open="popup1.opened" datepicker-options="dateOptions1" close-text="Close"/>
                     <span class="input-group-btn">
             <button type="button" class="btn btn-default" ng-click="open1()"><i
@@ -29,9 +28,8 @@
 
             <h6 class="col-xs-2"><span class="label label-default">End Date:</span></h6>
             <div class="col-xs-3">
-                <!--{{endDate}}-->
                 <p class="input-group">
-                    <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="endDate"
+                    <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="endDate.name" ng-model-options="{timezone: 'utc'}"
                            is-open="popup2.opened" datepicker-options="dateOptions2" close-text="Close"/>
                     <span class="input-group-btn">
             <button type="button" class="btn btn-default" ng-click="open2()"><i
@@ -41,39 +39,10 @@
             </div>
         </div>
 
-        <div ng-controller="heatmapController">
-            <!--<div class="dropdown dropdownpage2 col-xs-1">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    {{dateSel.datename}}
-                    <span class="caret"></span></button>
-                <ul class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenuButton">
-                    <li ng-repeat="date in dateSelOptions">
-                        <a class="dropdown-item" href="#" ng-click="selectDateSel(date)">{{date.datename}}</a>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="dropdown dropdownpage2 col-xs-2">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    {{termSel.termname}}
-                    <span class="caret"></span></button>
-                <ul class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenuButton">
-                    <li ng-repeat="term in termSelOptions">
-                        <a class="dropdown-item" href="#" ng-click="selectTermSel(term)">{{term.termname}}</a>
-                    </li>
-                </ul>
-            </div>-->
-
-            <select ng-model="dateSel" ng-options="date.datename for date in dateSelOptions">
-            </select>
-
-            <select ng-model="termSel" ng-options="term.termname for term in termSelOptions">
-            </select>
+        <div >
             <!--<button id="reset" type="button" class="btn btn-secondary col-xs-1" ng-click="resetHeatMap()">Reset</button>-->
 
-            <heat-map id="heatmapdir" val="val" date-sel="dateSel" term-sel="termSel">
+            <heat-map id="heatmapdir" val="val" start-date="startDate" end-date="endDate">
             </heat-map>
         </div>
     </div>

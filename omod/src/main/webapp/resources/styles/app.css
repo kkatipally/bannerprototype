@@ -18,7 +18,7 @@ article{
   background: #009384;
 }
 
-.btn-group {
+#entityTypes {
   margin-left: 100px;
   margin-top: 25px;
   /*margin-bottom: 25px;*/
@@ -31,7 +31,7 @@ article{
   margin-bottom: 5px;
 }
 
-.dropdown-menu {
+#numTermsDropdownMenu {
     width: 50px;
 }
 

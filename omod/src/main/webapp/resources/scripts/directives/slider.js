@@ -6,12 +6,12 @@ visitNotesApp.directive('slider', function($compile){
             var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
             element.dateRangeSlider({
                     bounds: { //bounds of the date range
-                        min: new Date(2012, 0, 1),
-                        max: new Date(2012, 11, 31)
+                        min: new Date(2015, 0, 1),
+                        max: new Date(2017, 0, 1)
                     },
                     defaultValues:{
-                        min: new Date(2012, 1, 1),
-                        max: new Date(2012, 11, 31)
+                        min: new Date(2015, 0, 1),
+                        max: new Date(2017, 0, 1)
                     },
                     formatter:function(val){
                         var days = val.getDate(),

@@ -2,7 +2,7 @@
 
 visitNotesApp.controller('datepickerController', function ($scope) {
 
-    $scope.startDate = {"name": new Date(2016, 8, 1)};
+    /*$scope.startDate = {"name": new Date(2016, 8, 1)};
 
     $scope.dateOptions1 = {
         formatYear: 'yy',
@@ -36,6 +36,6 @@ visitNotesApp.controller('datepickerController', function ($scope) {
 
     $scope.popup2 = {
         opened: false
-    };
+    };*/
 
 });

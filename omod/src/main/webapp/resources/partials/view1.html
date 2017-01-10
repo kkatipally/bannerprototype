@@ -5,7 +5,7 @@
     </article>
 
     <div ng-controller="inputController">
-        <div class="btn-group" data-toggle="buttons-radio">
+        <div id="entityTypes" class="btn-group" data-toggle="buttons-radio">
             <entityType ng-repeat="entityType in entityTypes">
                 <button type="button" class="btn btn-secondary" ng-click="selectEntityType(entityType.name)">
                     {{entityType.name}}
@@ -18,7 +18,7 @@
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 View
                 <span class="caret"></span></button>
-            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+            <ul id="numTermsDropdownMenu" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                 <li ng-repeat="displayNumTerm in displayNumTerms">
                     <a class="dropdown-item" href="#" ng-click="selectDisplayNumTerms(displayNumTerm.name)">{{displayNumTerm.name}}</a>
                 </li>

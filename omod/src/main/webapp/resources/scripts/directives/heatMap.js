@@ -6,19 +6,22 @@ visitNotesApp.directive('heatMap', function($compile){
         restrict: 'E',
         scope: {
             val: '=val',
-            dateSel: '=dateSel',
-            termSel: '=termSel'
+            startDate: '=startDate',
+            endDate: '=endDate'
+            //dateSel: '=dateSel'
+            //termSel: '=termSel'
         },
         link: function(scope, element, attrs, controller) {
 
-            var dateSel = scope.dateSel.datevalue;
-            var termSel = scope.termSel.termvalue;
+            //var dateSel = scope.dateSel.datevalue;
+            //var termSel = scope.termSel.termvalue;
+        	var minDate = scope.startDate.name;
+            var maxDate = scope.endDate.name;
 
-            //TODO - Get from datepicker. Change json data to add 2016
-            var minDate = getDate('20150901');
-            var maxDate = getDate('20161101');
-            var numMonths = maxDate.getMonth() - minDate.getMonth() + (12 * (maxDate.getFullYear() - minDate.getFullYear()));
-            //console.log("numMonths: " + numMonths);
+            //var minDate = getDate('20150901');
+            //var maxDate = getDate('20161101');
+            var numMonths = 1 + maxDate.getMonth() - minDate.getMonth() + (12 * (maxDate.getFullYear() - minDate.getFullYear()));
+            //console.log("numMonths in updateviz: " + numMonths);
 
             var i, j, k, heatRect, markDates,
                 groupMonths = 3,
@@ -46,7 +49,7 @@ visitNotesApp.directive('heatMap', function($compile){
                 return new Date(year, month, day);
             }
 
-            function buildviz(data){
+            function buildviz(data, minDate, maxDate){
 
             	var colorScale;
             	
@@ -96,10 +99,9 @@ visitNotesApp.directive('heatMap', function($compile){
                     .attr("class", "nestedClass")
                     .attr('id', function(d, i) { return 'nestedId' + i });
 
-                /*//TODO - Get from datepicker. Change json data to add 2016
-                 var minDate = getDate('20151001');
-                 var maxDate = getDate('20161031');
-                 var numMonths = maxDate.getMonth() - minDate.getMonth() + (12 * (maxDate.getFullYear() - minDate.getFullYear()));
+                 //var minDate = getDate('20151001');
+                 //var maxDate = getDate('20161031');
+                 var numMonths = 1 + maxDate.getMonth() - minDate.getMonth() + (12 * (maxDate.getFullYear() - minDate.getFullYear()));
                  //console.log("numMonths: " + numMonths);
                  //console.log("Min Date: " + minDate);
                  //console.log("Max Date: " + maxDate);*/
@@ -125,8 +127,9 @@ visitNotesApp.directive('heatMap', function($compile){
                     
                     function gettotFreq(d, i){ return d[i]['freq'];}
                     
-                    startRect = new Date(minDate.getTime());
-                    endRect = new Date(minDate.getTime());
+                    startRect = new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate(), 0, 0, 0, 0);
+                    endRect = new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate(), 0, 0, 0, 0);
+                    
                     //console.log("Init startRect: " + startRect);
                     
                     for(i=0; i<grps; i++){
@@ -134,12 +137,12 @@ visitNotesApp.directive('heatMap', function($compile){
                         var newdate;
                         addFreq = 0;
                         yRect = j;
-                        endRect.setMonth(startRect.getMonth() + groupMonths);
-                        endRect = new Date(Math.min(endRect, maxDate));
+                       	endRect= new Date(startRect.getFullYear(), startRect.getMonth() + groupMonths, 1, 0, 0, 0, 0);
+
+                        endRect = new Date(Math.min(endRect, new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)));
                         //var maxDate=new Date(Math.max.apply(null,dates));
                         //console.log("endRect: " + endRect);
                         
-                        //TODO: add corresponding dates for each heatmapRect to newdata. also modify loop below
                         for(k=0; k<d1.counts.length; k++){ 
                             currentDate = getDate(getVisitDate(d1.counts, k));
                             //console.log("currentDate, startRect, endRect: " + currentDate, startRect, endRect);
@@ -174,7 +177,7 @@ visitNotesApp.directive('heatMap', function($compile){
                         //console.log("newdata.yRect: " + newdata.yRect);
                         //console.log("newdata.listDates: " + newdata.listDates);
                         AllRect.push(newdata);
-                        startRect.setMonth(startRect.getMonth() + groupMonths);
+                        startRect= new Date(endRect.getTime());
                         //console.log("startRect: " + startRect);
                     }
                     //AllRect.push(DataRect);
@@ -193,6 +196,7 @@ visitNotesApp.directive('heatMap', function($compile){
                 nested.each(function(d1, i) {
 
                         var grps = Math.ceil(numMonths/groupMonths);
+                        //console.log("numMonths, grps : " + numMonths + ' ' + grps);
                         var startRect, endRect, lengthRect, yRect, totFreq, addFreq, currentDate;
                         var startIndex = 0;
                         var DataRect = [];
@@ -201,8 +205,9 @@ visitNotesApp.directive('heatMap', function($compile){
 
                         function gettotFreq(d, i){ return d[i]['freq'];}
 
-                        startRect = new Date(minDate.getTime());
-                        endRect = new Date(minDate.getTime());
+                        startRect = new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate(), 0, 0, 0, 0);
+                        endRect = new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate(), 0, 0, 0, 0);
+                        
                         //console.log("Init startRect: " + startRect);
 
                         for(i=0; i<grps; i++){
@@ -210,12 +215,12 @@ visitNotesApp.directive('heatMap', function($compile){
                             var newdate;
                             addFreq = 0;
                             yRect = j;
-                            endRect.setMonth(startRect.getMonth() + groupMonths);
-                            endRect = new Date(Math.min(endRect, maxDate));
+                        	endRect= new Date(startRect.getFullYear(), startRect.getMonth() + groupMonths, 1, 0, 0, 0, 0);
+                        	endRect = new Date(Math.min(endRect, new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)));
+
                             //var maxDate=new Date(Math.max.apply(null,dates));
                             //console.log("endRect: " + endRect);
 
-                            //TODO: add corresponding dates for each heatmapRect to newdata. also modify loop below
                             for(k=0; k<d1.counts.length; k++){
                                 currentDate = getDate(getVisitDate(d1.counts, k));
                                 //console.log("currentDate, startRect, endRect: " + currentDate, startRect, endRect);
@@ -250,7 +255,7 @@ visitNotesApp.directive('heatMap', function($compile){
                             //console.log("newdata.yRect: " + newdata.yRect);
                             //console.log("newdata.listDates: " + newdata.listDates);
                             DataRect.push(newdata);
-                            startRect.setMonth(startRect.getMonth() + groupMonths);
+                            startRect= new Date(endRect.getTime());
                             //console.log("startRect: " + startRect);
                         }
 
@@ -378,7 +383,7 @@ visitNotesApp.directive('heatMap', function($compile){
                     colors.push(element);
                 } 
                 
-                console.log("colors: " + JSON.stringify(colors));
+                //console.log("colors: " + JSON.stringify(colors));
 
                 var legend = svg.append("g")
                                .attr("class", "legend");
@@ -403,21 +408,22 @@ visitNotesApp.directive('heatMap', function($compile){
                  legend.exit().remove();
             } //end of buildviz
 
-            function updateviz(origData, dateSel, termSel, xdeleteArray, negToggleArray, searchTerms){
+            function updateviz(origData, minDate, maxDate, xdeleteArray, negToggleArray, searchTerms){
 
                 var data1 = JSON.parse(JSON.stringify(origData));
                 var data2, data, termfound;
                 var toggleArray = [];
                 var AllRect = [];
 
-                //TODO - Set to num months in history from today. Change json data to add 2016
-                var maxDate = getDate('20161101');
+                //var maxDate = getDate('20161101');
 
-                var minDate = new Date(maxDate.getTime());
-                minDate.setMonth(maxDate.getMonth() - dateSel);
+                //var minDate = new Date(maxDate.getTime());
+                //minDate.setMonth(maxDate.getMonth() - dateSel);
 
                 //console.log("Updated min Date: " + minDate);
                 //console.log("Updated max Date: " + maxDate);
+                
+                var numMonths = 1 + maxDate.getMonth() - minDate.getMonth() + (12 * (maxDate.getFullYear() - minDate.getFullYear()));
 
                 for(var n=0; n<searchTerms.length; n++){
                     termfound = 0;
@@ -449,16 +455,18 @@ visitNotesApp.directive('heatMap', function($compile){
                 data1.forEach(function(d){
                     //d.counts.splice(0,d.counts.length-dateSel);
                     d.counts.filter(function(d) {
-                        return dateSel >= (maxDate.getMonth() - (getDate(d.date)).getMonth() + (12 * (maxDate.getFullYear() - (getDate(d.date)).getFullYear()) ) )
+                    	//TODO
+                        //return dateSel >= (maxDate.getMonth() - (getDate(d.date)).getMonth() + (12 * (maxDate.getFullYear() - (getDate(d.date)).getFullYear()) ) )
+                        return ((getDate(d.date) >= minDate) && (getDate(d.date) <= maxDate) );
                     });
                     //console.log(d.counts.length);
                 });
 
-                if(termSel === "Search")
+                /*if(termSel === "Search")
                     data2 = data1.filter(function(d) { return d.expand === "show" })
                 else if(termSel === "All")
                     data2 = data1;
-                else { //toggle option
+                else { //toggle option*/
 
                     for(var n=0; n<negToggleArray.length; n++){
                         data1 = data1.filter(function(d, j) {
@@ -468,7 +476,7 @@ visitNotesApp.directive('heatMap', function($compile){
                         //console.log("data1 within toggle loop: " + JSON.stringify(data1));
                     }
                     data2 = data1;
-                }
+                //}
                 //console.log("data after toggle: " + JSON.stringify(data2));
 
 
@@ -536,7 +544,7 @@ visitNotesApp.directive('heatMap', function($compile){
                 //console.log("Updated data: " + JSON.stringify(data[0].counts));
                 //console.log("Updated dateSel: " + dateSel);
 
-                /*//TODO - Set to num months in history from today. Change json data to add 2016
+                /* 
                  var maxDate = getDate('20161101');
 
                  var minDate = new Date(maxDate.getTime());
@@ -554,7 +562,7 @@ visitNotesApp.directive('heatMap', function($compile){
                 nested
                 .each(function(d1, i) {
                     
-                    var grps = Math.ceil(dateSel/groupMonths);
+                    var grps = Math.ceil(numMonths/groupMonths);
                     var startRect, endRect, lengthRect, yRect, totFreq, addFreq, currentDate;
                     var startIndex = 0;
                     var DataRect = [];
@@ -563,8 +571,9 @@ visitNotesApp.directive('heatMap', function($compile){
                     
                     function gettotFreq(d, i){ return d[i]['freq'];}
                     
-                    startRect = new Date(minDate.getTime());
-                    endRect = new Date(minDate.getTime());
+                    startRect = new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate(), 0, 0, 0, 0);
+                    endRect = new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate(), 0, 0, 0, 0);
+                    
                     //console.log("Init startRect: " + startRect);
                     
                     for(i=0; i<grps; i++){
@@ -572,8 +581,8 @@ visitNotesApp.directive('heatMap', function($compile){
                         var newdate;
                         addFreq = 0;
                         yRect = j;
-                        endRect.setMonth(startRect.getMonth() + groupMonths);
-                        endRect = new Date(Math.min(endRect, maxDate));
+                    	endRect= new Date(startRect.getFullYear(), startRect.getMonth() + groupMonths, 1, 0, 0, 0, 0);
+                    	endRect = new Date(Math.min(endRect, new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)));
                         //console.log("endRect: " + endRect);
                         
                         for(k=0; k<d1.counts.length; k++){ 
@@ -611,7 +620,7 @@ visitNotesApp.directive('heatMap', function($compile){
                         //console.log("newdata.listDates: " + newdata.listDates);
                         //DataRect.push(newdata);
                         AllRect.push(newdata);
-                        startRect.setMonth(startRect.getMonth() + groupMonths);
+                        startRect= new Date(endRect.getTime());
                         //console.log("startRect: " + startRect);
                     }
                 });
@@ -629,7 +638,8 @@ visitNotesApp.directive('heatMap', function($compile){
                 nested
                     .each(function(d1, i) {
 
-                        var grps = Math.ceil(dateSel/groupMonths);
+                        var grps = Math.ceil(numMonths/groupMonths);
+                        //console.log("grps in updateviz: " + grps);
                         var startRect, endRect, lengthRect, yRect, totFreq, addFreq, currentDate;
                         var startIndex = 0;
                         var DataRect = [];
@@ -638,8 +648,9 @@ visitNotesApp.directive('heatMap', function($compile){
 
                         function gettotFreq(d, i){ return d[i]['freq'];}
 
-                        startRect = new Date(minDate.getTime());
-                        endRect = new Date(minDate.getTime());
+                        startRect = new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate(), 0, 0, 0, 0);
+                        endRect = new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate(), 0, 0, 0, 0);
+                        
                         //console.log("Init startRect: " + startRect);
 
                         for(i=0; i<grps; i++){
@@ -647,8 +658,8 @@ visitNotesApp.directive('heatMap', function($compile){
                             var newdate;
                             addFreq = 0;
                             yRect = j;
-                            endRect.setMonth(startRect.getMonth() + groupMonths);
-                            endRect = new Date(Math.min(endRect, maxDate));
+                        	endRect= new Date(startRect.getFullYear(), startRect.getMonth() + groupMonths, 1, 0, 0, 0, 0);
+                        	endRect = new Date(Math.min(endRect, new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)));
                             //console.log("endRect: " + endRect);
 
                             for(k=0; k<d1.counts.length; k++){
@@ -685,7 +696,7 @@ visitNotesApp.directive('heatMap', function($compile){
                             //console.log("newdata.yRect: " + newdata.yRect);
                             //console.log("newdata.listDates: " + newdata.listDates);
                             DataRect.push(newdata);
-                            startRect.setMonth(startRect.getMonth() + groupMonths);
+                            startRect= new Date(endRect.getTime());
                             //console.log("startRect: " + startRect);
                         }
 
@@ -824,7 +835,7 @@ visitNotesApp.directive('heatMap', function($compile){
                      colors.push(element);
                  } 
                  
-                 console.log("colors: " + JSON.stringify(colors));
+                 //console.log("colors: " + JSON.stringify(colors));
 
                  var legend = svg.append("g")
                                 .attr("class", "legend");
@@ -859,7 +870,7 @@ visitNotesApp.directive('heatMap', function($compile){
 
                         xdeleteArray.push(textToDelete);
 
-                        updateviz(origData, dateSel, termSel, xdeleteArray, negToggleArray, searchTerms);
+                        updateviz(origData, minDate, maxDate, xdeleteArray, negToggleArray, searchTerms);
                     });
 
                 d3.selectAll(".expandLabel")
@@ -881,7 +892,7 @@ visitNotesApp.directive('heatMap', function($compile){
                             //console.log("negToggleArray after push: " + JSON.stringify(negToggleArray));
                         }
 
-                        if(negToggleArray.length === 0){
+                        /*if(negToggleArray.length === 0){
                             //d3.select('#term-option').node().value = 'All';
                             termSel = 'All';
                             scope.termSel.termvalue = 'All';
@@ -895,12 +906,12 @@ visitNotesApp.directive('heatMap', function($compile){
                             //d3.select('#term-option').node().value = 'Toggle';
                             termSel = 'Toggle';
                             scope.termSel.termvalue = 'Toggle';
-                        }
+                        }*/
 
                         //var dateSel = d3.select('#date-option').node().value;
                         //var termSel = d3.select('#term-option').node().value;
 
-                        updateviz(origData, dateSel, termSel, xdeleteArray, negToggleArray, searchTerms);
+                        updateviz(origData, minDate, maxDate, xdeleteArray, negToggleArray, searchTerms);
                     });
 
                 d3.selectAll(".resetLabel")
@@ -914,9 +925,9 @@ visitNotesApp.directive('heatMap', function($compile){
                         //scope.dateSel.datename = "All Dates";
                         //scope.dateSel.datevalue = 14;
 
-                        console.log("scope.termSel: " + angular.toJson(scope.termSel));
-                        console.log("scope.parent.termSel: " + angular.toJson(scope.$parent.termSel));
-                        updateviz(origData, 14, 'Search', xdeleteArray, negToggleArray, searchTerms);
+                        //console.log("scope.termSel: " + angular.toJson(scope.termSel));
+                        //console.log("scope.parent.termSel: " + angular.toJson(scope.$parent.termSel));
+                        updateviz(origData, 14, /*'Search',*/ xdeleteArray, negToggleArray, searchTerms);
                     });
             } //end of updateviz
 
@@ -926,21 +937,33 @@ visitNotesApp.directive('heatMap', function($compile){
                 gY.call(yAxis.scale(d3.event.transform.rescaleY(y)));
             }
 
-            scope.$watch('val', function (newVal, oldVal) {
+            scope.$watch('[val, startDate, endDate]', 
+            function(newVals, oldVals) {
+              if((oldVals[0] != newVals[0]) || 
+            	 (oldVals[1] != newVals[1]) || 
+            	 (oldVals[2] != newVals[2])){
+                //console.log('Watch triggered');
+              //}
+              
+                //scope.$watch('val', function (newVal, oldVal) {
 
                 // clear the elements inside of the directive
                 //vis.selectAll('*').remove();
                 d3.select("svg").remove();
 
                 // if 'val' is undefined, exit
-                if (!newVal) {
+                /*if (!newVal) {
                     return;
-                }
+                }*/
 
-                var data = newVal;
-                //console.log(JSON.stringify(data));
+                //var data = newVal;
+                var data = newVals[0];
+                var minDate = newVals[1].name;
+                var maxDate = newVals[2].name;
+                
+                //console.log("maxDate after watch:" + maxDate);
 
-                buildviz(data);
+                buildviz(data, minDate, maxDate);
 
                 var xdeleteArray = [];
                 var negToggleArray = [];
@@ -959,11 +982,7 @@ visitNotesApp.directive('heatMap', function($compile){
 
                 searchTerms.sort();
 
-                /*d3.selectAll(".selectClass")
-                    .on("change", function(d,i){*/
-                        //var dateSel = d3.select('#date-option').node().value;
-                        //var termSel = d3.select('#term-option').node().value;
-                        scope.$watch('dateSel', function (newVal, oldVal) {
+                        /*scope.$watch('dateSel', function (newVal, oldVal) {
                             if(newVal != oldVal) {
                                 dateSel = newVal.datevalue;
 
@@ -987,8 +1006,8 @@ visitNotesApp.directive('heatMap', function($compile){
                                 negToggleArray.sort();
                                 updateviz(data, dateSel, termSel, xdeleteArray, negToggleArray, searchTerms);
                             }
-                        });
-
+                        });*/
+                
                 d3.selectAll(".Xdelete")
                     .on("click", function(d, i){
                         //var dateSel = d3.select('#date-option').node().value;
@@ -999,7 +1018,7 @@ visitNotesApp.directive('heatMap', function($compile){
 
                         xdeleteArray.push(textToDelete);
 
-                        updateviz(data, dateSel, termSel, xdeleteArray, negToggleArray, searchTerms);
+                        updateviz(data, minDate, maxDate, xdeleteArray, negToggleArray, searchTerms);
                     });
 
                 d3.selectAll(".expandLabel")
@@ -1021,7 +1040,7 @@ visitNotesApp.directive('heatMap', function($compile){
                             //console.log("negToggleArray after push: " + JSON.stringify(negToggleArray));
                         }
 
-                        if(negToggleArray.length === 0){
+                        /*if(negToggleArray.length === 0){
                             //d3.select('#term-option').node().value = 'All';
                             termSel = 'All';
                             scope.termSel.termvalue = 'All'; //NOT WORKING!
@@ -1035,13 +1054,13 @@ visitNotesApp.directive('heatMap', function($compile){
                             //d3.select('#term-option').node().value = 'Toggle';
                             termSel = 'Toggle';
                             scope.termSel.termvalue = 'Toggle';
-                        }
+                        }*/
 
                         negToggleArray.sort();
                         //var dateSel = d3.select('#date-option').node().value;
                         //var termSel = d3.select('#term-option').node().value;
 
-                        updateviz(data, dateSel, termSel, xdeleteArray, negToggleArray, searchTerms);
+                        updateviz(data, minDate, maxDate, xdeleteArray, negToggleArray, searchTerms);
                     });
 
                 d3.selectAll(".resetLabel")
@@ -1057,7 +1076,7 @@ visitNotesApp.directive('heatMap', function($compile){
 
                         console.log("scope.termSel: " + angular.toJson(scope.termSel));
                         console.log("scope.parent.termSel: " + angular.toJson(scope.$parent.termSel));
-                        updateviz(data, 14, 'Search', xdeleteArray, negToggleArray, searchTerms);
+                        updateviz(data, 14, /*'Search',*/ xdeleteArray, negToggleArray, searchTerms);
                     });
 
                 d3.selectAll(".resetzoom")
@@ -1075,8 +1094,9 @@ visitNotesApp.directive('heatMap', function($compile){
                          view.attr("transform", d3.event.transform);}
                          ).transform, d3.zoomIdentity);*/
                     });
-
-            });
+              }
+            }, 
+            true);
     }
 }
 });

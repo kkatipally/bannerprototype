@@ -2,7 +2,7 @@
 
 visitNotesApp.controller('heatmapController', function ($scope) {
 
-    $scope.dateSelOptions = [{"datename": "All Dates", "datevalue": 14}, {"datename": "Last Year", "datevalue": 12}, {"datename": "Last 6 mo", "datevalue": 6}, {"datename": "Last 3 mo", "datevalue": 3}];
+    /*$scope.dateSelOptions = [{"datename": "All Dates", "datevalue": 14}, {"datename": "Last Year", "datevalue": 12}, {"datename": "Last 6 mo", "datevalue": 6}, {"datename": "Last 3 mo", "datevalue": 3}];
     $scope.termSelOptions = [{"termname": "Only search terms", "termvalue": "Search"}, {"termname": "All terms", "termvalue": "All"}, {"termname": "Use toggle below", "termvalue": "Toggle"}];
 
     $scope.$watch('dateSel', function() {
@@ -24,6 +24,79 @@ visitNotesApp.controller('heatmapController', function ($scope) {
     $scope.selectTermSel = function(term){
         //console.log("Terms for chart selected: " + term.value);
         $scope.termSel = term;
+    };*/
+	
+	function monthsBefore(d, months) {
+		  var nd = new Date(d.getTime());
+		  nd.setMonth(d.getMonth() - months);
+		  return nd;
+	}
+	
+	function monthsAfter(d, months) {
+		  var nd = new Date(d.getTime());
+		  nd.setMonth(d.getMonth() + months);
+		  return nd;
+	}
+	
+	//$scope.startDate = { "name": new Date() };
+	$scope.startDate = { "name": monthsBefore(new Date(), 12)};
+
+	$scope.endDate = { "name": new Date()};
+	
+	//var date1 = new Date();
+	//$scope.minDate1 = date1.setMonth((new Date()).getMonth() - 24);
+	$scope.minDate1 = monthsBefore(new Date(), 24);
+	//var date2 = new Date();
+	//$scope.maxDate1 = date2.setMonth((new Date()).getMonth() - 3);
+	//$scope.maxDate1 = monthsBefore(new Date(), 3);
+	
+    $scope.dateOptions1 = {
+        formatYear: 'yy',
+        minDate: $scope.minDate1, //min start date: 2 years ago from today
+        //maxDate: $scope.maxDate1,
+        startingDay: 0
+    };
+    
+    $scope.$watch('endDate.name', function(newEnd) {
+        if(newEnd) {
+      	  $scope.dateOptions1.maxDate = monthsBefore(newEnd, 3); //max start date: min of end Date and 3 months ago from today
+        }
+      });
+    
+    $scope.$watch('startDate.name', function(newStart) {
+        if(newStart) {
+          //var date3 = new Date();
+      	  //$scope.dateOptions2.minDate = date3.setMonth(newStart.getMonth() + 3);
+      	  //$scope.dateOptions2.minDate = newStart; //min end date: start date
+          $scope.dateOptions2.minDate = monthsAfter(newStart, 3); //min end date: start date
+        }
+      });
+    
+	$scope.dateOptions2 = {
+        formatYear: 'yy',
+        //minDate: $scope.minDate2,
+        maxDate: new Date(),  //max end date: today
+        startingDay: 0
+    };
+
+    $scope.open1 = function () {
+        $scope.popup1.opened = true;
+    };
+
+    $scope.open2 = function () {
+        $scope.popup2.opened = true;
+    };
+
+    $scope.formats = ['MM-dd-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+    $scope.format = $scope.formats[0];
+    $scope.altInputFormats = ['M!/d!/yyyy'];
+
+    $scope.popup1 = {
+        opened: false
+    };
+
+    $scope.popup2 = {
+        opened: false
     };
 
     $scope.resetHeatMap = function() {
