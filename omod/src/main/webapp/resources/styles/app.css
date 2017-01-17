@@ -18,6 +18,10 @@ article{
   background: #009384;
 }
 
+#slider{
+  font-size: 10px;
+}
+
 #entityTypes {
   margin-left: 100px;
   margin-top: 25px;

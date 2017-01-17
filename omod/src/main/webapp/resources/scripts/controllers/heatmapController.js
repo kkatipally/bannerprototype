@@ -1,6 +1,6 @@
 'use strict';
 
-visitNotesApp.controller('heatmapController', function ($scope) {
+visitNotesApp.controller('heatmapController', function ($scope, DateFactory) {
 
     /*$scope.dateSelOptions = [{"datename": "All Dates", "datevalue": 14}, {"datename": "Last Year", "datevalue": 12}, {"datename": "Last 6 mo", "datevalue": 6}, {"datename": "Last 3 mo", "datevalue": 3}];
     $scope.termSelOptions = [{"termname": "Only search terms", "termvalue": "Search"}, {"termname": "All terms", "termvalue": "All"}, {"termname": "Use toggle below", "termvalue": "Toggle"}];
@@ -38,22 +38,24 @@ visitNotesApp.controller('heatmapController', function ($scope) {
 		  return nd;
 	}
 	
-	//$scope.startDate = { "name": new Date() };
-	$scope.startDate = { "name": monthsBefore(new Date(), 12)};
-
-	$scope.endDate = { "name": new Date()};
+	//$scope.$watch(function () { return DateFactory.getSliderMinDate(); }, function (newValue, oldValue) {
+        //if (newValue !== oldValue) {
+        	$scope.startDate = { "name": DateFactory.getSliderMinDate() };
+    		//console.log("Slider min in heatmapCtrl: " + $scope.startDate.name );
+        //}
+	//});
+	//$scope.$watch(function () { return DateFactory.getSliderMaxDate(); }, function (newValue, oldValue) {
+        //if (newValue !== oldValue) {
+			$scope.endDate = { "name": DateFactory.getSliderMaxDate() };
+        	//console.log("Slider max in heatmapCtrl: " + $scope.endDate.name);
+        //}
+    //});
 	
-	//var date1 = new Date();
-	//$scope.minDate1 = date1.setMonth((new Date()).getMonth() - 24);
 	$scope.minDate1 = monthsBefore(new Date(), 24);
-	//var date2 = new Date();
-	//$scope.maxDate1 = date2.setMonth((new Date()).getMonth() - 3);
-	//$scope.maxDate1 = monthsBefore(new Date(), 3);
 	
     $scope.dateOptions1 = {
         formatYear: 'yy',
         minDate: $scope.minDate1, //min start date: 2 years ago from today
-        //maxDate: $scope.maxDate1,
         startingDay: 0
     };
     
@@ -65,16 +67,12 @@ visitNotesApp.controller('heatmapController', function ($scope) {
     
     $scope.$watch('startDate.name', function(newStart) {
         if(newStart) {
-          //var date3 = new Date();
-      	  //$scope.dateOptions2.minDate = date3.setMonth(newStart.getMonth() + 3);
-      	  //$scope.dateOptions2.minDate = newStart; //min end date: start date
           $scope.dateOptions2.minDate = monthsAfter(newStart, 3); //min end date: start date
         }
       });
     
 	$scope.dateOptions2 = {
         formatYear: 'yy',
-        //minDate: $scope.minDate2,
         maxDate: new Date(),  //max end date: today
         startingDay: 0
     };

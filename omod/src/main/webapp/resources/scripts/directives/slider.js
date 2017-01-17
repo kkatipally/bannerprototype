@@ -2,16 +2,22 @@
 
 visitNotesApp.directive('slider', function($compile){
     return {
+    	scope: false,
         link: function(scope, element, attrs, controller){
-            var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
+            var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            function monthsBefore(d, months) {
+      		  var nd = new Date(d.getTime());
+      		  nd.setMonth(d.getMonth() - months);
+      		  return nd;
+            }
             element.dateRangeSlider({
                     bounds: { //bounds of the date range
-                        min: new Date(2015, 0, 1),
-                        max: new Date(2017, 0, 1)
+                        min: monthsBefore(new Date(), 24),
+                        max: new Date()
                     },
                     defaultValues:{
-                        min: new Date(2015, 0, 1),
-                        max: new Date(2017, 0, 1)
+                        min: monthsBefore(new Date(), 24),
+                        max: new Date()
                     },
                     formatter:function(val){
                         var days = val.getDate(),
@@ -42,8 +48,16 @@ visitNotesApp.directive('slider', function($compile){
                     }
                 }
             );
+            
+            scope.sliderMinDate = monthsBefore(new Date(), 24);
+            scope.sliderMaxDate = new Date();
+        	//console.log("Initial slider min/max in slider: " + scope.sliderMinDate + " " + scope.sliderMaxDate);
+
             element.bind("userValuesChanged", function(e, data){
                 console.log("Values just changed. min: " + data.values.min + " max: " + data.values.max);
+                scope.sliderMinDate = data.values.min ;
+                scope.sliderMaxDate = data.values.max ;
+            	//console.log("Slider min/max in slider: " + scope.sliderMinDate + " " + scope.sliderMaxDate);
             });
         }
     }

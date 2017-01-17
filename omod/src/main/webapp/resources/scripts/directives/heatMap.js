@@ -132,16 +132,32 @@ visitNotesApp.directive('heatMap', function($compile){
                     
                     //console.log("Init startRect: " + startRect);
                     
-                    for(i=0; i<grps; i++){
+                    i = 0;
+                    //for(i=0; i<grps; i++){
+                    while(endRect < new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)){
                         var listDates = [];
                         var newdate;
                         addFreq = 0;
                         yRect = j;
-                       	endRect= new Date(startRect.getFullYear(), startRect.getMonth() + groupMonths, 1, 0, 0, 0, 0);
+                        
+                        if(i == 0){
+                        	//console.log("startRect in loop: " + startRect.getMonth());
+                        	if(startRect.getMonth() <= 2) //Before March
+                        		endRect = new Date(startRect.getFullYear(), 3, 1, 0, 0, 0, 0);
+                        	else if(startRect.getMonth() <= 5) //April to June
+                        		endRect = new Date(startRect.getFullYear(), 6, 1, 0, 0, 0, 0);
+                        	else if(startRect.getMonth() <= 8) //July to September
+                        		endRect = new Date(startRect.getFullYear(), 9, 1, 0, 0, 0, 0);
+                        	else //October to December
+                        		endRect = new Date(startRect.getFullYear(), 12, 1, 0, 0, 0, 0);
+                        }
+                        else{
+                        	endRect = new Date(startRect.getFullYear(), startRect.getMonth() + groupMonths, 1, 0, 0, 0, 0);
+                        }
 
                         endRect = new Date(Math.min(endRect, new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)));
                         //var maxDate=new Date(Math.max.apply(null,dates));
-                        //console.log("endRect: " + endRect);
+                        //console.log("i, endRect:" + i + ' ' + endRect);
                         
                         for(k=0; k<d1.counts.length; k++){ 
                             currentDate = getDate(getVisitDate(d1.counts, k));
@@ -178,7 +194,10 @@ visitNotesApp.directive('heatMap', function($compile){
                         //console.log("newdata.listDates: " + newdata.listDates);
                         AllRect.push(newdata);
                         startRect= new Date(endRect.getTime());
-                        //console.log("startRect: " + startRect);
+                        
+                        //console.log("i, startRect: " + i + ' ' + startRect);
+                        //console.log("i, endRect:" + i + ' ' + endRect);
+                        i++;
                     }
                     //AllRect.push(DataRect);
                     //console.log("Build DataRect: " + JSON.stringify(DataRect));
@@ -210,12 +229,28 @@ visitNotesApp.directive('heatMap', function($compile){
                         
                         //console.log("Init startRect: " + startRect);
 
-                        for(i=0; i<grps; i++){
-                            var listDates = [];
+                        i = 0;
+                        //for(i=0; i<grps; i++){
+                        while(endRect < new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)){
+                        
+                        	var listDates = [];
                             var newdate;
                             addFreq = 0;
                             yRect = j;
-                        	endRect= new Date(startRect.getFullYear(), startRect.getMonth() + groupMonths, 1, 0, 0, 0, 0);
+                        	if(i == 0){
+                            	//console.log("startRect in loop: " + startRect.getMonth());
+                            	if(startRect.getMonth() <= 2) //Before March
+                            		endRect = new Date(startRect.getFullYear(), 3, 1, 0, 0, 0, 0);
+                            	else if(startRect.getMonth() <= 5) //April to June
+                            		endRect = new Date(startRect.getFullYear(), 6, 1, 0, 0, 0, 0);
+                            	else if(startRect.getMonth() <= 8) //July to September
+                            		endRect = new Date(startRect.getFullYear(), 9, 1, 0, 0, 0, 0);
+                            	else //October to December
+                            		endRect = new Date(startRect.getFullYear(), 12, 1, 0, 0, 0, 0);
+                            }
+                            else{
+                            	endRect = new Date(startRect.getFullYear(), startRect.getMonth() + groupMonths, 1, 0, 0, 0, 0);
+                            }
                         	endRect = new Date(Math.min(endRect, new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)));
 
                             //var maxDate=new Date(Math.max.apply(null,dates));
@@ -257,6 +292,7 @@ visitNotesApp.directive('heatMap', function($compile){
                             DataRect.push(newdata);
                             startRect= new Date(endRect.getTime());
                             //console.log("startRect: " + startRect);
+                            i++;
                         }
 
                         /*var colorScale = d3.scaleLinear()
@@ -576,13 +612,30 @@ visitNotesApp.directive('heatMap', function($compile){
                     
                     //console.log("Init startRect: " + startRect);
                     
-                    for(i=0; i<grps; i++){
-                        var listDates = [];
+                    i = 0;
+                    //for(i=0; i<grps; i++){
+                    while(endRect < new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)){
+                    
+                    	var listDates = [];
                         var newdate;
                         addFreq = 0;
                         yRect = j;
-                    	endRect= new Date(startRect.getFullYear(), startRect.getMonth() + groupMonths, 1, 0, 0, 0, 0);
-                    	endRect = new Date(Math.min(endRect, new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)));
+                        
+                        if(i == 0){
+                        	//console.log("startRect in loop: " + startRect.getMonth());
+                        	if(startRect.getMonth() <= 2) //Before March
+                        		endRect = new Date(startRect.getFullYear(), 3, 1, 0, 0, 0, 0);
+                        	else if(startRect.getMonth() <= 5) //April to June
+                        		endRect = new Date(startRect.getFullYear(), 6, 1, 0, 0, 0, 0);
+                        	else if(startRect.getMonth() <= 8) //July to September
+                        		endRect = new Date(startRect.getFullYear(), 9, 1, 0, 0, 0, 0);
+                        	else //October to December
+                        		endRect = new Date(startRect.getFullYear(), 12, 1, 0, 0, 0, 0);
+                        }
+                        else{
+                        	endRect = new Date(startRect.getFullYear(), startRect.getMonth() + groupMonths, 1, 0, 0, 0, 0);
+                        }
+                        endRect = new Date(Math.min(endRect, new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)));
                         //console.log("endRect: " + endRect);
                         
                         for(k=0; k<d1.counts.length; k++){ 
@@ -622,6 +675,7 @@ visitNotesApp.directive('heatMap', function($compile){
                         AllRect.push(newdata);
                         startRect= new Date(endRect.getTime());
                         //console.log("startRect: " + startRect);
+                        i++;
                     }
                 });
                 
@@ -653,13 +707,30 @@ visitNotesApp.directive('heatMap', function($compile){
                         
                         //console.log("Init startRect: " + startRect);
 
-                        for(i=0; i<grps; i++){
-                            var listDates = [];
+                        i = 0;
+                        //for(i=0; i<grps; i++){
+                        while(endRect < new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)){
+                        
+                        	var listDates = [];
                             var newdate;
                             addFreq = 0;
                             yRect = j;
-                        	endRect= new Date(startRect.getFullYear(), startRect.getMonth() + groupMonths, 1, 0, 0, 0, 0);
-                        	endRect = new Date(Math.min(endRect, new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)));
+
+                            if(i == 0){
+                            	//console.log("startRect in loop: " + startRect.getMonth());
+                            	if(startRect.getMonth() <= 2) //Before March
+                            		endRect = new Date(startRect.getFullYear(), 3, 1, 0, 0, 0, 0);
+                            	else if(startRect.getMonth() <= 5) //April to June
+                            		endRect = new Date(startRect.getFullYear(), 6, 1, 0, 0, 0, 0);
+                            	else if(startRect.getMonth() <= 8) //July to September
+                            		endRect = new Date(startRect.getFullYear(), 9, 1, 0, 0, 0, 0);
+                            	else //October to December
+                            		endRect = new Date(startRect.getFullYear(), 12, 1, 0, 0, 0, 0);
+                            }
+                            else{
+                            	endRect = new Date(startRect.getFullYear(), startRect.getMonth() + groupMonths, 1, 0, 0, 0, 0);
+                            }
+                            endRect = new Date(Math.min(endRect, new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)));
                             //console.log("endRect: " + endRect);
 
                             for(k=0; k<d1.counts.length; k++){
@@ -698,6 +769,7 @@ visitNotesApp.directive('heatMap', function($compile){
                             DataRect.push(newdata);
                             startRect= new Date(endRect.getTime());
                             //console.log("startRect: " + startRect);
+                            i++;
                         }
 
                         /*var colorScale = d3.scaleLinear()
