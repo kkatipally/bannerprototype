@@ -140,6 +140,30 @@ p{
 .test {
   fill: blue;
 }
+
+span.mention-type-problem {
+  margin: 5px;
+  margin-left:0px;
+  /*font-family: "arial";
+  font-size: 18px;*/
+  color: red /*rgb(190, 53, 90)*/
+}
+
+span.mention-type-test {
+  margin: 5px;
+  margin-left:0px;
+  /*font-family: "arial";
+  font-size: 18px;*/
+  color: blue /*rgb(17, 76, 126)*/
+}
+
+span.mention-type-treatment {
+  margin: 5px;
+  margin-left:0px;
+  /*font-family: "arial";
+  font-size: 18px;*/
+  color: green /*rgb(33, 119, 67)*/
+}
 .hide {
   visibility: hidden;
 }

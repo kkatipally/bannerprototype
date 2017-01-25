@@ -1,5 +1,6 @@
 package org.openmrs.module.bannerprototype.api.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -80,6 +81,12 @@ public class NLPServiceImpl extends BaseOpenmrsService implements NLPService {
 	@Transactional
 	public List<SofaDocument> getSofaDocumentsByPatient(Patient patient) {
 		return dao.getSofaDocumentsByPatient(patient);
+	}
+	
+	@Override
+	@Transactional
+	public List<SofaDocument> getSofaDocumentsByPatientAndDateRange(Patient patient, Date startDate, Date endDate) {
+		return dao.getSofaDocumentsByPatientAndDateRange(patient, startDate, endDate);
 	}
 	
 	public SessionFactory getSessionFactory() {

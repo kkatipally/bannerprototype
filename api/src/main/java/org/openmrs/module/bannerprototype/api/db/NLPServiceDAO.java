@@ -1,5 +1,6 @@
 package org.openmrs.module.bannerprototype.api.db;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -18,6 +19,8 @@ public interface NLPServiceDAO {
 	public List<SofaDocument> getAllSofaDocuments();
 	
 	public List<SofaDocument> getSofaDocumentsByPatient(Patient patient);
+	
+	public List<SofaDocument> getSofaDocumentsByPatientAndDateRange(Patient patient, Date startDate, Date endDate);
 	
 	public SofaText saveSofaText(SofaText sofaText);
 	

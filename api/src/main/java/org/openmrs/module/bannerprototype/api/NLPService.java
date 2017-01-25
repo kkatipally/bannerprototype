@@ -1,5 +1,6 @@
 package org.openmrs.module.bannerprototype.api;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -96,6 +97,14 @@ public interface NLPService extends OpenmrsService {
 	 * @return
 	 */
 	public List<SofaDocument> getSofaDocumentsByPatient(Patient patient);
+	
+	/**
+	 * returns all SofaDocument objects associated with patient
+	 * 
+	 * @param patient
+	 * @return
+	 */
+	public List<SofaDocument> getSofaDocumentsByPatientAndDateRange(Patient patient, Date startDate, Date endDate);
 	
 	/**
 	 * deletes all data relating to SofaDocuments, SofaTextMention etc. This is called when

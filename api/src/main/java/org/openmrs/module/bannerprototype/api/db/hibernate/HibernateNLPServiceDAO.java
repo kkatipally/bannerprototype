@@ -1,5 +1,6 @@
 package org.openmrs.module.bannerprototype.api.db.hibernate;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -142,6 +143,16 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 	public List<SofaDocument> getSofaDocumentsByPatient(Patient patient) {
 		Criteria crit = sessionFactory.getCurrentSession().createCriteria(SofaDocument.class);
 		crit.add(Restrictions.eq("patient", patient));
+		
+		return (List<SofaDocument>) crit.list();
+	}
+	
+	@Override
+	public List<SofaDocument> getSofaDocumentsByPatientAndDateRange(Patient patient, Date startDate, Date endDate) {
+		Criteria crit = sessionFactory.getCurrentSession().createCriteria(SofaDocument.class);
+		crit.add(Restrictions.eq("patient", patient));
+		crit.add(Restrictions.gt("dateCreated", startDate));
+		crit.add(Restrictions.lt("dateCreated", endDate));
 		
 		return (List<SofaDocument>) crit.list();
 	}
