@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.openmrs.BaseOpenmrsData;
 import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
@@ -19,7 +20,7 @@ import banner.tagging.Mention;
  * 
  * @author ryaneshleman
  */
-public class SofaText extends BaseOpenmrsObject implements Serializable, Comparable {
+public class SofaText extends BaseOpenmrsData implements Serializable, Comparable {
 	
 	private int sofaTextId;
 	

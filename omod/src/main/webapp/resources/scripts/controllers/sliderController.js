@@ -1,11 +1,20 @@
 'use strict';
 
 visitNotesApp.controller('sliderController',
-    function cloudController($scope, DateFactory){
+    function sliderController($scope, DateFactory){
 
-        $scope.sliderMinDate = '';
-        $scope.sliderMaxDate = '';
+		/*function monthsBefore(d, months) {
+		  var nd = new Date(d.getTime());
+		  nd.setMonth(d.getMonth() - months);
+		  return nd;
+		}
+	
+        $scope.sliderMinDate = monthsBefore(new Date(), 24);
+        $scope.sliderMaxDate = new Date();
 
+        DateFactory.setSliderMinDate($scope.sliderMinDate);
+        DateFactory.setSliderMaxDate($scope.sliderMaxDate);
+        				
         $scope.$watch('sliderMinDate', function (newValue, oldValue) {
             //if (newValue !== oldValue) {
             	DateFactory.setSliderMinDate(newValue);
@@ -18,6 +27,6 @@ visitNotesApp.controller('sliderController',
             	DateFactory.setSliderMaxDate(newValue);
             	//console.log("Slider max in sliderController: " + newValue);
             //}
-        });
+        });*/
         
 });

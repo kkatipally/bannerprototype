@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.openmrs.BaseOpenmrsData;
 import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.Encounter;
 import org.openmrs.Patient;
@@ -20,7 +21,7 @@ import org.openmrs.Patient;
  * 
  * @author ryaneshleman
  */
-public class SofaDocument extends BaseOpenmrsObject implements Serializable {
+public class SofaDocument extends BaseOpenmrsData implements Serializable {
 	
 	private int sofaDocumentId;
 	

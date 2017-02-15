@@ -41,6 +41,7 @@
         <uicommonsVersion>1.3</uicommonsVersion>
         <appframeworkVersion>2.2.1</appframeworkVersion>
         <appuiVersion>1.2.2</appuiVersion>
+        <webservicesRestVersion>2.12</webservicesRestVersion>
     </properties>
 
     <dependencyManagement>

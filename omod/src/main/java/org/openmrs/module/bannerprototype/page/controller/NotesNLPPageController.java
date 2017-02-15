@@ -37,7 +37,7 @@ public class NotesNLPPageController {
 	                                                                               @RequestParam(value = "until", required = false) String until*/)
 	        throws IOException, ClassNotFoundException {
 		
-		System.out.println("entityType, numTerms, patientId: " + entityType + ' ' +  numTerms + ' ' + patient);
+		System.out.println("entityType, numTerms, patientId: " + entityType + ' ' + numTerms + ' ' + patient);
 		
 		if (patient == null) // user redirected after time out.  need to work around
 		{
@@ -95,9 +95,9 @@ public class NotesNLPPageController {
 		String adminEmail = Context.getAdministrationService().getGlobalProperty("bannerprototype.adminEmail");
 		
 		int numofTerms = 1;
-		if(StringUtils.hasText(numTerms)){
+		if (StringUtils.hasText(numTerms)) {
 			numofTerms = (int) Integer.parseInt(numTerms);
-			System.out.println("numTerms, int numofTerms: " + numTerms + ' ' +  numofTerms);
+			System.out.println("numTerms, int numofTerms: " + numTerms + ' ' + numofTerms);
 		}
 		
 		pageModel.addAttribute("returnUrl", returnUrl);

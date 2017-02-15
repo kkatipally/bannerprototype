@@ -1,5 +1,6 @@
 package org.openmrs.module.bannerprototype.api.db;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -35,6 +36,10 @@ public interface NLPServiceDAO {
 	public Set<SofaText> getSofaTextByDocument(SofaDocument sofaDocument);
 	
 	public SofaDocument getSofaDocumentById(int SofaDocumentId);
+	
+	public SofaDocument getSofaDocumentByUuid(String uuid);
+	
+	public SofaTextMention getSofaTextMentionByUuid(String uuid);
 	
 	public SessionFactory getSessionFactory();
 	

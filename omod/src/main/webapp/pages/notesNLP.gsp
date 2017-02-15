@@ -29,6 +29,7 @@ ui.includeJavascript("bannerprototype", "lib/ui-bootstrap-tpls-2.4.0.min.js")
 ui.includeJavascript("bannerprototype","lib/d3.min.js")
 
 ui.includeJavascript("bannerprototype","app.js")
+ui.includeJavascript("bannerprototype", "resources/sofaResources.js")
 ui.includeJavascript("bannerprototype", "controllers/view1Controller.js")
 ui.includeJavascript("bannerprototype","controllers/view2Controller.js")
 ui.includeJavascript("bannerprototype", "controllers/inputController.js")
@@ -93,16 +94,17 @@ var userId = ${user}
 
 </script> 
 
-<div ng-app="visitNotesApp" class="center" ng-controller="sliderController">
+<div ng-app="visitNotesApp" class="center">
+<div ng-controller="cloudController">
     <h4>Select start and end dates, entity type (problems/treatments/tests) and number of terms to view:</h4>
     <article>
         <div id="slider" slider></div>
     </article>
 
-    <!--<div ng-controller="inputController">
-        <div id="entityTypes" class="btn-group" data-toggle="buttons-radio" name="entityType">
-            <entityType ng-repeat="entityType in entityTypes">
-                <button type="button" class="btn btn-secondary" ng-click="selectEntityType(entityType.name)">
+
+        <div id="entityTypes" class="btn-group" data-toggle="buttons-radio" name="entityType" ng-model="entityTypes.selectedValue">
+            <entityType ng-repeat="entityType in entityTypes" >
+                <button type="button" class="btn btn-secondary" ng-click="selectEntityType(entityType)">
                     {{entityType.name}}
                 </button>
             </entityType>
@@ -114,59 +116,17 @@ var userId = ${user}
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 View
                 <span class="caret"></span></button>
-            <ul id="numTermsDropdownMenu" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+            <ul id="numTermsDropdownMenu" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" ng-model="displayNumTerms.selectedValue">
                 <li ng-repeat="displayNumTerm in displayNumTerms">
-                    <a class="dropdown-item" href="#" ng-click="selectDisplayNumTerms(displayNumTerm.name)">{{displayNumTerm.name}}</a>
+                    <a class="dropdown-item" href="#" ng-click="selectDisplayNumTerms(displayNumTerm)">{{displayNumTerm.name}}</a>
                 </li>
             </ul>
-        </div>-->
-        <br>
-        <br>
-
-<form method="get" class="horizontalForm">
-<input type="hidden" name="patientId" value="${patient.patientId}"/>
-<input type="hidden" name="returnUrl" value="${returnUrl}"/>
-
-<p class="left">                
-                    <select name="entityType">
-                        <option value="Problems" <% if (entityType == "Problems") { %> selected <% } %>>
-                            Problems
-                        </option>
-                        <option value="Treatments" <% if (entityType == "Treatments") { %> selected <% } %>>
-                            Treatments
-                        </option>
-                        <option value="Tests" <% if (entityType == "Tests") { %> selected <% } %>>
-                            Tests
-                        </option>
-                    </select>
-        </p>
-        
-        <p class="left">                
-                    <select name="numTerms">
-                        <option value=5 <% if (numTerms == "5") { %> selected <% } %>>
-                            View 5
-                        </option>
-                        <option value=10 <% if (numTerms == "10") { %> selected <% } %>>
-                            View 10
-                        </option>
-                        <option value=20 <% if (numTerms == "20") { %> selected <% } %>>
-                            View 20
-                        </option>
-                        <option value=30 <% if (numTerms == "30") { %> selected <% } %>>
-                            View 30
-                        </option>
-                    </select>
-        </p>
-        
-    	<p class="left"> 
-                    <input type="submit" value="Update">
-                </p>
-        </form>
         </div>
-</div>
-      
-<!--<div ng-controller="cloudController">-->
-    <div id="cloudborder">
+        <br>
+        <br>
+
+
+   <div id="cloudborder">
         <div id="cloud">
         <div data-i2="css:[{fontSize:'12px'},{fontSize:'30px'}]">
             
@@ -177,7 +137,8 @@ var userId = ${user}
 	</div>
         </div>
     </div>
-    
+ </div>  
+ 
     <div class="container">
     <form class="form-inline searchbottom" ng-submit="page1Submit(searchInput)">
         <!-- <div class="form-group"> -->
@@ -193,6 +154,7 @@ var userId = ${user}
             <span class="glyphicon glyphicon-search"></span> Submit
         </button>-->
     </form>
+</div>
 </div>
     
 

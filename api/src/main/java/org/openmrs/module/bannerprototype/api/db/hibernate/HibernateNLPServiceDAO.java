@@ -1,5 +1,6 @@
 package org.openmrs.module.bannerprototype.api.db.hibernate;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -12,10 +13,12 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Encounter;
 import org.openmrs.Patient;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.bannerprototype.SofaDocument;
 import org.openmrs.module.bannerprototype.SofaText;
 import org.openmrs.module.bannerprototype.SofaTextMention;
 import org.openmrs.module.bannerprototype.SofaTextMentionConcept;
+import org.openmrs.module.bannerprototype.api.NLPService;
 import org.openmrs.module.bannerprototype.api.db.NLPServiceDAO;
 
 public class HibernateNLPServiceDAO implements NLPServiceDAO {
@@ -123,6 +126,37 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 		Hibernate.initialize(sofaDocument);
 		
 		return sofaDocument;
+	}
+	
+	/**
+	 * this method is a hack because I couldn't quickly figure out how to get hibernate to do this
+	 * for me. it eagerly queries all fields required to fully populate a SofaDocument.
+	 */
+	public SofaDocument getSofaDocumentByUuid(String uuid) {
+		
+		//SofaDocument sofaDocument = (SofaDocument) session.get(SofaDocument.class, sofaDocumentId);
+		Criteria crit = sessionFactory.getCurrentSession().createCriteria(SofaDocument.class);
+		crit.add(Restrictions.eq("uuid", uuid));
+		SofaDocument sofaDocument = (SofaDocument) crit.uniqueResult();
+		
+		Hibernate.initialize(sofaDocument);
+		
+		return sofaDocument;
+	}
+	
+	/**
+	 * this method is a hack because I couldn't quickly figure out how to get hibernate to do this
+	 * for me. it eagerly queries all fields required to fully populate a SofaDocument.
+	 */
+	public SofaTextMention getSofaTextMentionByUuid(String uuid) {
+		Criteria crit = sessionFactory.getCurrentSession().createCriteria(SofaTextMention.class);
+		crit.add(Restrictions.eq("uuid", uuid));
+		
+		SofaTextMention sofaTextMention = (SofaTextMention) crit.uniqueResult();
+		
+		Hibernate.initialize(sofaTextMention);
+		
+		return sofaTextMention;
 	}
 	
 	private Set<SofaTextMention> getSofaTextMentionsBySofaText(SofaText sofaText) {

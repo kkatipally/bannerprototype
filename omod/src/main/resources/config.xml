@@ -28,6 +28,9 @@
 		<require_module>
 			org.openmrs.module.uiframework
 		</require_module>
+		<require_module version="${webservicesRestVersion}">
+			org.openmrs.module.webservices.rest
+		</require_module>
 	</require_modules>
 
 

@@ -1,5 +1,6 @@
 package org.openmrs.module.bannerprototype.api.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -75,6 +76,18 @@ public class NLPServiceImpl extends BaseOpenmrsService implements NLPService {
 	@Transactional
 	public SofaDocument getSofaDocumentById(int sofaDocumentId) {
 		return dao.getSofaDocumentById(sofaDocumentId);
+	}
+	
+	@Override
+	@Transactional
+	public SofaDocument getSofaDocumentByUuid(String uuid) {
+		return dao.getSofaDocumentByUuid(uuid);
+	}
+	
+	@Override
+	@Transactional
+	public SofaTextMention getSofaTextMentionByUuid(String uuid) {
+		return dao.getSofaTextMentionByUuid(uuid);
 	}
 	
 	@Override

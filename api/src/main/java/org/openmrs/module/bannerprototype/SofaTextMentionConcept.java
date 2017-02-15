@@ -2,6 +2,7 @@ package org.openmrs.module.bannerprototype;
 
 import java.io.Serializable;
 
+import org.openmrs.BaseOpenmrsData;
 import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.Concept;
 import org.openmrs.ConceptName;
@@ -12,7 +13,7 @@ import org.openmrs.api.context.Context;
  * 
  * @author ryaneshleman
  */
-public class SofaTextMentionConcept extends BaseOpenmrsObject implements Serializable {
+public class SofaTextMentionConcept extends BaseOpenmrsData implements Serializable {
 	
 	private int sofaTextMentionConceptId;
 	

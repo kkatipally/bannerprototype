@@ -1,5 +1,6 @@
 package org.openmrs.module.bannerprototype.api;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -82,6 +83,22 @@ public interface NLPService extends OpenmrsService {
 	 * @return
 	 */
 	public SofaDocument getSofaDocumentById(int sofaDocumentId);
+	
+	/**
+	 * returns the SofaDocument by UUID
+	 * 
+	 * @param uuid
+	 * @return
+	 */
+	public SofaDocument getSofaDocumentByUuid(String uuid);
+	
+	/**
+	 * returns the SofaTextMention by UUID
+	 * 
+	 * @param uuid
+	 * @return
+	 */
+	public SofaTextMention getSofaTextMentionByUuid(String uuid);
 	
 	/**
 	 * returns the current SessionFactory
