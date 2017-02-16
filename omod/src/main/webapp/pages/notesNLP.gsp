@@ -29,6 +29,7 @@ ui.includeJavascript("bannerprototype", "lib/ui-bootstrap-tpls-2.4.0.min.js")
 ui.includeJavascript("bannerprototype","lib/d3.min.js")
 
 ui.includeJavascript("bannerprototype","app.js")
+ui.includeJavascript("bannerprototype","directives/parseStyle.js")
 ui.includeJavascript("bannerprototype", "resources/sofaResources.js")
 ui.includeJavascript("bannerprototype", "controllers/view1Controller.js")
 ui.includeJavascript("bannerprototype","controllers/view2Controller.js")
@@ -129,7 +130,12 @@ var userId = ${user}
    <div id="cloudborder">
         <div id="cloud">
         <div data-i2="css:[{fontSize:'12px'},{fontSize:'30px'}]">
-            
+
+			<span ng-repeat="term in finalCloud">
+            <style parse-style>.css_class {color: {{term.className}}}</style>
+			<span class="css_class">{{term.name}}</span><br>
+    		
+			</span>
             <% tagCloudWords.each { word -> %>
     <span class=mention-type-${word.getClassName()} data-i2="rate:${word.getCount()}">${word.getWord()}</span>
     

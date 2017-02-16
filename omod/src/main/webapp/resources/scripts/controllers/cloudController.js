@@ -22,7 +22,7 @@ visitNotesApp.controller('cloudController',
         $scope.entityTypes.selectedValue = "Problems";
         $scope.displayNumTerms.selectedValue = 5;
         
-        $scope.entityType = 'Problems';
+        $scope.entityType = 'All';
         $scope.numTerms = '5';
         
         function monthsBefore(d, months) {
@@ -59,6 +59,63 @@ visitNotesApp.controller('cloudController',
             if (!results[2]) return '';
             return decodeURIComponent(results[2].replace(/\+/g, " "));
         }
+        
+        function Word(name, className){
+            this.name = name;
+            this.className  = className;
+            this.count = 1; // Assign that method as property.
+         }
+        
+        function incrementCount(Word){
+           Word.count++ ; 
+         }
+        
+        function shuffle(array) {
+            var counter = array.length;
+
+            while (counter > 0) {
+                let index = Math.floor(Math.random() * counter);
+                counter--;
+                var temp = array[counter];
+                array[counter] = array[index];
+                array[index] = temp;
+            }
+            return array;
+        }
+        
+        function finalCloudDisplay(results){
+        	
+        	if(typeof results  != 'undefined'){
+        	var resultsarr = results;
+			var clouddict = {};
+			var tmp, tmpword ;
+
+			for(var i=0; i<resultsarr.length; i++){
+				tmp = resultsarr[i].display.split("/");
+				if(tmp[0] in clouddict){
+					incrementCount(clouddict[tmp[0]]);
+				}
+				else{
+					clouddict[tmp[0]] = new Word(tmp[0], tmp[1]);
+				}
+			}
+			
+			var keysSorted = Object.keys(clouddict).sort(function(a,b){return clouddict[b].count-clouddict[a].count})
+			
+			var keysSelected;
+			if (keysSorted.length > $scope.numTerms)
+				keysSelected = keysSorted.slice(0, $scope.numTerms);
+			else keysSelected = keysSorted;
+			
+			var keysShuffled = shuffle(keysSelected);
+			
+			var cloudSelected = [];
+			for (var j=0; j<keysShuffled.length; j++){
+				cloudSelected.push(clouddict[keysShuffled[j]]);
+			};
+			return cloudSelected;
+        	}
+        }
      
         $scope.selectEntityType = function(entity){
             console.log("Entity type selected: " + entity.name);
@@ -90,8 +147,9 @@ visitNotesApp.controller('cloudController',
     	 			entityType: $scope.entityType,
     	 			patient : $scope.patient
     			}, function() {
-    				console.log("After start date change:");
+    				//console.log("After start date change:");
     				console.log($scope.sofatextmentions);
+    				$scope.finalCloud = finalCloudDisplay($scope.sofatextmentions.results);
     			});
         });
         
@@ -106,8 +164,9 @@ visitNotesApp.controller('cloudController',
         	 			entityType: $scope.entityType,
         	 			patient : $scope.patient
         			}, function() {
-        				console.log("After end date change:");
+        				//console.log("After end date change:");
         				console.log($scope.sofatextmentions);
+        				$scope.finalCloud = finalCloudDisplay($scope.sofatextmentions.results);
         			});
 
         });
@@ -127,7 +186,10 @@ visitNotesApp.controller('cloudController',
 	 			patient : $scope.patient
 			}, function() {
 				console.log($scope.sofatextmentions);
+				$scope.finalCloud = finalCloudDisplay($scope.sofatextmentions.results);
 			});
+        
+        
         
         $scope.$watch('entityType', function(newVal, oldVal) {
             //if(newVal) {
@@ -138,7 +200,8 @@ visitNotesApp.controller('cloudController',
     	 			patient : $scope.patient
     			}, function() {
     				console.log("After change:");
-    				console.log($scope.sofatextmentions);
+    				console.log($scope.sofatextmentions.results);
+    				$scope.finalCloud = finalCloudDisplay($scope.sofatextmentions.results);
     			});
            // }
           });

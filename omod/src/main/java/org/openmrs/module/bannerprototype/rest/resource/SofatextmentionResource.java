@@ -147,6 +147,6 @@ public class SofatextmentionResource extends DataDelegatingCrudResource<SofaText
 	 */
 	@PropertyGetter("display")
 	public String getDisplayString(SofaTextMention sofaTextMention) {
-		return sofaTextMention.getMentionText();
+		return sofaTextMention.getMentionText() + "/" + sofaTextMention.getMentionType();
 	}
 }
