@@ -87,86 +87,10 @@ else
   	 
 var userId = ${user}
 
-    	
- // setup function
- jq(function() {
-	 i2.emph();
- });
 
 </script> 
 
-<div ng-app="visitNotesApp" class="center">
-<div ng-controller="cloudController">
-    <h4>Select start and end dates, entity type (problems/treatments/tests) and number of terms to view:</h4>
-    <article>
-        <div id="slider" slider></div>
-    </article>
+<html ng-app="visitNotesApp"/>
+<base href="/"/>
 
-
-        <div id="entityTypes" class="btn-group" data-toggle="buttons-radio" name="entityType" ng-model="entityTypes.selectedValue">
-            <entityType ng-repeat="entityType in entityTypes" >
-                <button type="button" class="btn btn-secondary" ng-click="selectEntityType(entityType)">
-                    {{entityType.name}}
-                </button>
-            </entityType>
-        </div>
-        
-        
-        <div id="dropdownpage1" class="btn-group">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                View
-                <span class="caret"></span></button>
-            <ul id="numTermsDropdownMenu" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" ng-model="displayNumTerms.selectedValue">
-                <li ng-repeat="displayNumTerm in displayNumTerms">
-                    <a class="dropdown-item" href="#" ng-click="selectDisplayNumTerms(displayNumTerm)">{{displayNumTerm.name}}</a>
-                </li>
-            </ul>
-        </div>
-        <br>
-        <br>
-
-
-   <div id="cloudborder">
-        <div id="cloud">
-        <div data-i2="css:[{fontSize:'12px'},{fontSize:'30px'}]">
-		
-			<span ng-repeat="term in finalCloud">
-			
-			<a ngHref="#" ng-click="addToSearch(term.name)">
-            <style parse-style>.css_class {color: {{term.className}}}</style>
-			<span class="css_class">{{term.name}}</span><br>
-    		</a>
-    		
-			</span>
-		
-            <% tagCloudWords.each { word -> %>
-    <span class=mention-type-${word.getClassName()} data-i2="rate:${word.getCount()}">${word.getWord()}</span>
-    
-	<% } %> 
-	</div>
-        </div>
-    </div>
-
- 
-    <div class="container">
-    <form class="form-inline searchbottom" ng-submit="page1Submit(searchInput)">
-        <!-- <div class="form-group"> -->
-        <div class="row"> 
-        <div class="col-md-2">
-            <input type="text" class="form-control" ng-model="searchInput" placeholder="Search">
-        </div>
-        <div class="col-md-2">
-            <input type="submit" class="form-control">
-            </div>
-        </div>
-        <!--<button type="submit" class="btn btn-default">
-            <span class="glyphicon glyphicon-search"></span> Submit
-        </button>-->
-    </form>
-</div>
- </div> 
-</div>
-    
-
-
+<div ng-view></div>

@@ -1,46 +1,57 @@
-<div class="center">
+<div ng-app="visitNotesApp" class="center">
+<div ng-controller="cloudController">
     <h4>Select start and end dates, entity type (problems/treatments/tests) and number of terms to view:</h4>
-    <article ng-controller="sliderController">
+    <article>
         <div id="slider" slider></div>
     </article>
 
-    <div ng-controller="inputController">
-        <div id="entityTypes" class="btn-group" data-toggle="buttons-radio">
-            <entityType ng-repeat="entityType in entityTypes">
-                <button type="button" class="btn btn-secondary" ng-click="selectEntityType(entityType.name)">
+
+        <div id="entityTypes" class="btn-group" data-toggle="buttons-radio" name="entityType" ng-model="entityTypes.selectedValue">
+            <entityType ng-repeat="entityType in entityTypes" >
+                <button type="button" class="btn btn-secondary" ng-click="selectEntityType(entityType)">
                     {{entityType.name}}
                 </button>
             </entityType>
         </div>
-
+        
+        
         <div id="dropdownpage1" class="btn-group">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 View
                 <span class="caret"></span></button>
-            <ul id="numTermsDropdownMenu" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+            <ul id="numTermsDropdownMenu" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" ng-model="displayNumTerms.selectedValue">
                 <li ng-repeat="displayNumTerm in displayNumTerms">
-                    <a class="dropdown-item" href="#" ng-click="selectDisplayNumTerms(displayNumTerm.name)">{{displayNumTerm.name}}</a>
+                    <a class="dropdown-item" href="#" ng-click="selectDisplayNumTerms(displayNumTerm)">{{displayNumTerm.name}}</a>
                 </li>
             </ul>
         </div>
         <br>
         <br>
-    </div>
-</div>
 
-<div ng-controller="cloudController">
-    <div id="cloudborder">
+
+   <div id="cloudborder">
         <div id="cloud">
-            <cloudTerm ng-repeat="cloudTerm in cloudTerms">
-                <a ngHref="#" ng-click="addToSearch(cloudTerm.name)">
-                <span style="color:red; font-size: {{(cloudTerm.id+1)*50}}%">
-                    {{cloudTerm.name}}
-                </span>
-                </a>
-            </cloudTerm>
+        <div data-i2="css:[{fontSize:'12px'},{fontSize:'30px'}]">
+		
+			<span ng-repeat="term in finalCloud">
+			
+			<a ngHref="#" ng-click="addToSearch(term.name)">
+            <style parse-style>.css_class {color: {{term.className}}}</style>
+			<span class="css_class">{{term.name}}</span><br>
+    		</a>
+    		
+			</span>
+		
+            <% tagCloudWords.each { word -> %>
+    <span class=mention-type-${word.getClassName()} data-i2="rate:${word.getCount()}">${word.getWord()}</span>
+    
+	<% } %> 
+	</div>
         </div>
     </div>
+
+ 
     <div class="container">
     <form class="form-inline searchbottom" ng-submit="page1Submit(searchInput)">
         <!-- <div class="form-group"> -->
@@ -57,3 +68,6 @@
         </button>-->
     </form>
 </div>
+ </div> 
+</div>
+    

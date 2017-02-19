@@ -1,11 +1,11 @@
 'use strict';
 
 visitNotesApp.controller('cloudController',
-    function cloudController($scope, DateFactory, SofaDocumentResource, SofaDocumentResources, SofaTextMentionResource, SofaTextMentionResources){
+    function cloudController($scope, $location, DateFactory, SofaDocumentResource, SofaDocumentResources, SofaTextMentionResource, SofaTextMentionResources){
 
         $scope.searchInput = "";
 
-        /*$scope.addToSearch = function(name){
+        $scope.addToSearch = function(name){
             console.log("Added to search: " + name);
             $scope.searchInput = $scope.searchInput + " " + name;
         };
@@ -13,8 +13,8 @@ visitNotesApp.controller('cloudController',
         $scope.page1Submit = function(searchInput){
             console.log("Page 1 submitted with: " + searchInput);
             //$location.path('/view2');
-            //$location.url('/view2');
-        };*/
+            $location.url('/view2');
+        };
         
         $scope.entityTypes = [{"id": 0, "name": "Problems"}, {"id": 1, "name": "Treatments"}, {"id": 2, "name": "Tests"}];
         $scope.displayNumTerms = [{"id": 5, "name": "View 5"}, {"id": 10, "name": "View 10"}, {"id": 20, "name": "View 20"}, {"id": 30, "name": "View 30"}];

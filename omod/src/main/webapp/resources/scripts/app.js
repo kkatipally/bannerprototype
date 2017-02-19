@@ -8,7 +8,7 @@ var visitNotesApp = angular.module('visitNotesApp', [
   'ui.bootstrap'
 ])
 
-    /*.config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
+    .config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
   //$locationProvider.hashPrefix('!');
 
   $routeProvider.when('/view1', {
@@ -27,6 +27,6 @@ var visitNotesApp = angular.module('visitNotesApp', [
   })
   $routeProvider.otherwise({redirectTo: '/view1'});
   //$locationProvider.html5Mode(true);
-}]);*/
+}]);
 
 
