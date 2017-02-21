@@ -10,8 +10,10 @@ import org.openmrs.Encounter;
 import org.openmrs.Patient;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.bannerprototype.SofaDocument;
+import org.openmrs.module.bannerprototype.SofaDocumentUI;
 import org.openmrs.module.bannerprototype.SofaText;
 import org.openmrs.module.bannerprototype.SofaTextMention;
+import org.openmrs.module.bannerprototype.SofaTextMentionUI;
 import org.openmrs.module.bannerprototype.api.NLPService;
 import org.openmrs.module.bannerprototype.api.db.NLPServiceDAO;
 import org.springframework.transaction.annotation.Transactional;
@@ -88,6 +90,12 @@ public class NLPServiceImpl extends BaseOpenmrsService implements NLPService {
 	@Transactional
 	public SofaTextMention getSofaTextMentionByUuid(String uuid) {
 		return dao.getSofaTextMentionByUuid(uuid);
+	}
+	
+	@Override
+	@Transactional
+	public SofaTextMentionUI getSofaTextMentionUIByUuid(String uuid) {
+		return dao.getSofaTextMentionUIByUuid(uuid);
 	}
 	
 	@Override

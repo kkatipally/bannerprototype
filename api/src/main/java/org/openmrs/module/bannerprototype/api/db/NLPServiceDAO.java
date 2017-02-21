@@ -12,6 +12,7 @@ import org.openmrs.module.bannerprototype.SofaDocument;
 import org.openmrs.module.bannerprototype.SofaText;
 import org.openmrs.module.bannerprototype.SofaTextMention;
 import org.openmrs.module.bannerprototype.SofaTextMentionConcept;
+import org.openmrs.module.bannerprototype.SofaTextMentionUI;
 
 public interface NLPServiceDAO {
 	
@@ -40,6 +41,8 @@ public interface NLPServiceDAO {
 	public SofaDocument getSofaDocumentByUuid(String uuid);
 	
 	public SofaTextMention getSofaTextMentionByUuid(String uuid);
+	
+	public SofaTextMentionUI getSofaTextMentionUIByUuid(String uuid);
 	
 	public SessionFactory getSessionFactory();
 	

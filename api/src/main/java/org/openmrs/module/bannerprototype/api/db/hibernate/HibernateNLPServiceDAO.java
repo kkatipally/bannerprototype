@@ -1,6 +1,7 @@
 package org.openmrs.module.bannerprototype.api.db.hibernate;
 
-import java.util.ArrayList;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -11,13 +12,18 @@ import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.type.DateType;
+import org.hibernate.type.IntegerType;
+import org.hibernate.type.StringType;
 import org.openmrs.Encounter;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.bannerprototype.SofaDocument;
+import org.openmrs.module.bannerprototype.SofaDocumentUI;
 import org.openmrs.module.bannerprototype.SofaText;
 import org.openmrs.module.bannerprototype.SofaTextMention;
 import org.openmrs.module.bannerprototype.SofaTextMentionConcept;
+import org.openmrs.module.bannerprototype.SofaTextMentionUI;
 import org.openmrs.module.bannerprototype.api.NLPService;
 import org.openmrs.module.bannerprototype.api.db.NLPServiceDAO;
 
@@ -157,6 +163,55 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 		Hibernate.initialize(sofaTextMention);
 		
 		return sofaTextMention;
+	}
+	
+	public SofaTextMentionUI getSofaTextMentionUIByUuid(String uuid) {
+		
+		StringBuffer sb = new StringBuffer();
+		
+		/*sb.append("select uuid as mentionUuid, mention_text as mentionText");
+		sb.append(" from sofatext_mention ");
+		sb.append(" WHERE uuid = :uuid");*/
+		
+		sb.append("select stm.uuid as mentionUuid, stm.mention_text as mentionText,");
+		sb.append(" stm.mention_type as mentionType, sd.uuid as dateUuid, sd.patient_id as patientId,");
+		sb.append(" sd.date_created as dateCreated");
+		sb.append(" from sofatext_mention stm");
+		sb.append(" INNER JOIN sofatext st");
+		sb.append(" ON stm.sofatext_id = st.sofatext_id");
+		sb.append(" INNER JOIN sofa_document sd");
+		sb.append(" ON st.sofa_document_id = sd.sofa_document_id");
+		sb.append(" WHERE stm.uuid = :uuid");
+		
+		String query = sb.toString();
+		
+		Object[] result = (Object[]) sessionFactory.getCurrentSession().createSQLQuery(query)
+		        .addScalar("mentionUuid", new StringType()).addScalar("mentionText", new StringType())
+		        .addScalar("mentionType", new StringType()).addScalar("dateUuid", new StringType())
+		        .addScalar("patientId", new IntegerType()).addScalar("dateCreated", new DateType())
+		        .setParameter("uuid", uuid).uniqueResult();
+		
+		String uuidDate = result[3].toString();
+		Date dateCr = null;
+		try {
+			dateCr = new SimpleDateFormat("yyyy-MM-dd").parse(result[5].toString());
+		}
+		catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		SofaDocumentUI sdUI = new SofaDocumentUI(uuidDate, dateCr);
+		
+		Set<SofaDocumentUI> dateList = new HashSet<SofaDocumentUI>();
+		dateList.add(sdUI);
+		
+		String uuidMention = result[0].toString();
+		String textMention = result[1].toString();
+		String typeMention = result[2].toString();
+		SofaTextMentionUI stmUI = new SofaTextMentionUI(uuidMention, textMention, typeMention, dateList);
+		
+		return stmUI;
+		
 	}
 	
 	private Set<SofaTextMention> getSofaTextMentionsBySofaText(SofaText sofaText) {

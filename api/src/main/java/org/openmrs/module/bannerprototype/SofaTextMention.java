@@ -228,4 +228,19 @@ public class SofaTextMention extends BaseOpenmrsData implements Serializable, Co
 		return this.getMentionStart() - ((SofaTextMention) stm).getMentionStart();
 	}
 	
+	/**
+	 * uuid is a unique identifier for the SofaTextMention
+	 * 
+	 * @return the uuid
+	 */
+	public String getUuid() {
+		return uuid;
+	}
+	
+	/**
+	 * @param uuid the uuid to set
+	 */
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
 }

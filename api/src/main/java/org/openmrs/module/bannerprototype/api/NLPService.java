@@ -12,6 +12,7 @@ import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.bannerprototype.SofaDocument;
 import org.openmrs.module.bannerprototype.SofaText;
 import org.openmrs.module.bannerprototype.SofaTextMention;
+import org.openmrs.module.bannerprototype.SofaTextMentionUI;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -99,6 +100,14 @@ public interface NLPService extends OpenmrsService {
 	 * @return
 	 */
 	public SofaTextMention getSofaTextMentionByUuid(String uuid);
+	
+	/**
+	 * returns the SofaTextMention by UUID
+	 * 
+	 * @param uuid
+	 * @return
+	 */
+	public SofaTextMentionUI getSofaTextMentionUIByUuid(String uuid);
 	
 	/**
 	 * returns the current SessionFactory
