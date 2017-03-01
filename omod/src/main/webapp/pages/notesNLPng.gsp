@@ -41,7 +41,8 @@ ui.includeJavascript("bannerprototype","directives/cloud.js")
 ui.includeJavascript("bannerprototype", "directives/slider.js")
 ui.includeJavascript("bannerprototype","directives/heatMap.js")
 ui.includeJavascript("bannerprototype","services/DateFactory.js")
-  
+ui.includeJavascript("bannerprototype","services/SearchFactory.js")
+
 ui.includeCss("bannerprototype", "bootstrap.min.css")
 ui.includeCss("bannerprototype", "iThing.css")
 ui.includeCss("bannerprototype", "app.css")

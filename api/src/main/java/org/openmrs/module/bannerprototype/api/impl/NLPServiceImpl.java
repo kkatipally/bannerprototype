@@ -110,6 +110,13 @@ public class NLPServiceImpl extends BaseOpenmrsService implements NLPService {
 		return dao.getSofaDocumentsByPatientAndDateRange(patient, startDate, endDate);
 	}
 	
+	@Override
+	@Transactional
+	public List<SofaTextMentionUI> getSofaTextMentionUIByConstraints(Patient patient, Date startDate, Date endDate,
+	        String[] searchTerms) {
+		return dao.getSofaTextMentionUIByConstraints(patient, startDate, endDate, searchTerms);
+	}
+	
 	public SessionFactory getSessionFactory() {
 		return dao.getSessionFactory();
 	}

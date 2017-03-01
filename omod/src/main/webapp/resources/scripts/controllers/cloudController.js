@@ -1,17 +1,22 @@
 'use strict';
 
 visitNotesApp.controller('cloudController',
-    function cloudController($scope, $location, DateFactory, SofaDocumentResource, SofaDocumentResources, SofaTextMentionResource, SofaTextMentionResources){
+    function cloudController($scope, $location, DateFactory, SearchFactory, SofaDocumentResource, SofaDocumentResources, SofaTextMentionResource, SofaTextMentionResources){
 
         $scope.searchInput = "";
-
+        $scope.searchTerms = [];
+        
         $scope.addToSearch = function(name){
             console.log("Added to search: " + name);
-            $scope.searchInput = $scope.searchInput + " " + name;
+            $scope.searchInput += " " + name;
+            $scope.searchTerms.push(name);
         };
 
         $scope.page1Submit = function(searchInput){
-            console.log("Page 1 submitted with: " + searchInput);
+        	
+        	SearchFactory.setSearchTerms($scope.searchTerms);
+            console.log("Page 1 submitted with searchInput: " + $scope.searchInput);
+            console.log("Page 1 submitted with JSON.stringify(searchTerms): " + JSON.stringify($scope.searchTerms));
             //$location.path('/view2');
             $location.url('/view2');
         };

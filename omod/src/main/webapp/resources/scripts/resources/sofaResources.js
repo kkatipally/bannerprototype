@@ -32,3 +32,18 @@ visitNotesApp.factory('SofaTextMentionResources', function($resource) {
 				}
 			});
 });
+
+visitNotesApp.factory('SofaTextMentionUIResources', function($resource) {
+    return $resource("/openmrs/ws/rest/v1/bannerprototype/sofatextmentionui", {},
+		{
+			displayHeatMap : {
+				method : 'GET',
+				params : {
+					'patient' : "@patient",
+					'startDate' : "@startDate",
+					'endDate' : "@endDate",
+					'searchTerms' : "@searchTerms"
+				}
+			}
+		});
+});

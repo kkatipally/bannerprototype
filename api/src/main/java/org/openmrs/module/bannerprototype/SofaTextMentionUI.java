@@ -1,13 +1,14 @@
 package org.openmrs.module.bannerprototype;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 import org.openmrs.BaseOpenmrsData;
 
 public class SofaTextMentionUI extends BaseOpenmrsData implements Serializable {
 	
-	private String uuid;
+	//private String uuid;
 	
 	private String mentionText;
 	
@@ -16,26 +17,25 @@ public class SofaTextMentionUI extends BaseOpenmrsData implements Serializable {
 	private String relatedTo;
 	
 	//private HashMap<String, SofaDocumentUI> dateList;
-	//private List<SofaDocumentUI> dateList;
-	private Set<SofaDocumentUI> dateList;
+	private List<SofaDocumentUI> dateList;
 	
 	/**
 	 * Default constructor
 	 */
 	public SofaTextMentionUI(SofaTextMention sofaTextMention) {
-		setUuid(sofaTextMention.getUuid());
+		//setUuid(sofaTextMention.getUuid());
 		setMentionText(sofaTextMention.getMentionText());
 		setMentionType(sofaTextMention.getMentionType());
 	}
 	
-	public SofaTextMentionUI(String uuid, String mentionText, String mentionType, Set<SofaDocumentUI> dateList) {
-		this.uuid = uuid;
+	public SofaTextMentionUI(/*String uuid, */String mentionText, String mentionType, List<SofaDocumentUI> dateList) {
+		//this.uuid = uuid;
 		this.mentionText = mentionText;
 		this.mentionType = mentionType;
 		this.dateList = dateList;
 	}
 	
-	public void addDate(SofaDocument sofadocument) {
+	public void addDate(SofaDocumentUI sofaDocumentUI) {
 		/*if(dateList.containsKey(sofadocument.getUuid())){
 			dateList.get(sofadocument.getUuid()).incrementCount();
 		}
@@ -45,13 +45,13 @@ public class SofaTextMentionUI extends BaseOpenmrsData implements Serializable {
 		
 		boolean found = false;
 		for (SofaDocumentUI date : dateList) {
-			if (date.getUuid().equals(sofadocument.getUuid())) {
-				//date.incrementCount();
+			if (date.getUuid().equals(sofaDocumentUI.getUuid())) {
+				date.incrementCount();
 				found = true;
 			}
 		}
 		if (found == false) {
-			dateList.add(new SofaDocumentUI(sofadocument));
+			dateList.add(sofaDocumentUI);
 		}
 		
 	}
@@ -68,21 +68,16 @@ public class SofaTextMentionUI extends BaseOpenmrsData implements Serializable {
 		
 	}
 	
-	/**
-	 * uuid is a unique identifier for the SofaTextMention
-	 * 
-	 * @return the uuid
-	 */
+	/*
+	
 	public String getUuid() {
 		return uuid;
 	}
 	
-	/**
-	 * @param uuid the uuid to set
-	 */
+	
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
-	}
+	}*/
 	
 	/**
 	 * @return the mentionText
@@ -112,11 +107,11 @@ public class SofaTextMentionUI extends BaseOpenmrsData implements Serializable {
 		this.mentionType = mentionType;
 	}
 	
-	public Set<SofaDocumentUI> getDateList() {
+	public List<SofaDocumentUI> getDateList() {
 		return dateList;
 	}
 	
-	public void setDateList(Set<SofaDocumentUI> dateList) {
+	public void setDateList(List<SofaDocumentUI> dateList) {
 		this.dateList = dateList;
 	}
 	

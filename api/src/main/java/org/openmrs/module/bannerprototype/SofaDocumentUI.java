@@ -15,7 +15,8 @@ public class SofaDocumentUI extends BaseOpenmrsData implements Serializable {
 	
 	private Date dateCreated;
 	
-	//	private int mentionCount;
+	private int mentionCount;
+	
 	//	
 	//	private String diagnosis;
 	//	
@@ -30,18 +31,18 @@ public class SofaDocumentUI extends BaseOpenmrsData implements Serializable {
 		setUuid(sofadocument.getUuid());
 		setDateCreated(sofadocument.getDateCreated());
 		setPatient(sofadocument.getPatient());
-		//this.mentionCount = 1;
+		this.setMentionCount(1);
 	}
 	
 	public SofaDocumentUI(String uuid, Date dateCreated) {
 		this.uuid = uuid;
 		this.dateCreated = dateCreated;
-		//this.mentionCount = 1;
+		this.setMentionCount(1);
 	}
 	
-	//	public void incrementCount() {
-	//		this.mentionCount++;
-	//	}
+	public void incrementCount() {
+		this.setMentionCount(this.getMentionCount() + 1);
+	}
 	
 	@Override
 	public Integer getId() {
@@ -100,11 +101,26 @@ public class SofaDocumentUI extends BaseOpenmrsData implements Serializable {
 	}
 	
 	/**
-	 * Added to handle ERROR - BaseRestController.handleException(106) Could not write JSON: Conflicting getter definitions for property "voided"
+	 * Added to handle ERROR - BaseRestController.handleException(106) Could not write JSON:
+	 * Conflicting getter definitions for property "voided"
 	 */
 	@Override
 	public Boolean isVoided() {
 		return super.isVoided();
+	}
+	
+	/**
+	 * @return the mentionCount
+	 */
+	public int getMentionCount() {
+		return mentionCount;
+	}
+	
+	/**
+	 * @param mentionCount the mentionCount to set
+	 */
+	public void setMentionCount(int mentionCount) {
+		this.mentionCount = mentionCount;
 	}
 	
 }

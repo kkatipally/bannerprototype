@@ -1,6 +1,7 @@
 package org.openmrs.module.bannerprototype.rest.resource;
 
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 
 import org.openmrs.Patient;
@@ -46,7 +47,7 @@ public class SofatextmentionUIResource extends DataDelegatingCrudResource<SofaTe
 			description.addProperty("display");
 			description.addProperty("mentionText");
 			description.addProperty("mentionType");
-			description.addProperty("dateList", Representation.REF);
+			description.addProperty("dateList", Representation.FULL);
 			description.addSelfLink();
 			return description;
 		}
@@ -94,7 +95,7 @@ public class SofatextmentionUIResource extends DataDelegatingCrudResource<SofaTe
 	@Override
 	protected PageableResult doSearch(RequestContext context) {
 		
-		/*Patient patient = context.getParameter("patient") != null ? Context.getPatientService().getPatientByUuid(
+		Patient patient = context.getParameter("patient") != null ? Context.getPatientService().getPatientByUuid(
 		    context.getParameter("patient")) : null;
 		
 		Date startDate = context.getParameter("startDate") != null ? (Date) ConversionUtil.convert(
@@ -103,40 +104,24 @@ public class SofatextmentionUIResource extends DataDelegatingCrudResource<SofaTe
 		Date endDate = context.getParameter("endDate") != null ? (Date) ConversionUtil.convert(
 		    context.getParameter("endDate"), Date.class) : null;
 		
-		String entityType = context.getParameter("entityType");
+		//String searchTerm = context.getParameter("searchTerm");
+		String[] searchTerms;
+		searchTerms = context.getRequest().getParameterValues("searchTerms");
 		
-		ArrayList<SofaTextMention> mentionList = new ArrayList<SofaTextMention>();
+		List<SofaTextMentionUI> stmUIList = Context.getService(NLPService.class).getSofaTextMentionUIByConstraints(patient,
+		    startDate, endDate, searchTerms);
 		
-		List<SofaDocument> allSofaDocuments = Context.getService(NLPService.class).getSofaDocumentsByPatientAndDateRange(
-		    patient, startDate, endDate);
+		return new NeedsPaging<SofaTextMentionUI>(stmUIList, context);
 		
-		if (entityType.equals("Problems")) {
-			for (SofaDocument sd : allSofaDocuments) {
-				mentionList.addAll(sd.getProblemMentions());
-			}
-		} else if (entityType.equals("Treatments")) {
-			for (SofaDocument sd : allSofaDocuments) {
-				mentionList.addAll(sd.getTreatmentMentions());
-			}
-		} else if (entityType.equals("Tests")) {
-			for (SofaDocument sd : allSofaDocuments) {
-				mentionList.addAll(sd.getTestMentions());
-			}
-		} else {
-			for (SofaDocument sd : allSofaDocuments) {
-				mentionList.addAll(sd.getAllMentions());
-			}
-		}
-		
-		return new NeedsPaging<SofaTextMention>(mentionList, context);*/
-		return null;
 	}
 	
-	/*private void addToCloud(WordCloud wordcloud, List<SofaTextMention> mentions) {
-		
-		for (SofaTextMention m : mentions)
-			wordcloud.addWord(m.getMentionText(), m.getMentionType());
-	}*/
+	/*
+	 * private void addToCloud(WordCloud wordcloud, List<SofaTextMention>
+	 * mentions) {
+	 * 
+	 * for (SofaTextMention m : mentions) wordcloud.addWord(m.getMentionText(),
+	 * m.getMentionType()); }
+	 */
 	
 	/**
 	 * Returns a display string
