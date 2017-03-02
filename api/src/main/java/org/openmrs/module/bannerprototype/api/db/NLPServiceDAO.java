@@ -24,6 +24,8 @@ public interface NLPServiceDAO {
 	
 	public List<SofaDocument> getSofaDocumentsByPatientAndDateRange(Patient patient, Date startDate, Date endDate);
 	
+	public List<SofaDocument> getSofaDocumentsByConstraints(Patient patient, Date startDate, Date endDate, String searchTerm);
+	
 	public SofaText saveSofaText(SofaText sofaText);
 	
 	public SofaTextMention saveSofaTextMention(SofaTextMention sofaTextMention);
@@ -44,7 +46,7 @@ public interface NLPServiceDAO {
 	
 	public SofaTextMentionUI getSofaTextMentionUIByUuid(String uuid);
 	
-	public List<SofaTextMentionUI> getSofaTextMentionUIByConstraints(Patient patient, Date startDate, Date endDate,
+	public Set<SofaTextMentionUI> getSofaTextMentionUIByConstraints(Patient patient, Date startDate, Date endDate,
 	        String[] searchTerms);
 	
 	public SessionFactory getSessionFactory();

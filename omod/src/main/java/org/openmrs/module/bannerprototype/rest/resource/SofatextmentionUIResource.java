@@ -1,8 +1,10 @@
 package org.openmrs.module.bannerprototype.rest.resource;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Set;
 
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
@@ -37,6 +39,7 @@ public class SofatextmentionUIResource extends DataDelegatingCrudResource<SofaTe
 			description.addProperty("display");
 			description.addProperty("mentionText");
 			description.addProperty("mentionType");
+			description.addProperty("relatedTo");
 			description.addProperty("dateList", Representation.REF);
 			description.addSelfLink();
 			description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
@@ -47,6 +50,7 @@ public class SofatextmentionUIResource extends DataDelegatingCrudResource<SofaTe
 			description.addProperty("display");
 			description.addProperty("mentionText");
 			description.addProperty("mentionType");
+			description.addProperty("relatedTo");
 			description.addProperty("dateList", Representation.FULL);
 			description.addSelfLink();
 			return description;
@@ -108,8 +112,11 @@ public class SofatextmentionUIResource extends DataDelegatingCrudResource<SofaTe
 		String[] searchTerms;
 		searchTerms = context.getRequest().getParameterValues("searchTerms");
 		
-		List<SofaTextMentionUI> stmUIList = Context.getService(NLPService.class).getSofaTextMentionUIByConstraints(patient,
+		Set<SofaTextMentionUI> stmUISet = Context.getService(NLPService.class).getSofaTextMentionUIByConstraints(patient,
 		    startDate, endDate, searchTerms);
+		
+		List<SofaTextMentionUI> stmUIList = new ArrayList<SofaTextMentionUI>();
+		stmUIList.addAll(stmUISet);
 		
 		return new NeedsPaging<SofaTextMentionUI>(stmUIList, context);
 		

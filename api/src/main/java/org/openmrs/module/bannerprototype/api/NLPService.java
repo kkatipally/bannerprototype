@@ -115,7 +115,7 @@ public interface NLPService extends OpenmrsService {
 	 * @param uuid
 	 * @return
 	 */
-	public List<SofaTextMentionUI> getSofaTextMentionUIByConstraints(Patient patient, Date startDate, Date endDate,
+	public Set<SofaTextMentionUI> getSofaTextMentionUIByConstraints(Patient patient, Date startDate, Date endDate,
 	        String[] searchTerms);
 	
 	/**
@@ -140,6 +140,14 @@ public interface NLPService extends OpenmrsService {
 	 * @return
 	 */
 	public List<SofaDocument> getSofaDocumentsByPatientAndDateRange(Patient patient, Date startDate, Date endDate);
+	
+	/**
+	 * returns all SofaDocument objects associated with patient, date range and searchTerm
+	 * 
+	 * @param patient
+	 * @return
+	 */
+	public List<SofaDocument> getSofaDocumentsByConstraints(Patient patient, Date startDate, Date endDate, String searchTerm);
 	
 	/**
 	 * deletes all data relating to SofaDocuments, SofaTextMention etc. This is called when

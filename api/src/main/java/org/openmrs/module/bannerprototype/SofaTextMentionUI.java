@@ -115,4 +115,18 @@ public class SofaTextMentionUI extends BaseOpenmrsData implements Serializable {
 		this.dateList = dateList;
 	}
 	
+	/**
+	 * @return the relatedTo
+	 */
+	public String getRelatedTo() {
+		return relatedTo;
+	}
+	
+	/**
+	 * @param relatedTo the relatedTo to set
+	 */
+	public void setRelatedTo(String relatedTo) {
+		this.relatedTo = relatedTo;
+	}
+	
 }

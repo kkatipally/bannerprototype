@@ -25,10 +25,10 @@ visitNotesApp.directive('heatMap', function($compile){
 
             var i, j, k, heatRect, markDates,
                 groupMonths = 3,
-                margin = { top: 0, right: 0, bottom: 0, left: 50 },
-                width = 800 - margin.left - margin.right,
+                margin = { top: 0, right: 0, bottom: 0, left: 0 },
+                width = 870 - margin.left - margin.right,
                 height = 430 - margin.top - margin.bottom, //not used
-                termWidth = 100,
+                termWidth = 200,
                 gridWidth = ((width-2*termWidth)/numMonths),
                 gridHeight = 20,
                 entityTypes = ['red', 'green', 'blue'],
@@ -73,7 +73,7 @@ visitNotesApp.directive('heatMap', function($compile){
             	
                 d3.select("svg").remove();
 
-                var filterSearchTerm = data.filter(function(d) { return d /*return d.expand === "show"*/ });
+                var filterSearchTerm = data.filter(function(d) { return d.relatedTo == null /*return d.expand === "show"*/ });
 
                 var searchTerms = filterSearchTerm.map(function(d){ return d.mentionText;});
 
@@ -109,7 +109,7 @@ visitNotesApp.directive('heatMap', function($compile){
                     .attr('class', 'resetLabel')
                     .attr('id', 'resetLabel');
 
-                data = data.filter(function(d) { return d /*return d.expand === "show"*/ })
+                data = data.filter(function(d) { return d.relatedTo == null /*return d.expand === "show"*/ })
 
                 var nested = svg.selectAll('g')
                     .data(data)
@@ -517,7 +517,7 @@ visitNotesApp.directive('heatMap', function($compile){
                 });
 
                 /*if(termSel === "Search")
-                    data2 = data1.filter(function(d) { return d.expand === "show" })
+                    data2 = data1.filter(function(d) { return d.relatedTo == null d.expand === "show" })
                 else if(termSel === "All")
                     data2 = data1;
                 else { //toggle option*/
@@ -545,7 +545,7 @@ visitNotesApp.directive('heatMap', function($compile){
 
                 d3.select("svg").remove();
 
-                //var filterSearchTerm = data.filter(function(d) { return d.expand === "show" });
+                //var filterSearchTerm = data.filter(function(d) { return d.relatedTo == null d.expand === "show" });
 
                 var allTerms = data.map(function(d){ return d.mentionText;});
                 //console.log("allTerms: " + allTerms);
@@ -1062,7 +1062,7 @@ visitNotesApp.directive('heatMap', function($compile){
                 var allTerms = [];
                 var filterSearchTerm;
 
-                filterSearchTerm = data.filter(function(d) { return d /*return d.expand === "show"*/ });
+                filterSearchTerm = data.filter(function(d) { return d.relatedTo == null /*return d.expand === "show"*/ });
                 //console.log("filterSearchTerm: " + JSON.stringify(filterSearchTerm));
 
                 searchTerms = filterSearchTerm.map(function(d){ return d.mentionText;});

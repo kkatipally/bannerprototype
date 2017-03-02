@@ -220,7 +220,7 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 		
 	}
 	
-	public List<SofaTextMentionUI> getSofaTextMentionUIByConstraints(Patient patient, Date startDate, Date endDate,
+	public Set<SofaTextMentionUI> getSofaTextMentionUIByConstraints(Patient patient, Date startDate, Date endDate,
 	        String[] searchTerms) {
 		
 		StringBuffer sb = new StringBuffer();
@@ -268,7 +268,7 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 		
 		int index = 0;
 		SofaTextMentionUI prevStmUI = null;
-		List<SofaTextMentionUI> stmUIList = new ArrayList<SofaTextMentionUI>();
+		Set<SofaTextMentionUI> stmUIList = new HashSet<SofaTextMentionUI>();
 		for (Object obj : results) {
 			
 			Object[] result = (Object[]) obj;
@@ -335,6 +335,41 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 		crit.add(Restrictions.lt("dateCreated", endDate));
 		
 		return (List<SofaDocument>) crit.list();
+	}
+	
+	@Override
+	public List<SofaDocument> getSofaDocumentsByConstraints(Patient patient, Date startDate, Date endDate, String searchTerm) {
+		
+		StringBuffer sb = new StringBuffer();
+		
+		sb.append("select sd.sofa_document_id as sofaDocumentID");
+		sb.append(" from sofatext_mention stm");
+		sb.append(" INNER JOIN sofatext st");
+		sb.append(" ON stm.sofatext_id = st.sofatext_id");
+		sb.append(" INNER JOIN sofa_document sd");
+		sb.append(" ON st.sofa_document_id = sd.sofa_document_id");
+		sb.append(" WHERE sd.date_created >= :startDate and sd.date_created <= :endDate");
+		sb.append(" and sd.patient_id = :patient and ");
+		sb.append(" stm.mention_text = :searchTerm");
+		
+		String sqlQuery = sb.toString();
+		
+		Query query = sessionFactory.getCurrentSession().createSQLQuery(sqlQuery)
+		        .addScalar("sofaDocumentID", new IntegerType()).setParameter("startDate", startDate)
+		        .setParameter("endDate", endDate).setParameter("patient", patient).setParameter("searchTerm", searchTerm);
+		
+		List<SofaDocument> sofadocs = new ArrayList<SofaDocument>();
+		
+		List results = query.list();
+		for (Object obj : results) {
+			
+			int sdId = (Integer) obj;
+			//Object[] result = (Object[]) obj;
+			//int sdId = Integer.parseInt(result[0].toString());
+			SofaDocument sd = getSofaDocumentById(sdId);
+			sofadocs.add(sd);
+		}
+		return sofadocs;
 	}
 	
 	@Override

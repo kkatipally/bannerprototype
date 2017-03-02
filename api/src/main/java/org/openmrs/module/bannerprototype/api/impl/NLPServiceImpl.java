@@ -2,6 +2,7 @@ package org.openmrs.module.bannerprototype.api.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -16,6 +17,8 @@ import org.openmrs.module.bannerprototype.SofaTextMention;
 import org.openmrs.module.bannerprototype.SofaTextMentionUI;
 import org.openmrs.module.bannerprototype.api.NLPService;
 import org.openmrs.module.bannerprototype.api.db.NLPServiceDAO;
+import org.openmrs.module.bannerprototype.wordcloud.Word;
+import org.openmrs.module.bannerprototype.wordcloud.WordCloud;
 import org.springframework.transaction.annotation.Transactional;
 
 public class NLPServiceImpl extends BaseOpenmrsService implements NLPService {
@@ -112,9 +115,66 @@ public class NLPServiceImpl extends BaseOpenmrsService implements NLPService {
 	
 	@Override
 	@Transactional
-	public List<SofaTextMentionUI> getSofaTextMentionUIByConstraints(Patient patient, Date startDate, Date endDate,
+	public List<SofaDocument> getSofaDocumentsByConstraints(Patient patient, Date startDate, Date endDate, String searchTerm) {
+		return dao.getSofaDocumentsByConstraints(patient, startDate, endDate, searchTerm);
+	}
+	
+	@Override
+	@Transactional
+	public Set<SofaTextMentionUI> getSofaTextMentionUIByConstraints(Patient patient, Date startDate, Date endDate,
 	        String[] searchTerms) {
-		return dao.getSofaTextMentionUIByConstraints(patient, startDate, endDate, searchTerms);
+		
+		Set<SofaTextMentionUI> stmUIAll = new HashSet<SofaTextMentionUI>();
+		
+		for (String term : searchTerms) {
+			
+			List<SofaDocument> sofaDocs = getSofaDocumentsByConstraints(patient, startDate, endDate, term);
+			
+			WordCloud problemCloud = new WordCloud();
+			WordCloud treatmentCloud = new WordCloud();
+			WordCloud testCloud = new WordCloud();
+			
+			for (SofaDocument sd : sofaDocs) {
+				addToCloud(problemCloud, sd.getProblemMentions());
+				addToCloud(treatmentCloud, sd.getTreatmentMentions());
+				addToCloud(testCloud, sd.getTestMentions());
+			}
+			
+			List<String> allTopTerms = new ArrayList<String>();
+			List<Word> problemTopWords = problemCloud.getTopWordsShuffled(5);
+			List<Word> treatmentTopWords = treatmentCloud.getTopWordsShuffled(5);
+			List<Word> testTopWords = testCloud.getTopWordsShuffled(5);
+			
+			for (Word word : problemTopWords)
+				allTopTerms.add(word.getWord());
+			
+			for (Word word : treatmentTopWords)
+				allTopTerms.add(word.getWord());
+			
+			for (Word word : testTopWords)
+				allTopTerms.add(word.getWord());
+			
+			String[] allTopTermsArr = new String[allTopTerms.size()];
+			allTopTermsArr = allTopTerms.toArray(allTopTermsArr);
+			
+			Set<SofaTextMentionUI> stmUIList = dao.getSofaTextMentionUIByConstraints(patient, startDate, endDate,
+			    allTopTermsArr);
+			
+			for (SofaTextMentionUI stmUI : stmUIList) {
+				if (!(stmUI.getMentionText().equals(term))) {
+					stmUI.setRelatedTo(term);
+				}
+				stmUIAll.add(stmUI);
+			}
+			
+		}
+		return stmUIAll;
+	}
+	
+	private void addToCloud(WordCloud wordcloud, List<SofaTextMention> mentions) {
+		
+		for (SofaTextMention m : mentions)
+			wordcloud.addWord(m.getMentionText(), m.getMentionType());
 	}
 	
 	public SessionFactory getSessionFactory() {
