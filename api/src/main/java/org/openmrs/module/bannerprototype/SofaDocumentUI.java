@@ -17,12 +17,11 @@ public class SofaDocumentUI extends BaseOpenmrsData implements Serializable {
 	
 	private int mentionCount;
 	
-	//	
-	//	private String diagnosis;
-	//	
-	//	private String provider;
-	//	
-	//	private String location;
+	private String diagnosis;
+	
+	private String provider;
+	
+	private String location;
 	
 	/**
 	 * Default constructor
@@ -34,14 +33,41 @@ public class SofaDocumentUI extends BaseOpenmrsData implements Serializable {
 		this.setMentionCount(1);
 	}
 	
-	public SofaDocumentUI(String uuid, Date dateCreated) {
+	public SofaDocumentUI(String uuid, Date dateCreated, String provider, String location, String diagnosis) {
 		this.uuid = uuid;
 		this.dateCreated = dateCreated;
+		this.provider = provider;
+		this.location = location;
+		this.diagnosis = diagnosis;
 		this.setMentionCount(1);
 	}
 	
 	public void incrementCount() {
 		this.setMentionCount(this.getMentionCount() + 1);
+	}
+	
+	public String getDiagnosis() {
+		return diagnosis;
+	}
+	
+	public void setDiagnosis(String diagnosis) {
+		this.diagnosis = diagnosis;
+	}
+	
+	public String getProvider() {
+		return provider;
+	}
+	
+	public void setProvider(String provider) {
+		this.provider = provider;
+	}
+	
+	public String getLocation() {
+		return location;
+	}
+	
+	public void setLocation(String location) {
+		this.location = location;
 	}
 	
 	@Override

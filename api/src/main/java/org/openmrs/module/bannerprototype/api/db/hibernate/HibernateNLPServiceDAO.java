@@ -173,21 +173,30 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 		
 		StringBuffer sb = new StringBuffer();
 		
-		/*
-		 * sb.append("select uuid as mentionUuid, mention_text as mentionText");
-		 * sb.append(" from sofatext_mention "); sb.append(" WHERE uuid = :uuid"
-		 * );
-		 */
-		
 		sb.append("select stm.uuid as mentionUuid, stm.mention_text as mentionText,");
 		sb.append(" stm.mention_type as mentionType, sd.uuid as dateUuid, sd.patient_id as patientId,");
-		sb.append(" sd.date_created as dateCreated");
+		sb.append(" sd.date_created as dateCreated,");
+		sb.append(" p.name as provider, l.name as location, cn.name as diagnosis");
 		sb.append(" from sofatext_mention stm");
 		sb.append(" INNER JOIN sofatext st");
 		sb.append(" ON stm.sofatext_id = st.sofatext_id");
 		sb.append(" INNER JOIN sofa_document sd");
 		sb.append(" ON st.sofa_document_id = sd.sofa_document_id");
+		sb.append(" INNER JOIN encounter e");
+		sb.append(" ON sd.encounter_id = e.encounter_id");
+		sb.append(" INNER JOIN encounter_provider ep");
+		sb.append(" ON e.encounter_id = ep.encounter_id");
+		sb.append(" INNER JOIN provider p");
+		sb.append(" ON ep.provider_id = p.provider_id");
+		sb.append(" INNER JOIN location l");
+		sb.append(" ON e.location_id = l.location_id");
+		sb.append(" INNER JOIN obs o");
+		sb.append(" ON e.encounter_id = o.encounter_id");
+		sb.append(" INNER JOIN concept_name cn");
+		sb.append(" ON o.value_coded = cn.concept_id");
+		sb.append(" and o.value_coded_name_id = cn.concept_name_id");
 		sb.append(" WHERE stm.uuid = :uuid");
+		sb.append(" and o.concept_id = 1284 ");
 		
 		String query = sb.toString();
 		
@@ -195,7 +204,8 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 		        .addScalar("mentionUuid", new StringType()).addScalar("mentionText", new StringType())
 		        .addScalar("mentionType", new StringType()).addScalar("dateUuid", new StringType())
 		        .addScalar("patientId", new IntegerType()).addScalar("dateCreated", new DateType())
-		        .setParameter("uuid", uuid).uniqueResult();
+		        .addScalar("provider", new StringType()).addScalar("location", new StringType())
+		        .addScalar("diagnosis", new StringType()).setParameter("uuid", uuid).uniqueResult();
 		
 		String uuidDate = result[3].toString();
 		Date dateCr = null;
@@ -206,7 +216,22 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		SofaDocumentUI sdUI = new SofaDocumentUI(uuidDate, dateCr);
+		
+		String provider, location, diagnosis;
+		if (result[6] != null)
+			provider = result[6].toString();
+		else
+			provider = "";
+		if (result[7] != null)
+			location = result[7].toString();
+		else
+			location = "";
+		if (result[8] != null)
+			diagnosis = result[8].toString();
+		else
+			diagnosis = "";
+		
+		SofaDocumentUI sdUI = new SofaDocumentUI(uuidDate, dateCr, provider, location, diagnosis);
 		
 		List<SofaDocumentUI> dateList = new ArrayList<SofaDocumentUI>();
 		dateList.add(sdUI);
@@ -225,30 +250,35 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 		
 		StringBuffer sb = new StringBuffer();
 		
-		sb.append("select stm.mention_text as mentionText,");
-		sb.append(" stm.mention_type as mentionType, sd.uuid as dateUuid, sd.patient_id as patientId,");
-		sb.append(" sd.date_created as dateCreated");
+		sb.append("select stm.mention_text as mentionText, stm.mention_type as mentionType,");
+		sb.append(" sd.uuid as dateUuid, sd.patient_id as patientId, sd.date_created as dateCreated,");
+		sb.append(" p.name as provider, l.name as location, cn.name as diagnosis");
 		sb.append(" from sofatext_mention stm");
 		sb.append(" INNER JOIN sofatext st");
 		sb.append(" ON stm.sofatext_id = st.sofatext_id");
 		sb.append(" INNER JOIN sofa_document sd");
 		sb.append(" ON st.sofa_document_id = sd.sofa_document_id");
-		// sb.append(" INNER JOIN person p");
-		// sb.append(" ON sd.patient_id = p.person_id");
-		sb.append(" WHERE sd.date_created >= :startDate and sd.date_created <= :endDate");
-		// sb.append(" and p.uuid = '0586cbb8-56f1-4621-9ea6-4d53cb44884c'");
+		sb.append(" INNER JOIN encounter e");
+		sb.append(" ON sd.encounter_id = e.encounter_id");
+		sb.append(" INNER JOIN encounter_provider ep");
+		sb.append(" ON e.encounter_id = ep.encounter_id");
+		sb.append(" INNER JOIN provider p");
+		sb.append(" ON ep.provider_id = p.provider_id");
+		sb.append(" INNER JOIN location l");
+		sb.append(" ON e.location_id = l.location_id");
+		sb.append(" INNER JOIN obs o");
+		sb.append(" ON e.encounter_id = o.encounter_id");
+		sb.append(" INNER JOIN concept_name cn");
+		sb.append(" ON o.value_coded = cn.concept_id");
+		sb.append(" and o.value_coded_name_id = cn.concept_name_id");
+		sb.append(" WHERE o.concept_id = 1284 ");
+		if (startDate != null) {
+			sb.append(" and sd.date_created >= :startDate ");
+		}
+		if (endDate != null) {
+			sb.append(" and sd.date_created <= :endDate ");
+		}
 		sb.append(" and sd.patient_id = :patient and ");
-		
-		/*int termIndex = 0;
-		
-		for (String term : searchTerms) {
-			if (termIndex == 0)
-				sb.append(" stm.mention_text = :term");
-			else {
-				sb.append(" or stm.mention_text = :term");
-			}
-			termIndex++;
-		}*/
 		sb.append(" stm.mention_text in :searchTerms");
 		sb.append(" ORDER by stm.mention_text");
 		
@@ -257,13 +287,12 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 		Query query = sessionFactory.getCurrentSession().createSQLQuery(sqlQuery).addScalar("mentionText", new StringType())
 		        .addScalar("mentionType", new StringType()).addScalar("dateUuid", new StringType())
 		        .addScalar("patientId", new IntegerType()).addScalar("dateCreated", new DateType())
-		        .setParameter("startDate", startDate).setParameter("endDate", endDate).setParameter("patient", patient);
+		        .addScalar("provider", new StringType()).addScalar("location", new StringType())
+		        .addScalar("diagnosis", new StringType()).setParameter("startDate", startDate)
+		        .setParameter("endDate", endDate).setParameter("patient", patient);
 		
 		query.setParameterList("searchTerms", searchTerms);
 		
-		/*for (String term : searchTerms) {
-			query.setParameter("term", term);
-		}*/
 		List results = query.list();
 		
 		int index = 0;
@@ -284,7 +313,22 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			SofaDocumentUI sdUI = new SofaDocumentUI(uuidDate, dateCr);
+			
+			String provider, location, diagnosis;
+			if (result[5] != null)
+				provider = result[5].toString();
+			else
+				provider = "";
+			if (result[6] != null)
+				location = result[6].toString();
+			else
+				location = "";
+			if (result[7] != null)
+				diagnosis = result[7].toString();
+			else
+				diagnosis = "";
+			
+			SofaDocumentUI sdUI = new SofaDocumentUI(uuidDate, dateCr, provider, location, diagnosis);
 			
 			if ((index == 0) || !(prevStmUI.getMentionText().equals(textMention))) {
 				if (index > 0)
