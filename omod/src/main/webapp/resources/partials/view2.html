@@ -4,7 +4,7 @@
     <li class="breadcrumb-item">interferon</li>
 </ol>
 
-<div class="container-fluid">
+<div class="container-fluid" ng-controller="heatmapController">
     <div class="row">
         <button id="clearHistory" type="button" class="btn btn-secondary" ng-click="clearHistory()">Clear History
         </button>
@@ -12,7 +12,7 @@
             Page
         </button>
     </div>
-    <div id="heatmapsection" ng-controller="heatmapController">
+    <div id="heatmapsection">
         <div class="row">
             <h6 class="col-xs-2"><span class="label label-default">Start Date:</span></h6>
             <div class="col-xs-3">

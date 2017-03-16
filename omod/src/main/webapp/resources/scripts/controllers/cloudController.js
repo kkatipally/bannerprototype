@@ -28,7 +28,7 @@ visitNotesApp.controller('cloudController',
         $scope.displayNumTerms.selectedValue = 5;
         
         $scope.entityType = 'All';
-        $scope.numTerms = '5';
+        $scope.numTerms = '20';
         
         function monthsBefore(d, months) {
   		  var nd = new Date(d.getTime());
@@ -137,6 +137,7 @@ visitNotesApp.controller('cloudController',
       
         $scope.sliderMinDate = monthsBefore(new Date(), 24);
         $scope.sliderMaxDate = new Date();
+        console.log('slider max: ' + $scope.sliderMaxDate);
         
         DateFactory.setSliderMinDate($scope.sliderMinDate);
         DateFactory.setSliderMaxDate($scope.sliderMaxDate);
@@ -153,8 +154,9 @@ visitNotesApp.controller('cloudController',
     	 			patient : $scope.patient
     			}, function() {
     				//console.log("After start date change:");
-    				console.log($scope.sofatextmentions);
+    				console.log('sofatextmentions:' + JSON.stringify($scope.sofatextmentions));
     				$scope.finalCloud = finalCloudDisplay($scope.sofatextmentions.results);
+    				console.log('finalcloud: ' + JSON.stringify($scope.finalCloud));
     			});
         });
         
@@ -170,9 +172,10 @@ visitNotesApp.controller('cloudController',
         	 			patient : $scope.patient
         			}, function() {
         				//console.log("After end date change:");
-        				console.log($scope.sofatextmentions);
+        				console.log('sofatextmentions:' + JSON.stringify($scope.sofatextmentions));
         				$scope.finalCloud = finalCloudDisplay($scope.sofatextmentions.results);
-        			});
+        				console.log('finalcloud: ' + JSON.stringify($scope.finalCloud));
+        				});
 
         });
         
@@ -190,8 +193,9 @@ visitNotesApp.controller('cloudController',
 	 			entityType: $scope.entityType,
 	 			patient : $scope.patient
 			}, function() {
-				console.log($scope.sofatextmentions);
+				console.log('sofatextmentions:' + JSON.stringify($scope.sofatextmentions));
 				$scope.finalCloud = finalCloudDisplay($scope.sofatextmentions.results);
+				console.log('finalcloud: ' + JSON.stringify($scope.finalCloud));
 			});
         
         
@@ -207,6 +211,7 @@ visitNotesApp.controller('cloudController',
     				console.log("After change:");
     				console.log($scope.sofatextmentions.results);
     				$scope.finalCloud = finalCloudDisplay($scope.sofatextmentions.results);
+    				console.log('finalcloud: ' + JSON.stringify($scope.finalCloud));
     			});
            // }
           });

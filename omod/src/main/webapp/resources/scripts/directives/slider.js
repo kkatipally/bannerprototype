@@ -44,14 +44,14 @@ visitNotesApp.directive('slider', function($compile){
                         }
                     }],
                     step:{          //User can select dates in steps of 1 week
-                        weeks: 1
+                        //weeks: 1	//Results in incorrect end date being displayed
                     }
                 }
             );
             
             scope.sliderMinDate = monthsBefore(new Date(), 24);
             scope.sliderMaxDate = new Date();
-        	//console.log("Initial slider min/max in slider: " + scope.sliderMinDate + " " + scope.sliderMaxDate);
+        	console.log("Initial slider min/max in slider: " + scope.sliderMinDate + " " + scope.sliderMaxDate);
 
             element.bind("userValuesChanged", function(e, data){
                 console.log("Values just changed. min: " + data.values.min + " max: " + data.values.max);

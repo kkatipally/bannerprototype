@@ -35,18 +35,15 @@
         <div data-i2="css:[{fontSize:'12px'},{fontSize:'30px'}]">
 		
 			<span ng-repeat="term in finalCloud">
-			
 			<a ngHref="#" ng-click="addToSearch(term.name)">
-            <style parse-style>.css_class {color: {{term.className}}}</style>
-			<span class="css_class">{{term.name}}</span><br>
+			{{term.name}}
+            <!-- <style parse-style>.css_class {color: {{term.className}}}</style>
+			<span class="css_class">{{term.name}}</span><br>-->
     		</a>
     		
 			</span>
 		
-            <% tagCloudWords.each { word -> %>
-    <span class=mention-type-${word.getClassName()} data-i2="rate:${word.getCount()}">${word.getWord()}</span>
-    
-	<% } %> 
+            
 	</div>
         </div>
     </div>

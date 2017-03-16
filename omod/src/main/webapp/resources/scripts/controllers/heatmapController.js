@@ -1,6 +1,7 @@
 'use strict';
 
-visitNotesApp.controller('heatmapController', function($scope, DateFactory, SearchFactory, SofaTextMentionUIResources) {
+visitNotesApp.controller('heatmapController', 
+		function($scope, $location, DateFactory, SearchFactory, SofaTextMentionUIResources) {
 
 	/*
 	 * $scope.dateSelOptions = [{"datename": "All Dates", "datevalue": 14},
@@ -174,7 +175,53 @@ visitNotesApp.controller('heatmapController', function($scope, DateFactory, Sear
 	}, function() {
 		console.log("heatmap:" + JSON.stringify($scope.stms.results));
 		$scope.val = $scope.stms.results;
+		$scope.visitNotes = populateVisitNoteList($scope.stms.results);
+		console.log("visitNotes:" + JSON.stringify($scope.visitNotes));
 	});
+	
+	function displayDate(date) {
+  	  
+		var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+		                  "Jul", "Aug", "Sep", "Oct","Nov", "Dec"];
+
+		var day = date.getDate();
+		var monthIndex = date.getMonth();
+		var year = date.getFullYear();
+
+		return day + ' ' + monthNames[monthIndex] + ' ' + year;
+  	}
+	
+	function populateVisitNoteList(results){
+		
+		var Notes = [];
+		results.forEach(function (result, i){
+			result.dateList.forEach(function (date, j){
+				var note = {};
+				note["uuid"] = date.uuid;
+				note["term"] = result.mentionText;
+				note["date"] = displayDate(new Date(date.dateCreated));
+				note["diagnosis"] = date.diagnosis;
+				note["provider"] = date.provider;
+				note["location"] = date.location;
+				Notes.push(note);
+			});
+		});
+		return Notes;
+	}
+	
+	$scope.visitListSearchInput = "";
+
+    $scope.backToSearchPage = function(){
+        //$location.path('/view1');
+        $location.url('/view1');
+    };
+
+    $scope.visitListSearch = function(visitListSearchInput){
+        console.log("Visit list search clicked with: " + visitListSearchInput);
+    };
+
+    $scope.rendering = "Morbi libero urna, pretium sed arcu vitae, luctus semper sem. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque quam dui, congue id gravida quis, tempor sit amet justo. Aliquam blandit placerat nisi, in condimentum erat semper sed.Cras quam lorem, vestibulum nec mi elementum, pulvinar venenatis sapien. Suspendisse vitae nulla mattis, laoreet nibh ut, elementum mi. Nullam vestibulum mi arcu, nec mattis lorem facilisis eget. Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+
 });
 
 
