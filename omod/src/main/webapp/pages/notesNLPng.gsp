@@ -29,7 +29,6 @@ ui.includeJavascript("bannerprototype", "lib/ui-bootstrap-tpls-2.4.0.min.js")
 ui.includeJavascript("bannerprototype","lib/d3.min.js")
 
 ui.includeJavascript("bannerprototype","app.js")
-ui.includeJavascript("bannerprototype","directives/parseStyle.js")
 ui.includeJavascript("bannerprototype", "resources/sofaResources.js")
 ui.includeJavascript("bannerprototype", "controllers/view1Controller.js")
 ui.includeJavascript("bannerprototype","controllers/view2Controller.js")

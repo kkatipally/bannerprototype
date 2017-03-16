@@ -79,8 +79,8 @@
                     <th>Location</th>
                 </tr>
                 </thead>
-                <tbody ng-repeat="visitNote in visitNotes">
-                <tr>
+                <tbody>
+                <tr ng-repeat="visitNote in visitNotes" ng-click="selectNote()">
                     <td>{{visitNote.date}}</td>
                     <td>{{visitNote.diagnosis}}</td>
                     <td>{{visitNote.provider}}</td>

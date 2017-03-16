@@ -1,7 +1,7 @@
 'use strict';
 
 visitNotesApp.controller('heatmapController', 
-		function($scope, $location, DateFactory, SearchFactory, SofaTextMentionUIResources) {
+		function($scope, $location, DateFactory, SearchFactory, SofaDocumentResource, SofaTextMentionUIResources) {
 
 	/*
 	 * $scope.dateSelOptions = [{"datename": "All Dates", "datevalue": 14},
@@ -173,10 +173,10 @@ visitNotesApp.controller('heatmapController',
 		searchTerms : $scope.searchTerms,
 		v : "full"
 	}, function() {
-		console.log("heatmap:" + JSON.stringify($scope.stms.results));
+		//console.log("heatmap:" + JSON.stringify($scope.stms.results));
 		$scope.val = $scope.stms.results;
 		$scope.visitNotes = populateVisitNoteList($scope.stms.results);
-		console.log("visitNotes:" + JSON.stringify($scope.visitNotes));
+		//console.log("visitNotes:" + JSON.stringify($scope.visitNotes));
 	});
 	
 	function displayDate(date) {
@@ -191,6 +191,8 @@ visitNotesApp.controller('heatmapController',
 		return day + ' ' + monthNames[monthIndex] + ' ' + year;
   	}
 	
+    $scope.rendering = "Morbi libero urna, pretium sed arcu vitae, luctus semper sem. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque quam dui, congue id gravida quis, tempor sit amet justo. Aliquam blandit placerat nisi, in condimentum erat semper sed.Cras quam lorem, vestibulum nec mi elementum, pulvinar venenatis sapien. Suspendisse vitae nulla mattis, laoreet nibh ut, elementum mi. Nullam vestibulum mi arcu, nec mattis lorem facilisis eget. Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+
 	function populateVisitNoteList(results){
 		
 		var Notes = [];
@@ -204,6 +206,14 @@ visitNotesApp.controller('heatmapController',
 				note["provider"] = date.provider;
 				note["location"] = date.location;
 				Notes.push(note);
+				if ((i==0) && (j==0)){
+					$scope.sofadocInit = SofaDocumentResource.get({
+			    		uuid : date.uuid
+			    	}, function() {
+			    		//console.log("sofadoc:" + JSON.stringify($scope.sofadoc.text));
+			    		$scope.rendering = $scope.sofadocInit.text;
+			    	}); 
+				}
 			});
 		});
 		return Notes;
@@ -219,8 +229,17 @@ visitNotesApp.controller('heatmapController',
     $scope.visitListSearch = function(visitListSearchInput){
         console.log("Visit list search clicked with: " + visitListSearchInput);
     };
-
-    $scope.rendering = "Morbi libero urna, pretium sed arcu vitae, luctus semper sem. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque quam dui, congue id gravida quis, tempor sit amet justo. Aliquam blandit placerat nisi, in condimentum erat semper sed.Cras quam lorem, vestibulum nec mi elementum, pulvinar venenatis sapien. Suspendisse vitae nulla mattis, laoreet nibh ut, elementum mi. Nullam vestibulum mi arcu, nec mattis lorem facilisis eget. Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+    
+    $scope.selectNote = function(){
+    	$scope.selectedNote = this.visitNote;
+    	
+    	$scope.sofadoc = SofaDocumentResource.get({
+    		uuid : $scope.selectedNote.uuid
+    	}, function() {
+    		//console.log("sofadoc:" + JSON.stringify($scope.sofadoc.text));
+    		$scope.rendering = $scope.sofadoc.text;
+    	});
+    }
 
 });
 

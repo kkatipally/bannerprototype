@@ -193,9 +193,10 @@ visitNotesApp.controller('cloudController',
 	 			entityType: $scope.entityType,
 	 			patient : $scope.patient
 			}, function() {
-				console.log('sofatextmentions:' + JSON.stringify($scope.sofatextmentions));
+				//console.log('sofatextmentions:' + JSON.stringify($scope.sofatextmentions));
 				$scope.finalCloud = finalCloudDisplay($scope.sofatextmentions.results);
-				console.log('finalcloud: ' + JSON.stringify($scope.finalCloud));
+				//console.log('finalcloud: ' + JSON.stringify($scope.finalCloud));
+				i2.emph();
 			});
         
         

@@ -35,12 +35,12 @@
         <div data-i2="css:[{fontSize:'12px'},{fontSize:'30px'}]">
 		
 			<span ng-repeat="term in finalCloud">
+			
 			<a ngHref="#" ng-click="addToSearch(term.name)">
+			<span data-i2="rate:{{term.count}}" ng-class="{'mention-type-problem': term.className === 'problem', 'mention-type-treatment': term.className === 'treatment','mention-type-test': term.className === 'test'}">
 			{{term.name}}
-            <!-- <style parse-style>.css_class {color: {{term.className}}}</style>
-			<span class="css_class">{{term.name}}</span><br>-->
+    		</span>
     		</a>
-    		
 			</span>
 		
             
@@ -67,4 +67,6 @@
 </div>
  </div> 
 </div>
+
+
     

@@ -5,8 +5,7 @@ visitNotesApp.config(function ($httpProvider) {
 });
 
 visitNotesApp.factory('SofaDocumentResource', function($resource) {
-    //return $resource("/" + OPENMRS_CONTEXT_PATH  + "/ws/rest/v1/bannerprototype/sofadocument/1d840527-cef9-4a90-9f98-0ea9bffffe2f",{
-    return $resource("/openmrs/ws/rest/v1/bannerprototype/sofadocument/1d840527-cef9-4a90-9f98-0ea9bffffe2f");
+    return $resource("/openmrs/ws/rest/v1/bannerprototype/sofadocument/:uuid");
 });
 
 visitNotesApp.factory('SofaDocumentResources', function($resource) {

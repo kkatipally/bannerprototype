@@ -129,8 +129,14 @@ h6 {
 
 p{
   font-family: sans-serif;
-  font-size:12px;
+  font-size:14px;
 }
+
+table{
+  font-family: sans-serif;
+  font-size:14px;
+}
+
 .problem {
   fill: red;
 }
@@ -141,27 +147,27 @@ p{
   fill: blue;
 }
 
-span.mention-type-problem {
-  margin: 5px;
+.mention-type-problem {
+  margin: 10px;
   margin-left:0px;
-  /*font-family: "arial";
-  font-size: 18px;*/
+  font-family: "sans-serif";
+  /*font-size: 14px;*/
   color: red /*rgb(190, 53, 90)*/
 }
 
-span.mention-type-test {
-  margin: 5px;
+.mention-type-test {
+  margin: 10px;
   margin-left:0px;
-  /*font-family: "arial";
-  font-size: 18px;*/
+  font-family: "sans-serif";
+  /*font-size: 14px;*/
   color: blue /*rgb(17, 76, 126)*/
 }
 
-span.mention-type-treatment {
-  margin: 5px;
+.mention-type-treatment {
+  margin: 10px;
   margin-left:0px;
-  /*font-family: "arial";
-  font-size: 18px;*/
+  font-family: "sans-serif";
+  /*font-size: 14px;*/
   color: green /*rgb(33, 119, 67)*/
 }
 .hide {
