@@ -66,7 +66,7 @@ visitNotesApp.directive('heatMap', function($compile){
 
               	  return year + month + day;
               	}
-
+            
             function buildviz(data, minDate, maxDate){
 
             	var colorScale;
@@ -110,7 +110,8 @@ visitNotesApp.directive('heatMap', function($compile){
                     .attr('id', 'resetLabel');
 
                 data = data.filter(function(d) { return d.relatedTo == null /*return d.expand === "show"*/ })
-
+                console.log("nested data: " + JSON.stringify(data));
+                
                 var nested = svg.selectAll('g')
                     .data(data)
                     .enter().append('g')
@@ -134,7 +135,7 @@ visitNotesApp.directive('heatMap', function($compile){
 
                 var j = 0;
                 nested
-                .each(function(d1, i) {
+                .each(function(d1, nestedInd) {
                     
                     var grps = Math.ceil(numMonths/groupMonths);
                     var startRect, endRect, lengthRect, yRect, totFreq, addFreq, currentDate;
@@ -229,8 +230,8 @@ visitNotesApp.directive('heatMap', function($compile){
                                 //.domain([0, d3.max(totFreq)])
                                 //.range(['#ffffd9', '#081d58']); blue
                                 .range(['#ffffd9', '#ff0033']); //pink
-                
-                nested.each(function(d1, i) {
+                  
+                nested.each(function(d1, nestedInd) {
 
                         var grps = Math.ceil(numMonths/groupMonths);
                         //console.log("numMonths, grps : " + numMonths + ' ' + grps);
@@ -284,7 +285,10 @@ visitNotesApp.directive('heatMap', function($compile){
                                     newdate = {
                                         "date": new Date(currentDate.getTime()),
                                         "yDate": j,
-                                        "dateFreq": gettotFreq(d1.dateList, k)
+                                        "dateFreq": gettotFreq(d1.dateList, k),
+                                        "provider": d1.dateList[k]['provider'],
+                                        "location": d1.dateList[k]['location'],
+                                        "diagnosis": d1.dateList[k]['diagnosis']
                                     }
                                     //console.log("newdate.date: " + newdate.date);
                                     listDates.push(newdate);
@@ -348,9 +352,10 @@ visitNotesApp.directive('heatMap', function($compile){
                                 function(d){
                                     d3.select(this).classed(d.mentionType, true)
                                 });
-
+                        
+                        console.log("heatRect data: " + JSON.stringify(DataRect));
                         heatRect = d3.select(this)
-                            .selectAll('rect')
+                            .selectAll('.heatmap')
                             .data(DataRect)
                             .enter().append('rect')
                             .attr('x', function(d){ return 1.5*termWidth + xScale(d.startRect) })
@@ -360,13 +365,11 @@ visitNotesApp.directive('heatMap', function($compile){
                             .attr('width', function(d){ return xScale(d.endRect)-xScale(d.startRect)/*groupMonths*gridWidth*/})
                             .attr('height', gridHeight)
                             .attr('fill', function(d) { return colorScale(d.totFreq) })
-                            .attr('id', function(d, i) { return 'heatmapRect' + d.yRect })
+                            .attr('id', function(d, i) { return 'heatmapRect' + d.yRect + i})
                             .attr("class", "heatmap")
                             .on("mouseover", function(d, i){
-                                var heatmapid = 'heatmapRect' + i + d.yRect;
+                                
                                 //console.log('heatmapid: '+ heatmapid);
-
-                                d3.select(this).attr('visibility', 'hidden');
 
                                 tooltip.transition()
                                     .duration(500)
@@ -374,8 +377,14 @@ visitNotesApp.directive('heatMap', function($compile){
                                 tooltip.html("<strong>Frequency: " + d.totFreq + "</strong>")
                                     .style("left", (d3.event.pageX) + "px")
                                     .style("top", (d3.event.pageY - 28) + "px");
-
-                                markDates = nested
+                                
+                                var markDatesClass = 'markDates' + d.yRect + i;
+                                d3.selectAll('.g_main').selectAll('.nestedClass').selectAll('.'+markDatesClass)
+                                //.style("opacity", 1);
+                                .attr("visibility", "visible");
+                                
+                                d3.select(this).attr('visibility', 'hidden');
+                                /*markDates = nested
                                     .selectAll('d.listDates')
                                     .data(d.listDates).enter()
                                     .append('rect')
@@ -391,14 +400,13 @@ visitNotesApp.directive('heatMap', function($compile){
                                     //simple tooltip in next 2 lines
                                     .append("title")
                                     .text(function(d1){ return d1.dateFreq })
-                                /*.on("mouseover", function(d) {
-                                 console.log('tooltip mouseover works');
-                                 d3.selectAll('#heatmapRect').attr('visibility', 'hidden');
+                                .on("mouseover", function(d) {
+                                 d3.select('#heatmapid').attr('visibility', 'hidden');
 
                                  tooltip.transition()
                                  .duration(500)
                                  .style("opacity", .9);
-                                 tooltip.html("<strong>Frequency: " + d.dateFreq + "</strong>")
+                                 tooltip.html("<strong>Date: " + d.dateFreq + "</strong>")
                                  .style("left", (d3.event.pageX) + "px")
                                  .style("top", (d3.event.pageY - 28) + "px");
                                  })
@@ -406,15 +414,71 @@ visitNotesApp.directive('heatMap', function($compile){
                                  tooltip.transition()
                                  .duration(500)
                                  .style("opacity", 0);
-                                 });  */
+                                 }); */ 
                             })
                             .on("mouseout", function(d, i){
                                 d3.select(this).attr('visibility', 'visible');
-                                d3.selectAll('#markDatesClass').remove();
+                                //d3.selectAll('#markDatesClass').remove();
                                 tooltip.transition()
                                     .duration(500)
                                     .style("opacity", 0);
+                                
+                                var markDatesClass = 'markDates' + d.yRect + i;
+                                d3.selectAll('.g_main').selectAll('.nestedClass').selectAll('.'+markDatesClass)
+                                //.style("opacity", 0);
+                                .attr('visibility', 'hidden');
                             })
+                            .on("click", function(d, i){
+                            	console.log("heatmapRect clicked");
+                            });
+
+                            heatRect
+                            .each(function(d2, k) {
+                            	markDates = nested
+                                .selectAll('markDatesClass')
+                                .data(d2.listDates).enter()
+                        /*markDates = d3.select(this)
+                        		.selectAll('.heatmap')
+                        		.data(DataRect)
+                        		.enter()*/
+                                .append('rect')
+                                .attr('x', function(d1){ return 1.5*termWidth + xScale(d1.date) })
+                                .attr('y', function(d1){ return (d1.yDate+1)*gridHeight; })
+                                .attr("rx", 4)
+                                .attr("ry", 4)
+                                .attr('width', 4)
+                                .attr('height', gridHeight)
+                                //.style("opacity", 0)
+                                .attr('visibility', 'hidden')
+                                .attr("class", function(d) { return 'markDates' + d2.yRect + k})
+                                .attr('fill', function(d) { return colorScale(d.dateFreq) })
+                                //.attr('id', function(d) { return 'markDates' + d2.yRect + k })
+                                //simple tooltip in next 2 lines
+                                //.append("title")
+                                //.text(function(d1){ return d1.dateFreq })
+                            .on("mouseover", function(d) {
+                             
+                             var heatmapRectId = 'heatmapRect' + d2.yRect + k;
+                             d3.selectAll('.g_main').selectAll('.nestedClass').selectAll('#'+heatmapRectId).attr('visibility', 'hidden');
+
+                             d3.select(this).attr('visibility', 'visible');
+                             
+                             tooltip.transition()
+                             .duration(500)
+                             .style("opacity", .9);
+                             tooltip.html("<strong>Date: " + d.date + "</strong><br/><strong>Diagnosis: " + d.diagnosis + "</strong><br/><strong>Provider: " + d.provider + "</strong><br/><strong>Location: " + d.location + "</strong>")
+                             .style("left", (d3.event.pageX) + "px")
+                             .style("top", (d3.event.pageY - 28) + "px");
+                             })
+                             .on("mouseout", function(d) {
+                             tooltip.transition()
+                             .duration(500)
+                             .style("opacity", 0);
+                             })
+                            .on("click", function(d, i){
+                                	console.log("markDate clicked");
+                             })
+                            });
 
                         var Xdelete = d3.select(this).append("text")
                             .text('X')
@@ -588,7 +652,9 @@ visitNotesApp.directive('heatMap', function($compile){
                     .attr('id', 'resetLabel');
 
                 svg.selectAll('.nestedClass').remove();
-
+                
+                console.log("nested data: " + JSON.stringify(data));
+                
                 var nested = svg.selectAll('.g_main')
                     .data(data)
                     .enter().append('g')
@@ -614,15 +680,14 @@ visitNotesApp.directive('heatMap', function($compile){
 
                 var j = 0;
                 nested
-                .each(function(d1, i) {
-                    
+                .each(function(d1, nestedInd) {
+
                     var grps = Math.ceil(numMonths/groupMonths);
                     var startRect, endRect, lengthRect, yRect, totFreq, addFreq, currentDate;
                     var startIndex = 0;
                     var DataRect = [];
                     
                     function getVisitDate(d, i){ return d[i]['dateCreated'];}
-                    
                     function gettotFreq(d, i){ return d[i]['mentionCount'];}
                     
                     startRect = new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate(), 0, 0, 0, 0);
@@ -708,7 +773,7 @@ visitNotesApp.directive('heatMap', function($compile){
                                 .range(['#ffffd9', '#ff0033']); //pink
                     
                 nested
-                    .each(function(d1, i) {
+                    .each(function(d1, nestedInd) {
 
                         var grps = Math.ceil(numMonths/groupMonths);
                         //console.log("grps in updateviz: " + grps);
@@ -761,7 +826,10 @@ visitNotesApp.directive('heatMap', function($compile){
                                     newdate = {
                                         "date": new Date(currentDate.getTime()),
                                         "yDate": j,
-                                        "dateFreq": gettotFreq(d1.dateList, k)
+                                        "dateFreq": gettotFreq(d1.dateList, k),
+                                        "provider": d1.dateList[k]['provider'],
+                                        "location": d1.dateList[k]['location'],
+                                        "diagnosis": d1.dateList[k]['diagnosis']
                                     }
                                     //console.log("newdate.date: " + newdate.date);
                                     listDates.push(newdate);
@@ -830,7 +898,8 @@ visitNotesApp.directive('heatMap', function($compile){
                                 });
 
                         d3.select(this).selectAll('.heatmap').remove();
-
+                        
+                        console.log("heatRect data: " + JSON.stringify(DataRect));
                         heatRect = d3.select(this)
                             .selectAll('rect')
                             .data(DataRect)
@@ -842,11 +911,9 @@ visitNotesApp.directive('heatMap', function($compile){
                             .attr('width', function(d){ return xScale(d.endRect)-xScale(d.startRect)/*groupMonths*gridWidth*/})
                             .attr('height', gridHeight)
                             .attr('fill', function(d) { return colorScale(d.totFreq) })
-                            .attr('id', function(d, i) { return 'heatmapRect' + d.yRect })
+                            .attr('id', function(d, i) { return 'heatmapRect' + d.yRect + i})
                             .attr("class", "heatmap")
                             .on("mouseover", function(d, i){
-
-                                d3.select(this).attr('visibility', 'hidden');
 
                                 tooltip.transition()
                                     .duration(500)
@@ -855,47 +922,109 @@ visitNotesApp.directive('heatMap', function($compile){
                                     .style("left", (d3.event.pageX) + "px")
                                     .style("top", (d3.event.pageY - 28) + "px");
 
-                                markDates = nested
-                                    .selectAll('d.listDates')
-                                    .data(d.listDates).enter()
-                                    .append('rect')
-                                    .attr('x', function(d1){ return 1.5*termWidth + xScale(d1.date) })
-                                    .attr('y', function(d1){ return (d1.yDate+1)*gridHeight; })
-                                    .attr("rx", 4)
-                                    .attr("ry", 4)
-                                    .attr('width', 4)
-                                    .attr('height', gridHeight)
-                                    .attr("id", "markDatesClass")
-                                    .attr('fill', function(d) { return colorScale(d.dateFreq) })
-                                    //.attr('id', function(d) { return 'markDates' + d.date + j })
-                                    //simple tooltip in next 2 lines
-                                    .append("title")
-                                    .text(function(d1){ return d1.dateFreq })
-                                /*.on("mouseover", function(d) {
-                                 console.log('tooltip mouseover works');
-                                 d3.selectAll('#heatmapRect').attr('visibility', 'hidden');
+                                var markDatesClass = 'markDates' + d.yRect + i;
+                                d3.selectAll('.g_main').selectAll('.nestedClass').selectAll('.'+markDatesClass)
+                                //.style("opacity", 1);
+                                .attr("visibility", "visible");
+                                
+                                d3.select(this).attr('visibility', 'hidden');
+                                /*markDates = nested
+                                .selectAll('d.listDates')
+                                .data(d.listDates).enter()
+                                .append('rect')
+                                .attr('x', function(d1){ return 1.5*termWidth + xScale(d1.date) })
+                                .attr('y', function(d1){ return (d1.yDate+1)*gridHeight; })
+                                .attr("rx", 4)
+                                .attr("ry", 4)
+                                .attr('width', 4)
+                                .attr('height', gridHeight)
+                                .attr("id", "markDatesClass")
+                                .attr('fill', function(d) { return colorScale(d.dateFreq) })
+                                //.attr('id', function(d) { return 'markDates' + d.date + j })
+                                //simple tooltip in next 2 lines
+                                .append("title")
+                                .text(function(d1){ return d1.dateFreq })
+                            .on("mouseover", function(d) {
+                             d3.select('#heatmapid').attr('visibility', 'hidden');
 
-                                 tooltip.transition()
-                                 .duration(500)
-                                 .style("opacity", .9);
-                                 tooltip.html("<strong>Frequency: " + d.dateFreq + "</strong>")
-                                 .style("left", (d3.event.pageX) + "px")
-                                 .style("top", (d3.event.pageY - 28) + "px");
-                                 })
-                                 .on("mouseout", function(d) {
-                                 tooltip.transition()
-                                 .duration(500)
-                                 .style("opacity", 0);
-                                 });  */
+                             tooltip.transition()
+                             .duration(500)
+                             .style("opacity", .9);
+                             tooltip.html("<strong>Date: " + d.dateFreq + "</strong>")
+                             .style("left", (d3.event.pageX) + "px")
+                             .style("top", (d3.event.pageY - 28) + "px");
+                             })
+                             .on("mouseout", function(d) {
+                             tooltip.transition()
+                             .duration(500)
+                             .style("opacity", 0);
+                             });*/
                             })
                             .on("mouseout", function(d, i){
                                 d3.select(this).attr('visibility', 'visible');
-                                d3.selectAll('#markDatesClass').remove();
+                                //d3.selectAll('#markDatesClass').remove();
                                 tooltip.transition()
                                     .duration(500)
                                     .style("opacity", 0);
+                                
+                                var markDatesClass = 'markDates' + d.yRect + i;
+                                d3.selectAll('.g_main').selectAll('.nestedClass').selectAll('.'+markDatesClass)                                //.style("opacity", 0);
+                                .attr('visibility', 'hidden');
                             })
+                            .on("click", function(d, i){
+                            	console.log("heatmapRect clicked");
+                            });
+                        
+                        heatRect
+                            .each(function(d2, k) {
+                         	
+                            	markDates = nested
+                                .selectAll('markDatesClass')
+                                .data(d2.listDates).enter()
+                                .append('rect')
+                                .attr('x', function(d1){ return 1.5*termWidth + xScale(d1.date) })
+                                .attr('y', function(d1){ return (d1.yDate+1)*gridHeight; })
+                                .attr("rx", 4)
+                                .attr("ry", 4)
+                                .attr('width', 4)
+                                .attr('height', gridHeight)
+                                //.style("opacity", 0)
+                                .attr('visibility', 'hidden')
+                                .attr("class", function(d) { return 'markDates' + d2.yRect + k})
+                                .attr('fill', function(d) { return colorScale(d.dateFreq) })
+                                //.attr('id', function(d) { return 'markDates' + d2.yRect + k })
+                                //simple tooltip in next 2 lines
+                                //.append("title")
+                                //.text(function(d1){ return d1.dateFreq })
+                            .on("mouseover", function(d) {
+                             
+                             var heatmapRectId = 'heatmapRect' + d2.yRect + k;
+                             d3.selectAll('.g_main').selectAll('.nestedClass').selectAll('#'+heatmapRectId).attr('visibility', 'hidden');
 
+                             d3.select(this).attr('visibility', 'visible');
+                             
+                             tooltip.transition()
+                             .duration(500)
+                             .style("opacity", .9);
+                             tooltip.html("<strong>Date: " + d.date + "</strong><br/><strong>Diagnosis: " + d.diagnosis + "</strong><br/><strong>Provider: " + d.provider + "</strong><br/><strong>Location: " + d.location + "</strong>")
+                             .style("left", (d3.event.pageX) + "px")
+                             .style("top", (d3.event.pageY - 28) + "px");
+                             })
+                             .on("mouseout", function(d) {
+                             tooltip.transition()
+                             .duration(500)
+                             .style("opacity", 0);
+                             
+                             var heatmapRectId = 'heatmapRect' + d2.yRect + k;
+                             d3.selectAll('.g_main').selectAll('.nestedClass').selectAll('#'+heatmapRectId).attr('visibility', 'visible');
+
+                             d3.select(this).attr('visibility', 'hidden');
+                             })
+                            .on("click", function(d, i){
+                                	console.log("markDate clicked");
+                              })
+                            });
+                        
                         d3.select(this).select(".Xdelete").remove();
 
                         var Xdelete = d3.select(this).append("text")
