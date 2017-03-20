@@ -39,6 +39,7 @@ ui.includeJavascript("bannerprototype","controllers/sliderController.js")
 ui.includeJavascript("bannerprototype","directives/cloud.js")
 ui.includeJavascript("bannerprototype", "directives/slider.js")
 ui.includeJavascript("bannerprototype","directives/heatMap.js")
+ui.includeJavascript("bannerprototype","directives/visitDates.js")
 ui.includeJavascript("bannerprototype","services/DateFactory.js")
 ui.includeJavascript("bannerprototype","services/SearchFactory.js")
 

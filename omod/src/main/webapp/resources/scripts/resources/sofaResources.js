@@ -9,7 +9,15 @@ visitNotesApp.factory('SofaDocumentResource', function($resource) {
 });
 
 visitNotesApp.factory('SofaDocumentResources', function($resource) {
-    return $resource("/" + OPENMRS_CONTEXT_PATH  + "/ws/rest/v1/bannerprototype/sofadocument/");
+    return $resource("/" + OPENMRS_CONTEXT_PATH  + "/ws/rest/v1/bannerprototype/sofadocument", {},
+			{
+		displayAllDates : {
+			method : 'GET',
+			params : {
+				'patient' : "@patient"
+			}
+		}
+	});
 });
 
 visitNotesApp.factory('SofaTextMentionResource', function($resource) {
@@ -17,8 +25,8 @@ visitNotesApp.factory('SofaTextMentionResource', function($resource) {
     return $resource("/openmrs/ws/rest/v1/bannerprototype/sofatextmention/71ef216f-75bb-4106-841f-e3405ba086eb");
 });
 
-visitNotesApp.factory('SofaTextMentionResources', function($resource) {
-	    return $resource("/openmrs/ws/rest/v1/bannerprototype/sofatextmention", {},
+visitNotesApp.factory('WordResources', function($resource) {
+	    return $resource("/openmrs/ws/rest/v1/bannerprototype/word", {},
 			{
 				displayCloud : {
 					method : 'GET',
@@ -26,7 +34,8 @@ visitNotesApp.factory('SofaTextMentionResources', function($resource) {
 						'patient' : "@patient",
 						'startDate' : "@startDate",
 						'endDate' : "@endDate",
-						'entityType' : "@entityType"
+						'entityType' : "@entityType",
+						'numTerms': "@numTerms"
 					}
 				}
 			});

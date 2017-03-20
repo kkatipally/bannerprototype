@@ -29,8 +29,6 @@ public class SofadocumentResource extends DataDelegatingCrudResource<SofaDocumen
 			DelegatingResourceDescription description = new DelegatingResourceDescription();
 			description.addProperty("uuid");
 			description.addProperty("display");
-			description.addProperty("encounter", Representation.REF);
-			description.addProperty("patient", Representation.DEFAULT);
 			description.addProperty("dateCreated");
 			description.addProperty("text");
 			description.addSelfLink();
@@ -40,8 +38,6 @@ public class SofadocumentResource extends DataDelegatingCrudResource<SofaDocumen
 			DelegatingResourceDescription description = new DelegatingResourceDescription();
 			description.addProperty("uuid");
 			description.addProperty("display");
-			description.addProperty("encounter", Representation.FULL);
-			description.addProperty("patient", Representation.FULL);
 			description.addProperty("dateCreated");
 			description.addProperty("text");
 			description.addSelfLink();

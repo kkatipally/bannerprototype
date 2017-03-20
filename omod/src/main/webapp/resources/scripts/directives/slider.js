@@ -2,7 +2,10 @@
 
 visitNotesApp.directive('slider', function($compile){
     return {
-    	scope: false,
+    	scope: {
+    		sliderMinDate: '=sliderMinDate',
+    		sliderMaxDate: '=sliderMaxDate'
+        },
         link: function(scope, element, attrs, controller){
             var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
             function monthsBefore(d, months) {
@@ -55,9 +58,12 @@ visitNotesApp.directive('slider', function($compile){
 
             element.bind("userValuesChanged", function(e, data){
                 console.log("Values just changed. min: " + data.values.min + " max: " + data.values.max);
-                scope.sliderMinDate = data.values.min ;
-                scope.sliderMaxDate = data.values.max ;
-            	//console.log("Slider min/max in slider: " + scope.sliderMinDate + " " + scope.sliderMaxDate);
+                scope.$apply(function() {
+                	scope.sliderMinDate = data.values.min ;
+                	scope.sliderMaxDate = data.values.max ;
+                	//console.log("Slider min/max in slider: " + scope.sliderMinDate + " " + scope.sliderMaxDate);
+                });
+                
             });
         }
     }

@@ -1,8 +1,13 @@
 <div ng-app="visitNotesApp" class="center">
 <div ng-controller="cloudController">
     <h4>Select start and end dates, entity type (problems/treatments/tests) and number of terms to view:</h4>
+    
+    <div >
+    <visit-dates id="visitdatesdir" visit-dates-data="visitDatesData" visit-dates-data-updated="visitDatesDataUpdated"/>
+	</div>
+	
     <article>
-        <div id="slider" slider></div>
+        <div id="slider" slider slider-min-date=sliderMinDate slider-max-date=sliderMaxDate></div>
     </article>
 
 
@@ -36,9 +41,9 @@
 		
 			<span ng-repeat="term in finalCloud">
 			
-			<a ngHref="#" ng-click="addToSearch(term.name)">
+			<a ngHref="#" ng-click="addToSearch(term.word)">
 			<span data-i2="rate:{{term.count}}" ng-class="{'mention-type-problem': term.className === 'problem', 'mention-type-treatment': term.className === 'treatment','mention-type-test': term.className === 'test'}">
-			{{term.name}}
+			{{term.word}}
     		</span>
     		</a>
 			</span>

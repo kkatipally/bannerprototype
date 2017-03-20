@@ -176,7 +176,7 @@ visitNotesApp.controller('heatmapController',
 		//console.log("heatmap:" + JSON.stringify($scope.stms.results));
 		$scope.val = $scope.stms.results;
 		$scope.visitNotes = populateVisitNoteList($scope.stms.results);
-		//console.log("visitNotes:" + JSON.stringify($scope.visitNotes));
+		console.log("visitNotes:" + JSON.stringify($scope.visitNotes));
 	});
 	
     $scope.rendering = "Morbi libero urna, pretium sed arcu vitae, luctus semper sem. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque quam dui, congue id gravida quis, tempor sit amet justo. Aliquam blandit placerat nisi, in condimentum erat semper sed.Cras quam lorem, vestibulum nec mi elementum, pulvinar venenatis sapien. Suspendisse vitae nulla mattis, laoreet nibh ut, elementum mi. Nullam vestibulum mi arcu, nec mattis lorem facilisis eget. Lorem ipsum dolor sit amet, consectetur adipiscing elit.";

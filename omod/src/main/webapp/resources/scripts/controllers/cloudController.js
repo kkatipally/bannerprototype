@@ -1,7 +1,7 @@
 'use strict';
 
 visitNotesApp.controller('cloudController',
-    function cloudController($scope, $location, DateFactory, SearchFactory, SofaDocumentResource, SofaDocumentResources, SofaTextMentionResource, SofaTextMentionResources){
+    function cloudController($scope, $location, $timeout, DateFactory, SearchFactory, SofaDocumentResources, WordResources){
 
         $scope.searchInput = "";
         $scope.searchTerms = [];
@@ -21,14 +21,14 @@ visitNotesApp.controller('cloudController',
             $location.url('/view2');
         };
         
-        $scope.entityTypes = [{"id": 0, "name": "Problems"}, {"id": 1, "name": "Treatments"}, {"id": 2, "name": "Tests"}];
+        $scope.entityTypes = [{"id": 0, "name": "All"}, {"id": 1, "name": "Problems"}, {"id": 2, "name": "Treatments"}, {"id": 3, "name": "Tests"}];
         $scope.displayNumTerms = [{"id": 5, "name": "View 5"}, {"id": 10, "name": "View 10"}, {"id": 20, "name": "View 20"}, {"id": 30, "name": "View 30"}];
 
         $scope.entityTypes.selectedValue = "Problems";
         $scope.displayNumTerms.selectedValue = 5;
         
         $scope.entityType = 'All';
-        $scope.numTerms = '20';
+        $scope.numTerms = 20;
         
         function monthsBefore(d, months) {
   		  var nd = new Date(d.getTime());
@@ -65,7 +65,7 @@ visitNotesApp.controller('cloudController',
             return decodeURIComponent(results[2].replace(/\+/g, " "));
         }
         
-        function Word(name, className){
+        /*function Word(name, className){
             this.name = name;
             this.className  = className;
             this.count = 1; // Assign that method as property.
@@ -120,10 +120,10 @@ visitNotesApp.controller('cloudController',
 			};
 			return cloudSelected;
         	}
-        }
+        }*/
      
         $scope.selectEntityType = function(entity){
-            console.log("Entity type selected: " + entity.name);
+            //console.log("Entity type selected: " + entity.name);
             $scope.entityType = entity.name;
         };
 
@@ -132,89 +132,66 @@ visitNotesApp.controller('cloudController',
             $scope.numTerms = term.id;
         };
         
-        //$scope.startDate = { "name": DateFactory.getSliderMinDate() };
-        //$scope.endDate = { "name": DateFactory.getSliderMaxDate() };
-      
         $scope.sliderMinDate = monthsBefore(new Date(), 24);
         $scope.sliderMaxDate = new Date();
-        console.log('slider max: ' + $scope.sliderMaxDate);
         
         DateFactory.setSliderMinDate($scope.sliderMinDate);
         DateFactory.setSliderMaxDate($scope.sliderMaxDate);
         
-        $scope.$watch('sliderMinDate', function (newValue, oldValue) {
-            //if (newValue !== oldValue) {
-            	DateFactory.setSliderMinDate(newValue);
-            	//console.log("Slider min in sliderController: " + newValue);
-            //}
-            	$scope.sofatextmentions = SofaTextMentionResources.displayCloud({
-    	 			startDate: formatDate(newValue),
-    	 			endDate: formatDate($scope.sliderMaxDate),
-    	 			entityType: $scope.entityType,
-    	 			patient : $scope.patient
-    			}, function() {
-    				//console.log("After start date change:");
-    				console.log('sofatextmentions:' + JSON.stringify($scope.sofatextmentions));
-    				$scope.finalCloud = finalCloudDisplay($scope.sofatextmentions.results);
-    				console.log('finalcloud: ' + JSON.stringify($scope.finalCloud));
-    			});
-        });
-        
-        $scope.$watch('sliderMaxDate', function (newValue, oldValue) {
-            //if (newValue !== oldValue) {
-            	DateFactory.setSliderMaxDate(newValue);
-            	//console.log("Slider max in sliderController: " + newValue);
-            //}
-                	$scope.sofatextmentions = SofaTextMentionResources.displayCloud({
-        	 			startDate: formatDate($scope.sliderMinDate),
-        	 			endDate: formatDate(newValue),
-        	 			entityType: $scope.entityType,
-        	 			patient : $scope.patient
-        			}, function() {
-        				//console.log("After end date change:");
-        				console.log('sofatextmentions:' + JSON.stringify($scope.sofatextmentions));
-        				$scope.finalCloud = finalCloudDisplay($scope.sofatextmentions.results);
-        				console.log('finalcloud: ' + JSON.stringify($scope.finalCloud));
-        				});
-
-        });
-        
         $scope.patient = getParameterByName('patientId');
         
-        //$scope.sofadoctest1 = SofaDocumentResource.get({ id: '1d840527-cef9-4a90-9f98-0ea9bffffe2f' }, function() {
-        $scope.sofatextmention1 = SofaTextMentionResource.get(function() {
-        	console.log($scope.sofatextmention1.mentionText);
-          }); // get() returns a single entry
+        $scope.visitDatesDataUpdated = false;
+        $scope.allSofadocs = SofaDocumentResources.displayAllDates({
+ 			patient : $scope.patient,
+ 			v : 'full'
+		}, function() {
+			$timeout(function() {
+				$scope.visitDatesDataUpdated = true;
+				$scope.visitDatesData = $scope.allSofadocs.results ;
+				console.log('visitDatesData:' + JSON.stringify($scope.visitDatesData));
+			}, 0);
+		
+		});
 
- 
-        $scope.sofatextmentions = SofaTextMentionResources.displayCloud({
+        $scope.words = WordResources.displayCloud({
 	 			startDate: formatDate($scope.sliderMinDate),
 	 			endDate: formatDate($scope.sliderMaxDate),
 	 			entityType: $scope.entityType,
-	 			patient : $scope.patient
+	 			patient : $scope.patient,
+	 			numTerms: $scope.numTerms,
+	 			v : 'full'
 			}, function() {
-				//console.log('sofatextmentions:' + JSON.stringify($scope.sofatextmentions));
-				$scope.finalCloud = finalCloudDisplay($scope.sofatextmentions.results);
+				//console.log('words:' + JSON.stringify($scope.words));
+				$scope.finalCloud = $scope.words.results;
+				//$scope.finalCloud = finalCloudDisplay($scope.words.results);
 				//console.log('finalcloud: ' + JSON.stringify($scope.finalCloud));
-				i2.emph();
+				//i2.emph();
 			});
         
-        
-        
-        $scope.$watch('entityType', function(newVal, oldVal) {
-            //if(newVal) {
-            	$scope.sofatextmentions = SofaTextMentionResources.displayCloud({
-    	 			startDate: formatDate($scope.sliderMinDate),
-    	 			endDate: formatDate($scope.sliderMaxDate),
-    	 			entityType: newVal,
-    	 			patient : $scope.patient
-    			}, function() {
-    				console.log("After change:");
-    				console.log($scope.sofatextmentions.results);
-    				$scope.finalCloud = finalCloudDisplay($scope.sofatextmentions.results);
-    				console.log('finalcloud: ' + JSON.stringify($scope.finalCloud));
-    			});
-           // }
-          });
+        $scope.$watch('[sliderMinDate, sliderMaxDate, entityType, numTerms]', 
+                function(newVals, oldVals) {
+        		  /*if(oldVals[0] != newVals[0])||
+                	 (oldVals[1] != newVals[1]) || 
+                	 (oldVals[2] != newVals[2]) ||
+                	 (oldVals[3] != newVals[3])){*/
+        				
+        				DateFactory.setSliderMinDate($scope.sliderMinDate);
+                	  	DateFactory.setSliderMaxDate($scope.sliderMaxDate);
+                	  	
+                	  	$scope.words = WordResources.displayCloud({
+            	 			startDate: formatDate($scope.sliderMinDate),
+            	 			endDate: formatDate($scope.sliderMaxDate),
+            	 			entityType: $scope.entityType,
+            	 			patient : $scope.patient,
+            	 			numTerms: $scope.numTerms,
+            	 			v : 'full'
+            			}, function() {
+            				//console.log('words:' + JSON.stringify($scope.words));
+            				$scope.finalCloud = $scope.words.results;
+            				//$scope.finalCloud = finalCloudDisplay($scope.words.results);
+            				//console.log('finalcloud: ' + JSON.stringify($scope.finalCloud));
+            				//i2.emph();
+            			});
+                  });
 
 });

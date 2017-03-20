@@ -80,7 +80,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="visitNote in visitNotes" ng-click="selectNote()">
+                <tr ng-repeat="visitNote in visitNotes | orderBy: 'date'" ng-click="selectNote()">
                     <td>{{visitNote.date | date:'mediumDate'}}</td>
                     <td>{{visitNote.diagnosis}}</td>
                     <td>{{visitNote.provider}}</td>

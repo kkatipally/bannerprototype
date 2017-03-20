@@ -1,11 +1,15 @@
 package org.openmrs.module.bannerprototype.wordcloud;
 
+import java.io.Serializable;
+
+import org.openmrs.BaseOpenmrsData;
+
 /**
  * this class represents entities/frequencies for the Word Cloud
  * 
  * @author ryaneshleman
  */
-public class Word implements Comparable<Word> {
+public class Word extends BaseOpenmrsData implements Serializable, Comparable {
 	
 	private String word;
 	
@@ -40,11 +44,9 @@ public class Word implements Comparable<Word> {
 		this.count++;
 	}
 	
-	/**
-	 * compareTo implemented to compare word counts, for sorting by frequency
-	 */
 	@Override
-	public int compareTo(Word w) {
+	public int compareTo(Object o) {
+		Word w = (Word) o;
 		if (w.getCount() < this.count)
 			return 1;
 		if (w.getCount() > this.count)
@@ -53,12 +55,37 @@ public class Word implements Comparable<Word> {
 		return 0;
 	}
 	
+	/**
+	 * compareTo implemented to compare word counts, for sorting by frequency
+	 */
+	
+	/*public int compareTo(Word w) {
+		if (w.getCount() < this.count)
+			return 1;
+		if (w.getCount() > this.count)
+			return -1;
+		
+		return 0;
+	}*/
+	
 	public String getClassName() {
 		return className;
 	}
 	
 	public void setClassName(String className) {
 		this.className = className;
+	}
+	
+	@Override
+	public Integer getId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public void setId(Integer arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
