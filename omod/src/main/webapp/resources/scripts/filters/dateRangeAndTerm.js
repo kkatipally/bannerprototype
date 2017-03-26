@@ -7,7 +7,7 @@ visitNotesApp.filter('dateRangeAndTerm', function(){
     	var filteredItems = [];
     	if(matchTerm !== ""){
     		angular.forEach(items, function(item) {
-    			if((item.date >= fromDate) && (item.date <= toDate) && (item.term.equals(matchTerm))) {
+    			if((item.date >= fromDate) && (item.date <= toDate) && (item.term === matchTerm)) {
     				filteredItems.push(item);
     			}
     		});

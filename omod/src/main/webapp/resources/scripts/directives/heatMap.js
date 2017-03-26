@@ -236,16 +236,17 @@ visitNotesApp.directive('heatMap', function($compile){
 
                         var grps = Math.ceil(numMonths/groupMonths);
                         //console.log("numMonths, grps : " + numMonths + ' ' + grps);
-                        var startRect, endRect, lengthRect, yRect, totFreq, addFreq, currentDate;
+                        var startRect, endRect, lengthRect, yRect, totFreq, addFreq, currentDate, mention;
                         var startIndex = 0;
                         var DataRect = [];
 
                         function getVisitDate(d, i){ return d[i]['dateCreated'];}
 
                         function gettotFreq(d, i){ return d[i]['mentionCount'];}
-
+                        
                         startRect = new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate(), 0, 0, 0, 0);
                         endRect = new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate(), 0, 0, 0, 0);
+                        mention = d1.mentionText;
                         
                         //console.log("Init startRect: " + startRect);
 
@@ -278,6 +279,7 @@ visitNotesApp.directive('heatMap', function($compile){
 
                             for(k=0; k<d1.dateList.length; k++){
                                 currentDate = new Date(getVisitDate(d1.dateList, k));
+                                                                
                                 //console.log("currentDate, startRect, endRect: " + currentDate, startRect, endRect);
 
                                 if((currentDate >= startRect) && (currentDate < endRect)){
@@ -305,6 +307,7 @@ visitNotesApp.directive('heatMap', function($compile){
                                 "yRect": yRect,
                                 "lengthRect": lengthRect,
                                 "totFreq":  addFreq,
+                                "mention": mention,
                                 "listDates": listDates
                             }
                             //console.log("newdata.startRect: " + newdata.startRect);
@@ -434,7 +437,7 @@ visitNotesApp.directive('heatMap', function($compile){
                             	scope.$apply(function() {
                             		scope.filterFromDate = new Date(d.startRect);
                             		scope.filterToDate = new Date(d.endRect);
-                            		scope.matchTerm = "";
+                            		scope.matchTerm = d.mention;
                             	});
                             });
 
@@ -486,7 +489,7 @@ visitNotesApp.directive('heatMap', function($compile){
                                 	scope.$apply(function() {
                                 		scope.filterFromDate = new Date(d.date);
                                 		scope.filterToDate = new Date(d.date);
-                                		scope.matchTerm = "";
+                                		scope.matchTerm = d2.mention;
                                 	});
                              })
                             });
@@ -788,16 +791,17 @@ visitNotesApp.directive('heatMap', function($compile){
 
                         var grps = Math.ceil(numMonths/groupMonths);
                         //console.log("grps in updateviz: " + grps);
-                        var startRect, endRect, lengthRect, yRect, totFreq, addFreq, currentDate;
+                        var startRect, endRect, lengthRect, yRect, totFreq, addFreq, currentDate, mention;
                         var startIndex = 0;
                         var DataRect = [];
 
                         function getVisitDate(d, i){ return d[i]['dateCreated'];}
 
                         function gettotFreq(d, i){ return d[i]['mentionCount'];}
-
+                        
                         startRect = new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate(), 0, 0, 0, 0);
                         endRect = new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate(), 0, 0, 0, 0);
+                        mention = d1.mentionText;
                         
                         //console.log("Init startRect: " + startRect);
 
@@ -856,6 +860,7 @@ visitNotesApp.directive('heatMap', function($compile){
                                 "yRect": yRect,
                                 "lengthRect": lengthRect,
                                 "totFreq":  addFreq,
+                                "mention": mention,
                                 "listDates": listDates
                             }
                             //console.log("newdata.startRect: " + newdata.startRect);
@@ -987,7 +992,7 @@ visitNotesApp.directive('heatMap', function($compile){
                             	scope.$apply(function() {
                             		scope.filterFromDate = new Date(d.startRect);
                             		scope.filterToDate = new Date(d.endRect);
-                            		scope.matchTerm = "";
+                            		scope.matchTerm = d.mention;
                             	});
                             });
                         
@@ -1041,7 +1046,7 @@ visitNotesApp.directive('heatMap', function($compile){
                                 	scope.$apply(function() {
                                 		scope.filterFromDate = new Date(d.date);
                                 		scope.filterToDate = new Date(d.date);
-                                		scope.matchTerm = "";
+                                		scope.matchTerm = d2.mention;
                                 	});
                               })
                             });
