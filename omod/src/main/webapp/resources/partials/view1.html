@@ -27,7 +27,9 @@
                 <span class="caret"></span></button>
             <ul id="numTermsDropdownMenu" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" ng-model="displayNumTerms.selectedValue">
                 <li ng-repeat="displayNumTerm in displayNumTerms">
-                    <a class="dropdown-item" href="#" ng-click="selectDisplayNumTerms(displayNumTerm)">{{displayNumTerm.name}}</a>
+                    <a class="dropdown-item" ng-click="selectDisplayNumTerms(displayNumTerm)">
+                    {{displayNumTerm.name}}
+                    </a>
                 </li>
             </ul>
         </div>

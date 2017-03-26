@@ -7,9 +7,10 @@ visitNotesApp.directive('heatMap', function($compile){
         scope: {
             val: '=val',
             startDate: '=startDate',
-            endDate: '=endDate'
-            //dateSel: '=dateSel'
-            //termSel: '=termSel'
+            endDate: '=endDate',
+            filterFromDate: '=filterFromDate',
+            filterToDate: '=filterToDate',
+            matchTerm: '=matchTerm'
         },
         link: function(scope, element, attrs, controller) {
 
@@ -430,6 +431,11 @@ visitNotesApp.directive('heatMap', function($compile){
                             })
                             .on("click", function(d, i){
                             	console.log("heatmapRect clicked");
+                            	scope.$apply(function() {
+                            		scope.filterFromDate = new Date(d.startRect);
+                            		scope.filterToDate = new Date(d.endRect);
+                            		scope.matchTerm = "";
+                            	});
                             });
 
                             heatRect
@@ -477,6 +483,11 @@ visitNotesApp.directive('heatMap', function($compile){
                              })
                             .on("click", function(d, i){
                                 	console.log("markDate clicked");
+                                	scope.$apply(function() {
+                                		scope.filterFromDate = new Date(d.date);
+                                		scope.filterToDate = new Date(d.date);
+                                		scope.matchTerm = "";
+                                	});
                              })
                             });
 
@@ -973,6 +984,11 @@ visitNotesApp.directive('heatMap', function($compile){
                             })
                             .on("click", function(d, i){
                             	console.log("heatmapRect clicked");
+                            	scope.$apply(function() {
+                            		scope.filterFromDate = new Date(d.startRect);
+                            		scope.filterToDate = new Date(d.endRect);
+                            		scope.matchTerm = "";
+                            	});
                             });
                         
                         heatRect
@@ -1022,6 +1038,11 @@ visitNotesApp.directive('heatMap', function($compile){
                              })
                             .on("click", function(d, i){
                                 	console.log("markDate clicked");
+                                	scope.$apply(function() {
+                                		scope.filterFromDate = new Date(d.date);
+                                		scope.filterToDate = new Date(d.date);
+                                		scope.matchTerm = "";
+                                	});
                               })
                             });
                         

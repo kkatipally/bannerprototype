@@ -1,7 +1,7 @@
 'use strict';
 
-visitNotesApp.controller('heatmapController', 
-		function($scope, $location, DateFactory, SearchFactory, SofaDocumentResource, SofaTextMentionUIResources) {
+visitNotesApp.controller('heatmapController',
+		function($scope, $location, DateFactory, SearchFactory, dateRangeAndTermFilter, SofaDocumentResource, SofaTextMentionUIResources) {
 
 	/*
 	 * $scope.dateSelOptions = [{"datename": "All Dates", "datevalue": 14},
@@ -163,6 +163,10 @@ visitNotesApp.controller('heatmapController',
 
 	});*/
 
+	$scope.filterFromDate = monthsBefore(new Date(), 24); //DateFactory.getSliderMinDate(); 
+	$scope.filterToDate = new Date(); //DateFactory.getSliderMaxDate();
+	$scope.matchTerm = "";
+	
 	$scope.patient = getParameterByName('patientId');
 	$scope.searchTerms = SearchFactory.getSearchTerms();
 

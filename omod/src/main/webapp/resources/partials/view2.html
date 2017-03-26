@@ -42,7 +42,8 @@
         <div >
             <!--<button id="reset" type="button" class="btn btn-secondary col-xs-1" ng-click="resetHeatMap()">Reset</button>-->
 
-            <heat-map id="heatmapdir" val="val" start-date="startDate" end-date="endDate">
+            <heat-map id="heatmapdir" val="val" start-date="startDate" end-date="endDate" 
+            filter-from-date="filterFromDate" filter-to-date="filterToDate" match-term="matchTerm">
             </heat-map>
         </div>
     </div>
@@ -80,7 +81,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="visitNote in visitNotes | orderBy: 'date'" ng-click="selectNote()">
+                <tr ng-repeat="visitNote in visitNotes | orderBy: 'date' | dateRangeAndTerm: filterFromDate : filterToDate : matchTerm" ng-click="selectNote()">
                     <td>{{visitNote.date | date:'mediumDate'}}</td>
                     <td>{{visitNote.diagnosis}}</td>
                     <td>{{visitNote.provider}}</td>

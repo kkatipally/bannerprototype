@@ -22,13 +22,13 @@ visitNotesApp.controller('cloudController',
         };
         
         $scope.entityTypes = [{"id": 0, "name": "All"}, {"id": 1, "name": "Problems"}, {"id": 2, "name": "Treatments"}, {"id": 3, "name": "Tests"}];
-        $scope.displayNumTerms = [{"id": 5, "name": "View 5"}, {"id": 10, "name": "View 10"}, {"id": 20, "name": "View 20"}, {"id": 30, "name": "View 30"}];
+        $scope.displayNumTerms = [{"id": 0, "name": "View 5", "num": 5}, {"id": 1, "name": "View 10", "num": 10}, {"id": 2, "name": "View 20", "num": 20}, {"id": 3, "name": "View 30", "num": 3}];
 
         $scope.entityTypes.selectedValue = "Problems";
         $scope.displayNumTerms.selectedValue = 5;
         
         $scope.entityType = 'All';
-        $scope.numTerms = 20;
+        $scope.displayNumTerm = 20;
         
         function monthsBefore(d, months) {
   		  var nd = new Date(d.getTime());
@@ -128,8 +128,8 @@ visitNotesApp.controller('cloudController',
         };
 
         $scope.selectDisplayNumTerms = function(term){
-            console.log("Number of terms selected: " + term.id);
-            $scope.numTerms = term.id;
+            //console.log("Number of terms selected: " + term.num);
+            $scope.displayNumTerm = term.num;
         };
         
         $scope.sliderMinDate = monthsBefore(new Date(), 24);
@@ -148,7 +148,7 @@ visitNotesApp.controller('cloudController',
 			$timeout(function() {
 				$scope.visitDatesDataUpdated = true;
 				$scope.visitDatesData = $scope.allSofadocs.results ;
-				console.log('visitDatesData:' + JSON.stringify($scope.visitDatesData));
+				//console.log('visitDatesData:' + JSON.stringify($scope.visitDatesData));
 			}, 0);
 		
 		});
@@ -158,17 +158,19 @@ visitNotesApp.controller('cloudController',
 	 			endDate: formatDate($scope.sliderMaxDate),
 	 			entityType: $scope.entityType,
 	 			patient : $scope.patient,
-	 			numTerms: $scope.numTerms,
+	 			numTerms: $scope.displayNumTerm,
 	 			v : 'full'
 			}, function() {
 				//console.log('words:' + JSON.stringify($scope.words));
 				$scope.finalCloud = $scope.words.results;
 				//$scope.finalCloud = finalCloudDisplay($scope.words.results);
 				//console.log('finalcloud: ' + JSON.stringify($scope.finalCloud));
-				//i2.emph();
+				$timeout(function() {
+					i2.emph();
+				}, 0);
 			});
         
-        $scope.$watch('[sliderMinDate, sliderMaxDate, entityType, numTerms]', 
+        $scope.$watch('[sliderMinDate, sliderMaxDate, entityType, displayNumTerm]', 
                 function(newVals, oldVals) {
         		  /*if(oldVals[0] != newVals[0])||
                 	 (oldVals[1] != newVals[1]) || 
@@ -183,14 +185,16 @@ visitNotesApp.controller('cloudController',
             	 			endDate: formatDate($scope.sliderMaxDate),
             	 			entityType: $scope.entityType,
             	 			patient : $scope.patient,
-            	 			numTerms: $scope.numTerms,
+            	 			numTerms: $scope.displayNumTerm,
             	 			v : 'full'
             			}, function() {
             				//console.log('words:' + JSON.stringify($scope.words));
             				$scope.finalCloud = $scope.words.results;
             				//$scope.finalCloud = finalCloudDisplay($scope.words.results);
             				//console.log('finalcloud: ' + JSON.stringify($scope.finalCloud));
-            				//i2.emph();
+            				$timeout(function() {
+            					i2.emph();
+            				}, 0);
             			});
                   });
 
