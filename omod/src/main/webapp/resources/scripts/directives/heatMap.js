@@ -10,7 +10,9 @@ visitNotesApp.directive('heatMap', function($compile){
             endDate: '=endDate',
             filterFromDate: '=filterFromDate',
             filterToDate: '=filterToDate',
-            matchTerm: '=matchTerm'
+            matchTerm: '=matchTerm',
+            searchBarTerms: '=searchBarTerms',
+            searchInput: '=searchInput'
         },
         link: function(scope, element, attrs, controller) {
 
@@ -355,7 +357,14 @@ visitNotesApp.directive('heatMap', function($compile){
                             .each(
                                 function(d){
                                     d3.select(this).classed(d.mentionType, true)
-                                });
+                                })
+                            .on("contextmenu", function(d, i){
+                            	d3.event.preventDefault();
+                            	scope.$apply(function() {
+                            		scope.searchBarTerms.push(d.mentionText);
+                            		scope.searchInput += " " + d.mentionText;
+                            	});
+                            });
                         
                         console.log("heatRect data: " + JSON.stringify(DataRect));
                         heatRect = d3.select(this)
@@ -911,7 +920,14 @@ visitNotesApp.directive('heatMap', function($compile){
                             .each(
                                 function(d){
                                     d3.select(this).classed(d.mentionType, true)
-                                });
+                                })
+                            .on("contextmenu", function(d, i){
+                            	d3.event.preventDefault();
+                            	scope.$apply(function() {
+                            		scope.searchBarTerms.push(d.mentionText);
+                            		scope.searchInput += " " + d.mentionText;
+                            	});
+                            });
 
                         d3.select(this).selectAll('.heatmap').remove();
                         

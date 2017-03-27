@@ -1,16 +1,28 @@
+<div ng-controller="heatmapController">
 <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="#">Search History</a></li>
     <li class="breadcrumb-item"><a href="#">Hypothyroidism</a></li>
     <li class="breadcrumb-item">interferon</li>
 </ol>
+<button id="clearHistory" type="button" class="btn btn-secondary" ng-click="clearHistory()">Clear History
+</button>
+<button id="backButton" type="button" class="btn btn-secondary" ng-click="backToSearchPage()">Back to Search Page
+</button>        
 
-<div class="container-fluid" ng-controller="heatmapController">
+<div class="container-fluid">
     <div class="row">
-        <button id="clearHistory" type="button" class="btn btn-secondary" ng-click="clearHistory()">Clear History
-        </button>
-        <button id="backButton" type="button" class="btn btn-secondary" ng-click="backToSearchPage()">Back to Search
-            Page
-        </button>
+        <form class="searchtop" ng-submit="page1Submit(searchInput)">
+        <!-- <div class="form-group"> -->
+        		<div class="col-md-6 pad">
+            		<input type="text" class="form-control" ng-model="searchInput" placeholder="Search">
+        		</div>
+        		<div class="col-md-2 pad">
+            		<input type="submit" class="form-control">
+            	</div>
+        <!--<button type="submit" class="btn btn-default">
+            <span class="glyphicon glyphicon-search"></span> Submit
+        </button>-->
+    	</form>
     </div>
     <div id="heatmapsection">
         <div class="row">
@@ -43,7 +55,8 @@
             <!--<button id="reset" type="button" class="btn btn-secondary col-xs-1" ng-click="resetHeatMap()">Reset</button>-->
 
             <heat-map id="heatmapdir" val="val" start-date="startDate" end-date="endDate" 
-            filter-from-date="filterFromDate" filter-to-date="filterToDate" match-term="matchTerm">
+            filter-from-date="filterFromDate" filter-to-date="filterToDate" match-term="matchTerm"
+            search-bar-terms="searchBarTerms" search-input="searchInput">
             </heat-map>
         </div>
     </div>
@@ -60,17 +73,11 @@
                   <span class="glyphicon glyphicon-search"></span> Go
                 </button>
             </form>-->
-            <form class="form-inline" ng-submit="page1Submit(searchInput)">
-        <!-- <div class="form-group"> -->
-        <div class="row"> 
-        <div class="col-md-2">
-            <input type="text" class="form-control" ng-model="searchInput" placeholder="Search">
-        </div>
-        <div class="col-md-2">
-            <input type="submit" class="form-control">
-            </div>
-        </div>
-    	</form>
+            <form>
+        				<div class="col-md-6">
+            				<input type="text" class="form-control" ng-model="visitListInput" placeholder="Search">
+        				</div>
+    		</form>
             <table class="table table-bordered table-hover table-sm">
                 <thead class="thead-default">
                 <tr>
@@ -81,7 +88,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="visitNote in visitNotes | orderBy: 'date' | dateRangeAndTerm: filterFromDate : filterToDate : matchTerm" ng-click="selectNote()">
+                <tr ng-repeat="visitNote in visitNotes | orderBy: 'date' | dateRangeAndTerm: filterFromDate : filterToDate : matchTerm | filter:visitListInput" ng-click="selectNote()">
                     <td>{{visitNote.date | date:'mediumDate'}}</td>
                     <td>{{visitNote.diagnosis}}</td>
                     <td>{{visitNote.provider}}</td>
@@ -118,6 +125,6 @@
         </div>
     </div>
 </div>
-
+</div>
 <!--<button type="button" class="reset">Reset</button>
     <button type="button" class="resetzoom">Reset Zoom</button>-->

@@ -55,8 +55,16 @@ article{
 
 .searchbottom {
   margin-top: 25px;
-  margin-left: 350px;
-  /*margin-bottom: 100px;*/
+  margin-left: 150px;
+}
+
+.searchtop {
+  margin-left: 150px;
+}
+
+.pad{
+  padding-left: 0px;
+  padding-right: 0px;	
 }
 
 .breadcrumb{
@@ -64,7 +72,7 @@ article{
 }
 
 #clearHistory {
-  float: left;
+  /*float: left;*/
   margin-left: 5px;
   margin-bottom: 5px;
 }

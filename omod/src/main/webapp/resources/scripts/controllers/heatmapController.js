@@ -26,6 +26,31 @@ visitNotesApp.controller('heatmapController',
 	 * $scope.selectTermSel = function(term){ //console.log("Terms for chart
 	 * selected: " + term.value); $scope.termSel = term; };
 	 */
+	
+	$scope.searchInput = "";
+    $scope.searchBarTerms = [];
+    
+    $scope.page1Submit = function(searchInput, searchBarTerms){
+    	
+    	SearchFactory.setSearchTerms($scope.searchBarTerms);
+        console.log("Page 1 submitted with searchInput: " + $scope.searchInput);
+        console.log("Page 1 submitted with JSON.stringify(searchBarTerms): " + JSON.stringify($scope.searchBarTerms));
+        //$location.url('/view2');
+        $scope.stms = SofaTextMentionUIResources.displayHeatMap({
+    		patient : $scope.patient,
+    		startDate : formatDate($scope.startDate.name),
+    		endDate : formatDate($scope.endDate.name),
+    		searchTerms : $scope.searchBarTerms,
+    		v : "full"
+    	}, function() {
+    		//console.log("heatmap:" + JSON.stringify($scope.stms.results));
+    		$scope.val = $scope.stms.results;
+    		$scope.visitNotes = populateVisitNoteList($scope.stms.results);
+    		console.log("visitNotes:" + JSON.stringify($scope.visitNotes));
+    		$scope.searchBarTerms = []; //resetting the terms
+    		$scope.searchInput = "";
+    	});
+    };
 
 	function monthsBefore(d, months) {
 		var nd = new Date(d.getTime());
@@ -168,19 +193,21 @@ visitNotesApp.controller('heatmapController',
 	$scope.matchTerm = "";
 	
 	$scope.patient = getParameterByName('patientId');
-	$scope.searchTerms = SearchFactory.getSearchTerms();
+	$scope.searchBarTerms = SearchFactory.getSearchTerms();
 
 	$scope.stms = SofaTextMentionUIResources.displayHeatMap({
 		patient : $scope.patient,
 		startDate : formatDate($scope.startDate.name),
 		endDate : formatDate($scope.endDate.name),
-		searchTerms : $scope.searchTerms,
+		searchTerms : $scope.searchBarTerms,
 		v : "full"
 	}, function() {
 		//console.log("heatmap:" + JSON.stringify($scope.stms.results));
 		$scope.val = $scope.stms.results;
 		$scope.visitNotes = populateVisitNoteList($scope.stms.results);
 		console.log("visitNotes:" + JSON.stringify($scope.visitNotes));
+		$scope.searchBarTerms = []; //resetting the terms
+		$scope.searchInput = "";
 	});
 	
     $scope.rendering = "Morbi libero urna, pretium sed arcu vitae, luctus semper sem. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque quam dui, congue id gravida quis, tempor sit amet justo. Aliquam blandit placerat nisi, in condimentum erat semper sed.Cras quam lorem, vestibulum nec mi elementum, pulvinar venenatis sapien. Suspendisse vitae nulla mattis, laoreet nibh ut, elementum mi. Nullam vestibulum mi arcu, nec mattis lorem facilisis eget. Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
@@ -193,7 +220,7 @@ visitNotesApp.controller('heatmapController',
 				var note = {};
 				note["uuid"] = date.uuid;
 				note["term"] = result.mentionText;
-				note["date"] = date.dateCreated; 
+				note["date"] = new Date(date.dateCreated); 
 				note["diagnosis"] = date.diagnosis;
 				note["provider"] = date.provider;
 				note["location"] = date.location;
