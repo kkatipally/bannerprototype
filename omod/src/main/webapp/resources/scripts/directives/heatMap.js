@@ -319,7 +319,7 @@ visitNotesApp.directive('heatMap', function($compile){
                             //console.log("newdata.listDates: " + newdata.listDates);
                             DataRect.push(newdata);
                             startRect= new Date(endRect.getTime());
-                            //console.log("startRect: " + startRect);
+                            //console.log("DataRect: " + JSON.stringify(DataRect));
                             i++;
                         }
 
@@ -931,9 +931,9 @@ visitNotesApp.directive('heatMap', function($compile){
 
                         d3.select(this).selectAll('.heatmap').remove();
                         
-                        //console.log("heatRect data: " + JSON.stringify(DataRect));
+                        //console.log("Update heatRect data: " + JSON.stringify(DataRect));
                         heatRect = d3.select(this)
-                            .selectAll('rect')
+                            .selectAll('.heatmap')
                             .data(DataRect)
                             .enter().append('rect')
                             .attr('x', function(d){ return 1.5*termWidth + xScale(d.startRect) })
@@ -943,7 +943,7 @@ visitNotesApp.directive('heatMap', function($compile){
                             .attr('width', function(d){ return xScale(d.endRect)-xScale(d.startRect)/*groupMonths*gridWidth*/})
                             .attr('height', gridHeight)
                             .attr('fill', function(d) { return colorScale(d.totFreq) })
-                            .attr('id', function(d, i) { return 'heatmapRect' + d.yRect + i})
+                            .attr('id', function(d, i) { return 'heatmapRect' + d.yRect + i; })
                             .attr("class", "heatmap")
                             .on("mouseover", function(d, i){
 
