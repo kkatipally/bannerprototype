@@ -30,12 +30,12 @@ visitNotesApp.controller('heatmapController',
 	$scope.searchInput = "";
     $scope.searchBarTerms = [];
     
-    $scope.page1Submit = function(searchInput, searchBarTerms){
+    $scope.page2Submit = function(searchInput, searchBarTerms){
     	
+    	$scope.searchBarTerms = $scope.searchInput.split(", ");
     	SearchFactory.setSearchTerms($scope.searchBarTerms);
         //console.log("Page 1 submitted with searchInput: " + $scope.searchInput);
         //console.log("Page 1 submitted with JSON.stringify(searchBarTerms): " + JSON.stringify($scope.searchBarTerms));
-        //$location.url('/view2');
         $scope.stms = SofaTextMentionUIResources.displayHeatMap({
     		patient : $scope.patient,
     		startDate : formatDate($scope.startDate.name),
@@ -47,8 +47,10 @@ visitNotesApp.controller('heatmapController',
     		$scope.val = $scope.stms.results;
     		$scope.visitNotes = populateVisitNoteList($scope.stms.results);
     		//console.log("visitNotes:" + JSON.stringify($scope.visitNotes));
-    		$scope.searchBarTerms = []; //resetting the terms
-    		$scope.searchInput = "";
+    		//resetting visit note list filter parameters
+    		$scope.filterFromDate = $scope.startDate.name; 
+    		$scope.filterToDate = $scope.endDate.name;
+    		$scope.matchTerm = "";
     	});
     };
 
@@ -188,13 +190,14 @@ visitNotesApp.controller('heatmapController',
 
 	});*/
 
-	$scope.filterFromDate = monthsBefore(new Date(), 24); //DateFactory.getSliderMinDate(); 
-	$scope.filterToDate = new Date(); //DateFactory.getSliderMaxDate();
+	$scope.filterFromDate = $scope.startDate.name; /*DateFactory.getSliderMinDate();*/ 
+	$scope.filterToDate = $scope.endDate.name; /*DateFactory.getSliderMaxDate();*/
 	$scope.matchTerm = "";
 	
 	$scope.patient = getParameterByName('patientId');
-	$scope.searchBarTerms = SearchFactory.getSearchTerms();
-
+	$scope.searchInput = SearchFactory.getSearchTerms();
+	$scope.searchBarTerms = $scope.searchInput.split(", ");
+	
 	$scope.stms = SofaTextMentionUIResources.displayHeatMap({
 		patient : $scope.patient,
 		startDate : formatDate($scope.startDate.name),
@@ -206,8 +209,6 @@ visitNotesApp.controller('heatmapController',
 		$scope.val = $scope.stms.results;
 		$scope.visitNotes = populateVisitNoteList($scope.stms.results);
 		//console.log("visitNotes:" + JSON.stringify($scope.visitNotes));
-		$scope.searchBarTerms = []; //resetting the terms
-		$scope.searchInput = "";
 	});
 	
     $scope.rendering = "Morbi libero urna, pretium sed arcu vitae, luctus semper sem. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque quam dui, congue id gravida quis, tempor sit amet justo. Aliquam blandit placerat nisi, in condimentum erat semper sed.Cras quam lorem, vestibulum nec mi elementum, pulvinar venenatis sapien. Suspendisse vitae nulla mattis, laoreet nibh ut, elementum mi. Nullam vestibulum mi arcu, nec mattis lorem facilisis eget. Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
@@ -246,6 +247,7 @@ visitNotesApp.controller('heatmapController',
         $location.url('/view1');
     };
 
+    //visit note rendering
     $scope.selectNote = function(){
     	$scope.selectedNote = this.visitNote;
     	
@@ -257,6 +259,7 @@ visitNotesApp.controller('heatmapController',
     	});
     }
     
+    //pagination in visit note list
     $scope.currentPage = 1;
     /*$scope.paginatedVisitNotes = [],
     $scope.numPerPage = 2,

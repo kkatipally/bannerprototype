@@ -11,7 +11,6 @@ visitNotesApp.directive('heatMap', function($compile){
             filterFromDate: '=filterFromDate',
             filterToDate: '=filterToDate',
             matchTerm: '=matchTerm',
-            searchBarTerms: '=searchBarTerms',
             searchInput: '=searchInput'
         },
         link: function(scope, element, attrs, controller) {
@@ -361,8 +360,10 @@ visitNotesApp.directive('heatMap', function($compile){
                             .on("contextmenu", function(d, i){
                             	d3.event.preventDefault();
                             	scope.$apply(function() {
-                            		scope.searchBarTerms.push(d.mentionText);
-                            		scope.searchInput += " " + d.mentionText;
+                            		if(scope.searchInput === "")
+                                		scope.searchInput += d.mentionText ;
+                                	else
+                                		scope.searchInput += ", " + d.mentionText ;
                             	});
                             });
                         
@@ -924,8 +925,10 @@ visitNotesApp.directive('heatMap', function($compile){
                             .on("contextmenu", function(d, i){
                             	d3.event.preventDefault();
                             	scope.$apply(function() {
-                            		scope.searchBarTerms.push(d.mentionText);
-                            		scope.searchInput += " " + d.mentionText;
+                            		if(scope.searchInput === "")
+                                		scope.searchInput += d.mentionText ;
+                                	else
+                                		scope.searchInput += ", " + d.mentionText ;
                             	});
                             });
 
