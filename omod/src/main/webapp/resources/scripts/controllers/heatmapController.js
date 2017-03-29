@@ -1,7 +1,7 @@
 'use strict';
 
 visitNotesApp.controller('heatmapController',
-		function($scope, $location, DateFactory, SearchFactory, dateRangeAndTermFilter, SofaDocumentResource, SofaTextMentionUIResources) {
+		function($scope, $location, DateFactory, SearchFactory, dateRangeAndTermFilter, uniqueNotesFilter, SofaDocumentResource, SofaTextMentionUIResources) {
 
 	/*
 	 * $scope.dateSelOptions = [{"datename": "All Dates", "datevalue": 14},
@@ -235,6 +235,7 @@ visitNotesApp.controller('heatmapController',
 				}
 			});
 		});
+		console.log("visit notes: " + JSON.stringify(Notes));
 		return Notes;
 	}
 	

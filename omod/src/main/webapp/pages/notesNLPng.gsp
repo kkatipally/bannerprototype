@@ -43,6 +43,7 @@ ui.includeJavascript("bannerprototype","directives/visitDates.js")
 ui.includeJavascript("bannerprototype","services/DateFactory.js")
 ui.includeJavascript("bannerprototype","services/SearchFactory.js")
 ui.includeJavascript("bannerprototype","filters/dateRangeAndTerm.js")
+ui.includeJavascript("bannerprototype","filters/uniqueNotes.js")
 
 ui.includeCss("bannerprototype", "bootstrap.min.css")
 ui.includeCss("bannerprototype", "iThing.css")

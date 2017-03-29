@@ -79,7 +79,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="visitNote in filteredVisitNotes = (visitNotes | orderBy: 'date' | dateRangeAndTerm: filterFromDate : filterToDate : matchTerm | filter:visitListInput) | limitTo:2:2*(currentPage-1)" ng-click="selectNote()">
+                <tr ng-repeat="visitNote in filteredVisitNotes = (visitNotes | orderBy: 'date' | dateRangeAndTerm: filterFromDate : filterToDate : matchTerm | filter:visitListInput | uniqueNotes) | limitTo:2:2*(currentPage-1)" ng-click="selectNote()">
                     <td>{{visitNote.date | date:'mediumDate'}}</td>
                     <td>{{visitNote.diagnosis}}</td>
                     <td>{{visitNote.provider}}</td>
