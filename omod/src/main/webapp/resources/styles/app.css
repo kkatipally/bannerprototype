@@ -114,10 +114,6 @@ h6 {
 //width: 375px;
 }
 
-.pagination {
-  float: right;
-}
-
 #visit-note-rendering {
   border: 1px solid grey;
   border-radius: 5px;
@@ -127,6 +123,15 @@ h6 {
 //width: 175px;
 //background-color: #474e5d;
 //color: #ffffff;
+}
+
+.visitListInput{
+  margin: 10px;
+}
+
+.pag{
+  float: right;
+  margin: 10px;
 }
 
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; } /*for ui bootstrap*/

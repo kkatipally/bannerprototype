@@ -33,8 +33,8 @@ visitNotesApp.controller('heatmapController',
     $scope.page1Submit = function(searchInput, searchBarTerms){
     	
     	SearchFactory.setSearchTerms($scope.searchBarTerms);
-        console.log("Page 1 submitted with searchInput: " + $scope.searchInput);
-        console.log("Page 1 submitted with JSON.stringify(searchBarTerms): " + JSON.stringify($scope.searchBarTerms));
+        //console.log("Page 1 submitted with searchInput: " + $scope.searchInput);
+        //console.log("Page 1 submitted with JSON.stringify(searchBarTerms): " + JSON.stringify($scope.searchBarTerms));
         //$location.url('/view2');
         $scope.stms = SofaTextMentionUIResources.displayHeatMap({
     		patient : $scope.patient,
@@ -46,7 +46,7 @@ visitNotesApp.controller('heatmapController',
     		//console.log("heatmap:" + JSON.stringify($scope.stms.results));
     		$scope.val = $scope.stms.results;
     		$scope.visitNotes = populateVisitNoteList($scope.stms.results);
-    		console.log("visitNotes:" + JSON.stringify($scope.visitNotes));
+    		//console.log("visitNotes:" + JSON.stringify($scope.visitNotes));
     		$scope.searchBarTerms = []; //resetting the terms
     		$scope.searchInput = "";
     	});
@@ -100,7 +100,7 @@ visitNotesApp.controller('heatmapController',
 	$scope.startDate = {
 		"name" : DateFactory.getSliderMinDate()
 	};
-	console.log("startDate: " + $scope.startDate.name );
+	//console.log("startDate: " + $scope.startDate.name );
 	// }
 	// });
 	// $scope.$watch(function () { return DateFactory.getSliderMaxDate(); },
@@ -205,7 +205,7 @@ visitNotesApp.controller('heatmapController',
 		//console.log("heatmap:" + JSON.stringify($scope.stms.results));
 		$scope.val = $scope.stms.results;
 		$scope.visitNotes = populateVisitNoteList($scope.stms.results);
-		console.log("visitNotes:" + JSON.stringify($scope.visitNotes));
+		//console.log("visitNotes:" + JSON.stringify($scope.visitNotes));
 		$scope.searchBarTerms = []; //resetting the terms
 		$scope.searchInput = "";
 	});
@@ -229,7 +229,7 @@ visitNotesApp.controller('heatmapController',
 					$scope.sofadocInit = SofaDocumentResource.get({
 			    		uuid : date.uuid
 			    	}, function() {
-			    		//console.log("sofadoc:" + JSON.stringify($scope.sofadoc.text));
+			    		console.log("sofadoc:" + JSON.stringify($scope.sofadocInit));
 			    		$scope.rendering = $scope.sofadocInit.text;
 			    	}); 
 				}
@@ -245,10 +245,6 @@ visitNotesApp.controller('heatmapController',
         $location.url('/view1');
     };
 
-    $scope.visitListSearch = function(visitListSearchInput){
-        console.log("Visit list search clicked with: " + visitListSearchInput);
-    };
-    
     $scope.selectNote = function(){
     	$scope.selectedNote = this.visitNote;
     	
@@ -259,6 +255,20 @@ visitNotesApp.controller('heatmapController',
     		$scope.rendering = $scope.sofadoc.text;
     	});
     }
+    
+    $scope.currentPage = 1;
+    /*$scope.paginatedVisitNotes = [],
+    $scope.numPerPage = 2,
+    $scope.maxSize = 5;*/
+    
+    $scope.pageChanged = function() {
+        /*var begin = (($scope.currentPage - 1) * $scope.numPerPage),
+         end = begin + $scope.numPerPage;
+        
+        if($scope.visitNotes !== undefined){
+        	$scope.paginatedVisitNotes = $scope.visitNotes.slice(begin, end);
+        }*/
+      };
 
 });
 

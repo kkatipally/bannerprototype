@@ -54,7 +54,7 @@ visitNotesApp.directive('heatMap', function($compile){
             
             function formatDate(date) {
           	  
-            	  console.log("date: " + date);
+            	  //console.log("date: " + date);
               	  var day = date.getDate();
               	  var month;
               	  if(date.getMonth() < 9){
@@ -113,7 +113,7 @@ visitNotesApp.directive('heatMap', function($compile){
                     .attr('id', 'resetLabel');
 
                 data = data.filter(function(d) { return d.relatedTo == null /*return d.expand === "show"*/ })
-                console.log("nested data: " + JSON.stringify(data));
+                //console.log("nested data: " + JSON.stringify(data));
                 
                 var nested = svg.selectAll('g')
                     .data(data)
@@ -366,7 +366,7 @@ visitNotesApp.directive('heatMap', function($compile){
                             	});
                             });
                         
-                        console.log("heatRect data: " + JSON.stringify(DataRect));
+                        //console.log("heatRect data: " + JSON.stringify(DataRect));
                         heatRect = d3.select(this)
                             .selectAll('.heatmap')
                             .data(DataRect)
@@ -442,7 +442,7 @@ visitNotesApp.directive('heatMap', function($compile){
                                 .attr('visibility', 'hidden');
                             })
                             .on("click", function(d, i){
-                            	console.log("heatmapRect clicked");
+                            	//console.log("heatmapRect clicked");
                             	scope.$apply(function() {
                             		scope.filterFromDate = new Date(d.startRect);
                             		scope.filterToDate = new Date(d.endRect);
@@ -494,7 +494,7 @@ visitNotesApp.directive('heatMap', function($compile){
                              .style("opacity", 0);
                              })
                             .on("click", function(d, i){
-                                	console.log("markDate clicked");
+                                	//console.log("markDate clicked");
                                 	scope.$apply(function() {
                                 		scope.filterFromDate = new Date(d.date);
                                 		scope.filterToDate = new Date(d.date);
@@ -676,7 +676,7 @@ visitNotesApp.directive('heatMap', function($compile){
 
                 svg.selectAll('.nestedClass').remove();
                 
-                console.log("nested data: " + JSON.stringify(data));
+                //console.log("nested data: " + JSON.stringify(data));
                 
                 var nested = svg.selectAll('.g_main')
                     .data(data)
@@ -931,7 +931,7 @@ visitNotesApp.directive('heatMap', function($compile){
 
                         d3.select(this).selectAll('.heatmap').remove();
                         
-                        console.log("heatRect data: " + JSON.stringify(DataRect));
+                        //console.log("heatRect data: " + JSON.stringify(DataRect));
                         heatRect = d3.select(this)
                             .selectAll('rect')
                             .data(DataRect)
@@ -1004,7 +1004,7 @@ visitNotesApp.directive('heatMap', function($compile){
                                 .attr('visibility', 'hidden');
                             })
                             .on("click", function(d, i){
-                            	console.log("heatmapRect clicked");
+                            	//console.log("heatmapRect clicked");
                             	scope.$apply(function() {
                             		scope.filterFromDate = new Date(d.startRect);
                             		scope.filterToDate = new Date(d.endRect);
@@ -1058,7 +1058,7 @@ visitNotesApp.directive('heatMap', function($compile){
                              d3.select(this).attr('visibility', 'hidden');
                              })
                             .on("click", function(d, i){
-                                	console.log("markDate clicked");
+                                	//console.log("markDate clicked");
                                 	scope.$apply(function() {
                                 		scope.filterFromDate = new Date(d.date);
                                 		scope.filterToDate = new Date(d.date);
@@ -1177,7 +1177,7 @@ visitNotesApp.directive('heatMap', function($compile){
 
                 d3.selectAll(".resetLabel")
                     .on("click", function(d){
-                        console.log("Reset click registered");
+                        //console.log("Reset click registered");
                         xdeleteArray = [];
                         negToggleArray = JSON.parse(JSON.stringify(searchTerms));
 
@@ -1326,7 +1326,7 @@ visitNotesApp.directive('heatMap', function($compile){
 
                 d3.selectAll(".resetLabel")
                     .on("click", function(d){
-                        console.log("Reset click registered");
+                        //console.log("Reset click registered");
                         xdeleteArray = [];
                         negToggleArray = JSON.parse(JSON.stringify(searchTerms));
 
@@ -1335,14 +1335,14 @@ visitNotesApp.directive('heatMap', function($compile){
                         //scope.dateSel.datename = "All Dates";
                         //scope.dateSel.datevalue = 14;
 
-                        console.log("scope.termSel: " + angular.toJson(scope.termSel));
-                        console.log("scope.parent.termSel: " + angular.toJson(scope.$parent.termSel));
+                        //console.log("scope.termSel: " + angular.toJson(scope.termSel));
+                        //console.log("scope.parent.termSel: " + angular.toJson(scope.$parent.termSel));
                         updateviz(data, 14, /*'Search',*/ xdeleteArray, negToggleArray, searchTerms);
                     });
 
                 d3.selectAll(".resetzoom")
                     .on("click", function(d){
-                        console.log("Reset zoom click registered");
+                        //console.log("Reset zoom click registered");
 
                         //d3.select("body").select("svg").attr('transform', 'translate(0, 0) scale(1)');
                         // d3.select("body").select("svg").call(d3.zoom().on("zoom", function () {
