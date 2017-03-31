@@ -30,17 +30,26 @@ visitNotesApp.controller('heatmapController',
 	$scope.searchInput = "";
     $scope.searchBarTerms = [];
     
-    $scope.page2Submit = function(searchInput, searchBarTerms){
+    $scope.page2Submit = function(searchInput){
     	
-    	$scope.searchBarTerms = $scope.searchInput.split(", ");
-    	SearchFactory.setSearchTerms($scope.searchBarTerms);
+    	$scope.searchBarTerms = $scope.searchInput.split(",");
+    	$scope.uniqueSearchBarTerms = $scope.searchBarTerms.filter(onlyUnique);
+    	$scope.finalSearchBarTerms = [];
+    	
+    	for(var i=0; i<$scope.uniqueSearchBarTerms.length; i++){
+    		$scope.uniqueSearchBarTerms[i] = $scope.uniqueSearchBarTerms[i].trim();
+    		if($scope.uniqueSearchBarTerms[i] !== "")
+    			$scope.finalSearchBarTerms.push($scope.uniqueSearchBarTerms[i]);
+    	}
+    	
+    	SearchFactory.setSearchTerms($scope.uniqueSearchBarTerms);
         //console.log("Page 1 submitted with searchInput: " + $scope.searchInput);
         //console.log("Page 1 submitted with JSON.stringify(searchBarTerms): " + JSON.stringify($scope.searchBarTerms));
         $scope.stms = SofaTextMentionUIResources.displayHeatMap({
     		patient : $scope.patient,
     		startDate : formatDate($scope.startDate.name),
     		endDate : formatDate($scope.endDate.name),
-    		searchTerms : $scope.searchBarTerms,
+    		searchTerms : $scope.finalSearchBarTerms,
     		v : "full"
     	}, function() {
     		//console.log("heatmap:" + JSON.stringify($scope.stms.results));
@@ -196,13 +205,25 @@ visitNotesApp.controller('heatmapController',
 	
 	$scope.patient = getParameterByName('patientId');
 	$scope.searchInput = SearchFactory.getSearchTerms();
-	$scope.searchBarTerms = $scope.searchInput.split(", ");
+	$scope.searchBarTerms = $scope.searchInput.split(",");
+	
+	function onlyUnique(value, index, self) { 
+	    return self.indexOf(value) === index;
+	}
+	$scope.uniqueSearchBarTerms = $scope.searchBarTerms.filter( onlyUnique );
+	$scope.finalSearchBarTerms = [];
+	
+	for(var i=0; i<$scope.uniqueSearchBarTerms.length; i++){
+		$scope.uniqueSearchBarTerms[i] = $scope.uniqueSearchBarTerms[i].trim();
+		if($scope.uniqueSearchBarTerms[i] !== "")
+			$scope.finalSearchBarTerms.push($scope.uniqueSearchBarTerms[i]);
+	}
 	
 	$scope.stms = SofaTextMentionUIResources.displayHeatMap({
 		patient : $scope.patient,
 		startDate : formatDate($scope.startDate.name),
 		endDate : formatDate($scope.endDate.name),
-		searchTerms : $scope.searchBarTerms,
+		searchTerms : $scope.finalSearchBarTerms,
 		v : "full"
 	}, function() {
 		//console.log("heatmap:" + JSON.stringify($scope.stms.results));
