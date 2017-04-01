@@ -239,10 +239,10 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 		List<SofaDocumentUI> dateList = new ArrayList<SofaDocumentUI>();
 		dateList.add(sdUI);
 		
-		String uuidMention = result[0].toString();
+		//String uuidMention = result[0].toString();
 		String textMention = result[1].toString();
 		String typeMention = result[2].toString();
-		SofaTextMentionUI stmUI = new SofaTextMentionUI(/* uuidMention, */textMention, typeMention, dateList);
+		SofaTextMentionUI stmUI = new SofaTextMentionUI(/*uuidMention, */textMention, typeMention, dateList);
 		
 		return stmUI;
 		
@@ -344,19 +344,6 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 					diagnosis = valueCodedName.toString();
 				}
 			}
-			/*String provider, location, diagnosis;
-			if (result[5] != null)
-				provider = result[5].toString();
-			else
-				provider = "";
-			if (result[6] != null)
-				location = result[6].toString();
-			else
-				location = "";
-			if (result[7] != null)
-				diagnosis = result[7].toString();
-			else
-				diagnosis = "";*/
 			
 			SofaDocumentUI sdUI = new SofaDocumentUI(uuidDate, dateCr, provider, location, diagnosis);
 			
@@ -367,7 +354,7 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 				List<SofaDocumentUI> dateList = new ArrayList<SofaDocumentUI>();
 				dateList.add(sdUI);
 				
-				SofaTextMentionUI stmUI = new SofaTextMentionUI(/*uuidMention, */textMention, typeMention, dateList);
+				SofaTextMentionUI stmUI = new SofaTextMentionUI(textMention, typeMention, dateList);
 				prevStmUI = stmUI;
 			} else {
 				prevStmUI.addDate(sdUI);

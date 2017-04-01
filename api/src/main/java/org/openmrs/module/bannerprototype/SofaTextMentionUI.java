@@ -3,6 +3,7 @@ package org.openmrs.module.bannerprototype;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
+import java.util.Objects;
 
 import org.openmrs.BaseOpenmrsData;
 
@@ -68,12 +69,9 @@ public class SofaTextMentionUI extends BaseOpenmrsData implements Serializable {
 		
 	}
 	
-	/*
-	
-	public String getUuid() {
+	/*public String getUuid() {
 		return uuid;
 	}
-	
 	
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
@@ -127,6 +125,24 @@ public class SofaTextMentionUI extends BaseOpenmrsData implements Serializable {
 	 */
 	public void setRelatedTo(String relatedTo) {
 		this.relatedTo = relatedTo;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		
+		if (o == this)
+			return true;
+		if (!(o instanceof SofaTextMentionUI)) {
+			return false;
+		}
+		
+		SofaTextMentionUI other = (SofaTextMentionUI) o;
+		return this.mentionText.equals(other.mentionText);
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(mentionText);
 	}
 	
 }
