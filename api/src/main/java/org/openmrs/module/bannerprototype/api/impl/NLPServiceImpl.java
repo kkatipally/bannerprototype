@@ -3,6 +3,7 @@ package org.openmrs.module.bannerprototype.api.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Arrays;
@@ -125,12 +126,12 @@ public class NLPServiceImpl extends BaseOpenmrsService implements NLPService {
 	public Set<SofaTextMentionUI> getSofaTextMentionUIByConstraints(Patient patient, Date startDate, Date endDate,
 	        String[] searchTerms) {
 		
-		Set<SofaTextMentionUI> stmUIAll = new HashSet<SofaTextMentionUI>();
+		Set<SofaTextMentionUI> stmUIAll = new LinkedHashSet<SofaTextMentionUI>();
 		
 		if (searchTerms.length > 3) {
 			
 			stmUIAll = dao.getSofaTextMentionUIByConstraints(patient, startDate, endDate, searchTerms);
-		
+			
 		} else {
 			for (String term : searchTerms) {
 				
@@ -147,6 +148,8 @@ public class NLPServiceImpl extends BaseOpenmrsService implements NLPService {
 				}
 				
 				List<String> allTopTerms = new ArrayList<String>();
+				allTopTerms.add(term);
+				
 				List<Word> problemTopWords = problemCloud.getTopWordsShuffled(5);
 				List<Word> treatmentTopWords = treatmentCloud.getTopWordsShuffled(5);
 				List<Word> testTopWords = testCloud.getTopWordsShuffled(5);
@@ -166,19 +169,23 @@ public class NLPServiceImpl extends BaseOpenmrsService implements NLPService {
 						allTopTerms.add(word.getWord());
 				}
 				
-				allTopTerms.add(term);
-				
 				String[] allTopTermsArr = new String[allTopTerms.size()];
 				allTopTermsArr = allTopTerms.toArray(allTopTermsArr);
 				
 				Set<SofaTextMentionUI> stmUIList = dao.getSofaTextMentionUIByConstraints(patient, startDate, endDate,
 				    allTopTermsArr);
 				
+				List<SofaTextMentionUI> relatedstmUIList = new ArrayList<SofaTextMentionUI>();
 				for (SofaTextMentionUI stmUI : stmUIList) {
 					if (!(stmUI.getMentionText().equals(term))) {
 						stmUI.setRelatedTo(term);
-					}
-					stmUIAll.add(stmUI);
+						relatedstmUIList.add(stmUI);
+					} else
+						stmUIAll.add(stmUI);
+				}
+				
+				for (SofaTextMentionUI relStmUI : relatedstmUIList) {
+					stmUIAll.add(relStmUI);
 				}
 				
 			}

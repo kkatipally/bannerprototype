@@ -12,7 +12,7 @@ visitNotesApp.directive('heatMap', function($compile){
             filterToDate: '=filterToDate', //Used to filter visit notes
             matchTerm: '=matchTerm', //Used to filter visit notes
             searchInput: '=searchInput', //Used to add term to the search bar
-            resetMap: '=resetMap'
+            resetMap: '=resetMap' //Reset the heatmap
         },
         link: function(scope, element, attrs, controller) {
 
@@ -1004,7 +1004,7 @@ visitNotesApp.directive('heatMap', function($compile){
                 var minDate = newVals[1].name;
                 var maxDate = newVals[2].name;
                 
-                //console.log("maxDate after watch:" + maxDate);
+                //console.log("data: " + JSON.stringify(data));
 
                 buildviz(data, minDate, maxDate);
                 scope.resetMap = false;
