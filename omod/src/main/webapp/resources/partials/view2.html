@@ -26,7 +26,7 @@
     </div>
     <div id="heatmapsection">
         <div class="row">
-            <h6 class="col-xs-2"><span class="label label-default">Start Date:</span></h6>
+            <div class="col-xs-1"><span class="label label-default">Start Date:</span></div>
             <div class="col-xs-3">
                 <p class="input-group">
                     <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="startDate.name" ng-model-options="{timezone: 'utc'}"
@@ -38,7 +38,7 @@
                 </p>
             </div>
 
-            <h6 class="col-xs-2"><span class="label label-default">End Date:</span></h6>
+            <div class="col-xs-1"><span class="label label-default">End Date:</span></div>
             <div class="col-xs-3">
                 <p class="input-group">
                     <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="endDate.name" ng-model-options="{timezone: 'utc'}"
@@ -49,14 +49,15 @@
           </span>
                 </p>
             </div>
+             <button id="resetHeatMap" type="button" class="btn btn-secondary col-xs-2" ng-click="resetHeatMap()">Reset</button>
+            
         </div>
 
         <div >
-            <!--<button id="reset" type="button" class="btn btn-secondary col-xs-1" ng-click="resetHeatMap()">Reset</button>-->
 
             <heat-map id="heatmapdir" val="val" start-date="startDate" end-date="endDate" 
             filter-from-date="filterFromDate" filter-to-date="filterToDate" match-term="matchTerm"
-            search-input="searchInput">
+            search-input="searchInput" reset-map="resetMap">
             </heat-map>
         </div>
     </div>
@@ -65,9 +66,10 @@
         <div id="visit-note-list" class="col-xs-6">
             <h6>Visit Note List</h6>
             <form>
-        				<div class="col-md-6">
+        				<div class="col-xs-6">
             				<input type="text" class="form-control visitListInput" ng-model="visitListInput" placeholder="Search">
         				</div>
+        				<button id="resetVisitList" type="button" class="btn btn-secondary col-xs-2" ng-click="resetVisitList()">Reset</button>
     		</form>
             <table class="table table-bordered table-hover table-sm">
                 <thead class="thead-default">

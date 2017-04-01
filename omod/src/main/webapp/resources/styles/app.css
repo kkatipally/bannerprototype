@@ -71,6 +71,15 @@ article{
   margin-bottom: 5px;	
 }
 
+#resetHeatMap{
+  float: right;
+}
+
+#resetVisitList{
+  margin-top: 10px;
+  float: right;
+}
+
 #clearHistory {
   /*float: left;*/
   margin-left: 5px;
@@ -127,6 +136,7 @@ h6 {
 
 .visitListInput{
   margin: 10px;
+  margin-left: 0px;
 }
 
 .pag{

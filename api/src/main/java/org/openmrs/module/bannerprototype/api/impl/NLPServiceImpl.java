@@ -128,7 +128,9 @@ public class NLPServiceImpl extends BaseOpenmrsService implements NLPService {
 		Set<SofaTextMentionUI> stmUIAll = new HashSet<SofaTextMentionUI>();
 		
 		if (searchTerms.length > 3) {
+			
 			stmUIAll = dao.getSofaTextMentionUIByConstraints(patient, startDate, endDate, searchTerms);
+		
 		} else {
 			for (String term : searchTerms) {
 				

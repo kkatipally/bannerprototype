@@ -8,26 +8,23 @@ visitNotesApp.directive('heatMap', function($compile){
             val: '=val',
             startDate: '=startDate',
             endDate: '=endDate',
-            filterFromDate: '=filterFromDate',
-            filterToDate: '=filterToDate',
-            matchTerm: '=matchTerm',
-            searchInput: '=searchInput'
+            filterFromDate: '=filterFromDate', //Used to filter visit notes
+            filterToDate: '=filterToDate', //Used to filter visit notes
+            matchTerm: '=matchTerm', //Used to filter visit notes
+            searchInput: '=searchInput', //Used to add term to the search bar
+            resetMap: '=resetMap'
         },
         link: function(scope, element, attrs, controller) {
 
-            //var dateSel = scope.dateSel.datevalue;
-            //var termSel = scope.termSel.termvalue;
         	var minDate = scope.startDate.name;
             var maxDate = scope.endDate.name;
 
-            //var minDate = getDate('20150901');
-            //var maxDate = getDate('20161101');
             var numMonths = 1 + maxDate.getMonth() - minDate.getMonth() + (12 * (maxDate.getFullYear() - minDate.getFullYear()));
             //console.log("numMonths in updateviz: " + numMonths);
 
             var i, j, k, heatRect, markDates,
                 groupMonths = 3,
-                margin = { top: 0, right: 0, bottom: 0, left: 0 },
+                margin = { top: 30, right: 0, bottom: 0, left: 0 },
                 width = 870 - margin.left - margin.right,
                 height = 430 - margin.top - margin.bottom, //not used
                 termWidth = 200,
@@ -35,13 +32,11 @@ visitNotesApp.directive('heatMap', function($compile){
                 gridHeight = 20,
                 entityTypes = ['red', 'green', 'blue'],
                 buckets = 9,
-                //colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"], // alternatively colorbrewer.YlGnBu[9]
             	AllRect = [],
             	legendElementWidth = 100;
             
             function getJSDate(d){
 
-                //20150101
                 var strDate = new String(d);
 
                 var year = strDate.substr(0,4);
@@ -82,10 +77,6 @@ visitNotesApp.directive('heatMap', function($compile){
                 var svg = d3.select("#heatmapdir").append("svg")
                     .attr("width", width + margin.left + margin.right)
                     .attr("height", ((searchTerms.length+6)*gridHeight) + margin.top + margin.bottom)
-                    /*.call(d3.zoom().on("zoom", function () {
-                     svg.attr("transform", d3.event.transform)
-                     }))*/
-                    //.on("dblclick.zoom", null)
                     .append("g")
                     .attr("class", "g_main")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -93,23 +84,6 @@ visitNotesApp.directive('heatMap', function($compile){
                 var tooltip = d3.select("#heatmapdir").append("div")
                     .attr("class", "tooltip")
                     .style("opacity", 0);
-
-                var resetData = [{"name": "RESET"}];
-
-                var reset = svg.selectAll('.g_main')
-                    .data(resetData)
-                    .enter();
-
-                var resetLabel = reset.append("text")
-                    .text(function(d) { return d.name; })
-                    .attr("x", width - termWidth)
-                    .attr("y", 15)
-                    .style('text-anchor', 'start')
-                    .style('font-family', 'sans-serif')
-                    .style('font-size', '15')
-                    .style('fill', 'black')
-                    .attr('class', 'resetLabel')
-                    .attr('id', 'resetLabel');
 
                 data = data.filter(function(d) { return d.relatedTo == null /*return d.expand === "show"*/ })
                 //console.log("nested data: " + JSON.stringify(data));
@@ -120,8 +94,6 @@ visitNotesApp.directive('heatMap', function($compile){
                     .attr("class", "nestedClass")
                     .attr('id', function(d, i) { return 'nestedId' + i });
 
-                 //var minDate = getJSDate('20151001');
-                 //var maxDate = getJSDate('20161031');
                  var numMonths = 1 + maxDate.getMonth() - minDate.getMonth() + (12 * (maxDate.getFullYear() - minDate.getFullYear()));
                  //console.log("numMonths: " + numMonths);
                  //console.log("Min Date: " + minDate);
@@ -154,7 +126,7 @@ visitNotesApp.directive('heatMap', function($compile){
                     //console.log("Init startRect: " + startRect);
                     
                     i = 0;
-                    //for(i=0; i<grps; i++){
+
                     while(endRect < new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)){
                         var listDates = [];
                         var newdate;
@@ -177,7 +149,6 @@ visitNotesApp.directive('heatMap', function($compile){
                         }
 
                         endRect = new Date(Math.min(endRect, new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)));
-                        //var maxDate=new Date(Math.max.apply(null,dates));
                         //console.log("i, endRect:" + i + ' ' + endRect);
                         
                         for(k=0; k<d1.dateList.length; k++){ 
@@ -252,7 +223,6 @@ visitNotesApp.directive('heatMap', function($compile){
                         //console.log("Init startRect: " + startRect);
 
                         i = 0;
-                        //for(i=0; i<grps; i++){
                         while(endRect < new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)){
                         
                         	var listDates = [];
@@ -275,7 +245,6 @@ visitNotesApp.directive('heatMap', function($compile){
                             }
                         	endRect = new Date(Math.min(endRect, new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)));
 
-                            //var maxDate=new Date(Math.max.apply(null,dates));
                             //console.log("endRect: " + endRect);
 
                             for(k=0; k<d1.dateList.length; k++){
@@ -322,12 +291,6 @@ visitNotesApp.directive('heatMap', function($compile){
                             i++;
                         }
 
-                        /*var colorScale = d3.scaleLinear()
-                            .domain([0, d3.max(DataRect, function(d){ return d.totFreq;})])
-                            //.domain([0, d3.max(totFreq)])
-                            //.range(['#ffffd9', '#081d58']); blue
-                            .range(['#ffffd9', '#ff0033']); //pink*/
-
                         //console.log("Build d1: " + JSON.stringify(d1));
                         //console.log("Build DataRect: " + JSON.stringify(DataRect));
 
@@ -352,11 +315,11 @@ visitNotesApp.directive('heatMap', function($compile){
                             .style('font-family', 'sans-serif')
                             .attr('class', 'yLabel')
                             .attr('id', 'yLabel')
-                            //.attr("transform", "translate(-6," + gridSize / 1.5 + ")")
                             .each(
                                 function(d){
                                     d3.select(this).classed(d.mentionType, true)
                                 })
+                            //right click
                             .on("contextmenu", function(d, i){
                             	d3.event.preventDefault();
                             	scope.$apply(function() {
@@ -398,48 +361,15 @@ visitNotesApp.directive('heatMap', function($compile){
                                 .attr("visibility", "visible");
                                 
                                 d3.select(this).attr('visibility', 'hidden');
-                                /*markDates = nested
-                                    .selectAll('d.listDates')
-                                    .data(d.listDates).enter()
-                                    .append('rect')
-                                    .attr('x', function(d1){ return 1.5*termWidth + xScale(d1.date) })
-                                    .attr('y', function(d1){ return (d1.yDate+1)*gridHeight; })
-                                    .attr("rx", 4)
-                                    .attr("ry", 4)
-                                    .attr('width', 4)
-                                    .attr('height', gridHeight)
-                                    .attr("id", "markDatesClass")
-                                    .attr('fill', function(d) { return colorScale(d.dateFreq) })
-                                    //.attr('id', function(d) { return 'markDates' + d.date + j })
-                                    //simple tooltip in next 2 lines
-                                    .append("title")
-                                    .text(function(d1){ return d1.dateFreq })
-                                .on("mouseover", function(d) {
-                                 d3.select('#heatmapid').attr('visibility', 'hidden');
-
-                                 tooltip.transition()
-                                 .duration(500)
-                                 .style("opacity", .9);
-                                 tooltip.html("<strong>Date: " + d.dateFreq + "</strong>")
-                                 .style("left", (d3.event.pageX) + "px")
-                                 .style("top", (d3.event.pageY - 28) + "px");
-                                 })
-                                 .on("mouseout", function(d) {
-                                 tooltip.transition()
-                                 .duration(500)
-                                 .style("opacity", 0);
-                                 }); */ 
-                            })
+                             })
                             .on("mouseout", function(d, i){
                                 d3.select(this).attr('visibility', 'visible');
-                                //d3.selectAll('#markDatesClass').remove();
                                 tooltip.transition()
                                     .duration(500)
                                     .style("opacity", 0);
                                 
                                 var markDatesClass = 'markDates' + d.yRect + i;
                                 d3.selectAll('.g_main').selectAll('.nestedClass').selectAll('.'+markDatesClass)
-                                //.style("opacity", 0);
                                 .attr('visibility', 'hidden');
                             })
                             .on("click", function(d, i){
@@ -456,10 +386,6 @@ visitNotesApp.directive('heatMap', function($compile){
                             	markDates = nested
                                 .selectAll('markDatesClass')
                                 .data(d2.listDates).enter()
-                        /*markDates = d3.select(this)
-                        		.selectAll('.heatmap')
-                        		.data(DataRect)
-                        		.enter()*/
                                 .append('rect')
                                 .attr('x', function(d1){ return 1.5*termWidth + xScale(d1.date) })
                                 .attr('y', function(d1){ return (d1.yDate+1)*gridHeight; })
@@ -467,14 +393,10 @@ visitNotesApp.directive('heatMap', function($compile){
                                 .attr("ry", 4)
                                 .attr('width', 4)
                                 .attr('height', gridHeight)
-                                //.style("opacity", 0)
                                 .attr('visibility', 'hidden')
                                 .attr("class", function(d) { return 'markDates' + d2.yRect + k})
                                 .attr('fill', function(d) { return colorScale(d.dateFreq) })
                                 //.attr('id', function(d) { return 'markDates' + d2.yRect + k })
-                                //simple tooltip in next 2 lines
-                                //.append("title")
-                                //.text(function(d1){ return d1.dateFreq })
                             .on("mouseover", function(d) {
                              
                              var heatmapRectId = 'heatmapRect' + d2.yRect + k;
@@ -557,11 +479,6 @@ visitNotesApp.directive('heatMap', function($compile){
                 var toggleArray = [];
                 var AllRect = [];
 
-                //var maxDate = getJSDate('20161101');
-
-                //var minDate = new Date(maxDate.getTime());
-                //minDate.setMonth(maxDate.getMonth() - dateSel);
-
                 //console.log("Updated min Date: " + minDate);
                 //console.log("Updated max Date: " + maxDate);
                 
@@ -595,7 +512,6 @@ visitNotesApp.directive('heatMap', function($compile){
                 });
 
                 data1.forEach(function(d){
-                    //d.dateList.splice(0,d.dateList.length-dateSel);
                     d.dateList.filter(function(d) {
                     	//TODO
                         //return dateSel >= (maxDate.getMonth() - (getJSDate(formatDate(d.dateCreated))).getMonth() + (12 * (maxDate.getFullYear() - (getJSDate(formatDate(d.dateCreated))).getFullYear()) ) )
@@ -603,12 +519,6 @@ visitNotesApp.directive('heatMap', function($compile){
                     });
                     //console.log(d.dateList.length);
                 });
-
-                /*if(termSel === "Search")
-                    data2 = data1.filter(function(d) { return d.relatedTo == null d.expand === "show" })
-                else if(termSel === "All")
-                    data2 = data1;
-                else { //toggle option*/
 
                     for(var n=0; n<negToggleArray.length; n++){
                         data1 = data1.filter(function(d, j) {
@@ -633,47 +543,19 @@ visitNotesApp.directive('heatMap', function($compile){
 
                 d3.select("svg").remove();
 
-                //var filterSearchTerm = data.filter(function(d) { return d.relatedTo == null d.expand === "show" });
-
                 var allTerms = data.map(function(d){ return d.mentionText;});
                 //console.log("allTerms: " + allTerms);
 
                 var svg = d3.select("#heatmapdir").append("svg")
                     .attr("width", width + margin.left + margin.right)
                     .attr("height", ((allTerms.length+6)*gridHeight) + margin.top + margin.bottom)
-                    /*.call(d3.zoom().on("zoom", function () {
-                     svg.attr("transform", d3.event.transform)
-                     }))*/
-                    //.on("dblclick.zoom", null)
                     .append("g")
                     .attr("class", "g_main")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-                /*var svg = d3.select("#heatmapdir").select("svg")
-                    .select(".g_main");*/
-
                 var tooltip = d3.select("#heatmapdir").select("div")
                                 .attr("class", "tooltip")
                                 .style("opacity", 0);
-
-                svg.selectAll('.resetLabel').remove();
-
-                var resetData = [{"name": "RESET"}];
-
-                var reset = svg.selectAll('.g_main')
-                    .data(resetData)
-                    .enter();
-
-                var resetLabel = reset.append("text")
-                    .text(function(d) { return d.name; })
-                    .attr("x", width - termWidth)
-                    .attr("y", 15)
-                    .style('text-anchor', 'start')
-                    .style('font-family', 'sans-serif')
-                    .style('font-size', '15')
-                    .style('fill', 'black')
-                    .attr('class', 'resetLabel')
-                    .attr('id', 'resetLabel');
 
                 svg.selectAll('.nestedClass').remove();
                 
@@ -688,14 +570,8 @@ visitNotesApp.directive('heatMap', function($compile){
                 //console.log("Updated data: " + JSON.stringify(data[0].dateList));
                 //console.log("Updated dateSel: " + dateSel);
 
-                /* 
-                 var maxDate = getJSDate('20161101');
-
-                 var minDate = new Date(maxDate.getTime());
-                 minDate.setMonth(maxDate.getMonth() - dateSel);
-
                  //console.log("Updated min Date: " + minDate);
-                 //console.log("Updated max Date: " + maxDate);*/
+                 //console.log("Updated max Date: " + maxDate);
 
                 //scales
                 var xScale = d3.scaleTime()
@@ -720,7 +596,6 @@ visitNotesApp.directive('heatMap', function($compile){
                     //console.log("Init startRect: " + startRect);
                     
                     i = 0;
-                    //for(i=0; i<grps; i++){
                     while(endRect < new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)){
                     
                     	var listDates = [];
@@ -884,12 +759,6 @@ visitNotesApp.directive('heatMap', function($compile){
                             i++;
                         }
 
-                        /*var colorScale = d3.scaleLinear()
-                            .domain([0, d3.max(DataRect, function(d){ return d.totFreq;})])
-                            //.domain([0, d3.max(totFreq)])
-                            //.range(['#ffffd9', '#081d58']); blue
-                            .range(['#ffffd9', '#ff0033']); //pink*/
-
                         //console.log("Update d1: " + JSON.stringify(d1));
                         //console.log("Update DataRect: " + JSON.stringify(DataRect));
 
@@ -963,41 +832,10 @@ visitNotesApp.directive('heatMap', function($compile){
                                 .attr("visibility", "visible");
                                 
                                 d3.select(this).attr('visibility', 'hidden');
-                                /*markDates = nested
-                                .selectAll('d.listDates')
-                                .data(d.listDates).enter()
-                                .append('rect')
-                                .attr('x', function(d1){ return 1.5*termWidth + xScale(d1.date) })
-                                .attr('y', function(d1){ return (d1.yDate+1)*gridHeight; })
-                                .attr("rx", 4)
-                                .attr("ry", 4)
-                                .attr('width', 4)
-                                .attr('height', gridHeight)
-                                .attr("id", "markDatesClass")
-                                .attr('fill', function(d) { return colorScale(d.dateFreq) })
-                                //.attr('id', function(d) { return 'markDates' + d.date + j })
-                                //simple tooltip in next 2 lines
-                                .append("title")
-                                .text(function(d1){ return d1.dateFreq })
-                            .on("mouseover", function(d) {
-                             d3.select('#heatmapid').attr('visibility', 'hidden');
-
-                             tooltip.transition()
-                             .duration(500)
-                             .style("opacity", .9);
-                             tooltip.html("<strong>Date: " + d.dateFreq + "</strong>")
-                             .style("left", (d3.event.pageX) + "px")
-                             .style("top", (d3.event.pageY - 28) + "px");
-                             })
-                             .on("mouseout", function(d) {
-                             tooltip.transition()
-                             .duration(500)
-                             .style("opacity", 0);
-                             });*/
+                                
                             })
                             .on("mouseout", function(d, i){
                                 d3.select(this).attr('visibility', 'visible');
-                                //d3.selectAll('#markDatesClass').remove();
                                 tooltip.transition()
                                     .duration(500)
                                     .style("opacity", 0);
@@ -1033,9 +871,6 @@ visitNotesApp.directive('heatMap', function($compile){
                                 .attr("class", function(d) { return 'markDates' + d2.yRect + k})
                                 .attr('fill', function(d) { return colorScale(d.dateFreq) })
                                 //.attr('id', function(d) { return 'markDates' + d2.yRect + k })
-                                //simple tooltip in next 2 lines
-                                //.append("title")
-                                //.text(function(d1){ return d1.dateFreq })
                             .on("mouseover", function(d) {
                              
                              var heatmapRectId = 'heatmapRect' + d2.yRect + k;
@@ -1085,8 +920,6 @@ visitNotesApp.directive('heatMap', function($compile){
 
                 var xAxisGen = d3.axisBottom(xScale).tickFormat(d3.timeFormat("%b %y"));
 
-                /*svg.selectAll("g.Xaxis").call(xAxisGen)
-                    .attr("transform", "translate(" + 1.5*termWidth + "," + (j+1)*gridHeight + ")");*/
                 var xAxis = svg.append("g").call(xAxisGen)
                     .attr("class","Xaxis")
                     .attr("transform", "translate(" + 1.5*termWidth + "," + (j+2)*gridHeight + ")");
@@ -1125,10 +958,6 @@ visitNotesApp.directive('heatMap', function($compile){
                   
                 d3.selectAll(".Xdelete")
                     .on("click", function(d, i){
-                        //var dateSel = d3.select('#date-option').node().value;
-                        //var termSel = d3.select('#term-option').node().value;
-
-
                         var textToDelete = d3.select(this.parentNode).select('.yLabel').text();
                         //console.log("textToDelete: " + textToDelete);
 
@@ -1156,71 +985,21 @@ visitNotesApp.directive('heatMap', function($compile){
                             //console.log("negToggleArray after push: " + JSON.stringify(negToggleArray));
                         }
 
-                        /*if(negToggleArray.length === 0){
-                            //d3.select('#term-option').node().value = 'All';
-                            termSel = 'All';
-                            scope.termSel.termvalue = 'All';
-                        }
-                        else if (negToggleArray.length === searchTerms.length){
-                            //d3.select('#term-option').node().value = 'Search';
-                            termSel = 'Search';
-                            scope.termSel.termvalue = 'Search';
-                        }
-                        else {
-                            //d3.select('#term-option').node().value = 'Toggle';
-                            termSel = 'Toggle';
-                            scope.termSel.termvalue = 'Toggle';
-                        }*/
-
-                        //var dateSel = d3.select('#date-option').node().value;
-                        //var termSel = d3.select('#term-option').node().value;
-
                         updateviz(origData, minDate, maxDate, xdeleteArray, negToggleArray, searchTerms);
                     });
 
-                d3.selectAll(".resetLabel")
-                    .on("click", function(d){
-                        //console.log("Reset click registered");
-                        xdeleteArray = [];
-                        negToggleArray = JSON.parse(JSON.stringify(searchTerms));
-
-                        //scope.termSel.termname = "Only search terms";
-                        //scope.termSel.termvalue = "Search"; //NOT WORKING
-                        //scope.dateSel.datename = "All Dates";
-                        //scope.dateSel.datevalue = 14;
-
-                        //console.log("scope.termSel: " + angular.toJson(scope.termSel));
-                        //console.log("scope.parent.termSel: " + angular.toJson(scope.$parent.termSel));
-                        updateviz(origData, 14, /*'Search',*/ xdeleteArray, negToggleArray, searchTerms);
-                    });
             } //end of updateviz
 
-            function zoomed() {
-                view.attr("transform", d3.event.transform);
-                gX.call(xAxis.scale(d3.event.transform.rescaleX(x)));
-                gY.call(yAxis.scale(d3.event.transform.rescaleY(y)));
-            }
-
-            scope.$watch('[val, startDate, endDate]', 
+            scope.$watch('[val, startDate, endDate, resetMap]', 
             function(newVals, oldVals) {
               if((oldVals[0] != newVals[0]) || 
             	 (oldVals[1] != newVals[1]) || 
-            	 (oldVals[2] != newVals[2])){
-                //console.log('Watch triggered');
-              //}
+            	 (oldVals[2] != newVals[2]) ||
+            	 (oldVals[3] != newVals[3])){
               
-                //scope.$watch('val', function (newVal, oldVal) {
-
-                // clear the elements inside of the directive
-                //vis.selectAll('*').remove();
+               // clear the elements inside of the directive
                 d3.select("svg").remove();
 
-                // if 'val' is undefined, exit
-                /*if (!newVal) {
-                    return;
-                }*/
-
-                //var data = newVal;
                 var data = newVals[0];
                 var minDate = newVals[1].name;
                 var maxDate = newVals[2].name;
@@ -1228,6 +1007,7 @@ visitNotesApp.directive('heatMap', function($compile){
                 //console.log("maxDate after watch:" + maxDate);
 
                 buildviz(data, minDate, maxDate);
+                scope.resetMap = false;
 
                 var xdeleteArray = [];
                 var negToggleArray = [];
@@ -1246,37 +1026,8 @@ visitNotesApp.directive('heatMap', function($compile){
 
                 searchTerms.sort();
 
-                        /*scope.$watch('dateSel', function (newVal, oldVal) {
-                            if(newVal != oldVal) {
-                                dateSel = newVal.datevalue;
-
-                                updateviz(data, dateSel, termSel, xdeleteArray, negToggleArray, searchTerms);
-                            }
-                        });
-                        scope.$watch('termSel', function (newVal, oldVal) {
-                            if(newVal != oldVal) {
-                                termSel = newVal.termvalue;
-
-                                if (termSel === 'Search') {
-                                    negToggleArray.splice(0, negToggleArray.length);
-                                    negToggleArray = JSON.parse(JSON.stringify(searchTerms));
-                                    //console.log("neg toggle array when termSel = Search: " + JSON.stringify(negToggleArray));
-                                }
-                                else if (termSel === 'All') {
-                                    negToggleArray.splice(0, negToggleArray.length);
-                                    //console.log("neg toggle array when termSel = All: " + JSON.stringify(negToggleArray));
-                                }
-
-                                negToggleArray.sort();
-                                updateviz(data, dateSel, termSel, xdeleteArray, negToggleArray, searchTerms);
-                            }
-                        });*/
-                
                 d3.selectAll(".Xdelete")
                     .on("click", function(d, i){
-                        //var dateSel = d3.select('#date-option').node().value;
-                        //var termSel = d3.select('#term-option').node().value;
-
                         var textToDelete = d3.select(this.parentNode).select('.yLabel').text();
                         //console.log("textToDelete: " + textToDelete);
 
@@ -1304,60 +1055,11 @@ visitNotesApp.directive('heatMap', function($compile){
                             //console.log("negToggleArray after push: " + JSON.stringify(negToggleArray));
                         }
 
-                        /*if(negToggleArray.length === 0){
-                            //d3.select('#term-option').node().value = 'All';
-                            termSel = 'All';
-                            scope.termSel.termvalue = 'All'; //NOT WORKING!
-                        }
-                        else if (negToggleArray.length === searchTerms.length){
-                            //d3.select('#term-option').node().value = 'Search';
-                            termSel = 'Search';
-                            scope.termSel.termvalue = 'Search';
-                        }
-                        else {
-                            //d3.select('#term-option').node().value = 'Toggle';
-                            termSel = 'Toggle';
-                            scope.termSel.termvalue = 'Toggle';
-                        }*/
-
                         negToggleArray.sort();
-                        //var dateSel = d3.select('#date-option').node().value;
-                        //var termSel = d3.select('#term-option').node().value;
 
                         updateviz(data, minDate, maxDate, xdeleteArray, negToggleArray, searchTerms);
                     });
 
-                d3.selectAll(".resetLabel")
-                    .on("click", function(d){
-                        //console.log("Reset click registered");
-                        xdeleteArray = [];
-                        negToggleArray = JSON.parse(JSON.stringify(searchTerms));
-
-                        //scope.termSel.termname = "Only search terms";
-                        //scope.termSel.termvalue = "Search"; //NOT WORKING
-                        //scope.dateSel.datename = "All Dates";
-                        //scope.dateSel.datevalue = 14;
-
-                        //console.log("scope.termSel: " + angular.toJson(scope.termSel));
-                        //console.log("scope.parent.termSel: " + angular.toJson(scope.$parent.termSel));
-                        updateviz(data, 14, /*'Search',*/ xdeleteArray, negToggleArray, searchTerms);
-                    });
-
-                d3.selectAll(".resetzoom")
-                    .on("click", function(d){
-                        //console.log("Reset zoom click registered");
-
-                        //d3.select("body").select("svg").attr('transform', 'translate(0, 0) scale(1)');
-                        // d3.select("body").select("svg").call(d3.zoom().on("zoom", function () {
-                        //d3.select(this).attr("transform", d3.event.transform)
-                        // }).transform, d3.zoomIdentity);
-                        /*.call(d3.zoom().on("zoom", function () {
-                         svg.attr("transform", d3.event.transform)
-                         }))*/
-                        /*.call(d3.zoom().on("zoom", function () {
-                         view.attr("transform", d3.event.transform);}
-                         ).transform, d3.zoomIdentity);*/
-                    });
               }
             }, 
             true);

@@ -1,7 +1,7 @@
 'use strict';
 
 visitNotesApp.controller('heatmapController',
-		function($scope, $location, DateFactory, SearchFactory, dateRangeAndTermFilter, uniqueNotesFilter, SofaDocumentResource, SofaTextMentionUIResources) {
+		function($scope, $location, $timeout, DateFactory, SearchFactory, dateRangeAndTermFilter, uniqueNotesFilter, SofaDocumentResource, SofaTextMentionUIResources) {
 
 	/*
 	 * $scope.dateSelOptions = [{"datename": "All Dates", "datevalue": 14},
@@ -179,8 +179,14 @@ visitNotesApp.controller('heatmapController',
 		opened : false
 	};
 
+	$scope.resetMap = false;
 	$scope.resetHeatMap = function() {
-
+		$timeout(function() {
+			$scope.resetMap = true;
+		}, 0);
+		$scope.filterFromDate = $scope.startDate.name;  
+		$scope.filterToDate = $scope.endDate.name; 
+		$scope.matchTerm = "";
 	};
 
 	// d3.json("/moduleResources/bannerprototype/d3data.json", function(error,
@@ -262,6 +268,13 @@ visitNotesApp.controller('heatmapController',
 	}
 	
 	$scope.visitListSearchInput = "";
+	
+	$scope.resetVisitList = function(){
+		$scope.filterFromDate = $scope.startDate.name;  
+		$scope.filterToDate = $scope.endDate.name; 
+		$scope.matchTerm = "";
+	}
+	
 
     $scope.backToSearchPage = function(){
         //$location.path('/view1');
