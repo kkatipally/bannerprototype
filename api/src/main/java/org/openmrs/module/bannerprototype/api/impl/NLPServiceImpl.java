@@ -123,6 +123,12 @@ public class NLPServiceImpl extends BaseOpenmrsService implements NLPService {
 	
 	@Override
 	@Transactional
+	public Set<SofaTextMentionUI> getSofaTextMentionUIBySofaDocUuid(String sofaDocUuid) {
+		return dao.getSofaTextMentionUIBySofaDocUuid(sofaDocUuid);
+	}
+	
+	@Override
+	@Transactional
 	public Set<SofaTextMentionUI> getSofaTextMentionUIByConstraints(Patient patient, Date startDate, Date endDate,
 	        String[] searchTerms) {
 		

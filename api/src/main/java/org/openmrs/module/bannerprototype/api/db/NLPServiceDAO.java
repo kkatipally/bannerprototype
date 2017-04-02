@@ -46,6 +46,8 @@ public interface NLPServiceDAO {
 	
 	public SofaTextMentionUI getSofaTextMentionUIByUuid(String uuid);
 	
+	public Set<SofaTextMentionUI> getSofaTextMentionUIBySofaDocUuid(String sofaDocUuid);
+	
 	public Set<SofaTextMentionUI> getSofaTextMentionUIByConstraints(Patient patient, Date startDate, Date endDate,
 	        String[] searchTerms);
 	

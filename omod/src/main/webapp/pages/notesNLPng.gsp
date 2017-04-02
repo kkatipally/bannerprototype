@@ -42,6 +42,7 @@ ui.includeJavascript("bannerprototype","directives/heatMap.js")
 ui.includeJavascript("bannerprototype","directives/visitDates.js")
 ui.includeJavascript("bannerprototype","services/DateFactory.js")
 ui.includeJavascript("bannerprototype","services/SearchFactory.js")
+ui.includeJavascript("bannerprototype","services/VisitUuidFactory.js")
 ui.includeJavascript("bannerprototype","filters/dateRangeAndTerm.js")
 ui.includeJavascript("bannerprototype","filters/uniqueNotes.js")
 

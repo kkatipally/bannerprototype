@@ -110,9 +110,16 @@ public interface NLPService extends OpenmrsService {
 	public SofaTextMentionUI getSofaTextMentionUIByUuid(String uuid);
 	
 	/**
-	 * returns the SofaTextMention by UUID
+	 * returns SofaTextMentionUIs by SofaDoc UUID
 	 * 
-	 * @param uuid
+	 * @param sofaDocUuid
+	 * @return
+	 */
+	public Set<SofaTextMentionUI> getSofaTextMentionUIBySofaDocUuid(String sofaDocUuid);
+	
+	/**
+	 * returns SofaTextMentionUIs by constraints
+	 * 
 	 * @return
 	 */
 	public Set<SofaTextMentionUI> getSofaTextMentionUIByConstraints(Patient patient, Date startDate, Date endDate,

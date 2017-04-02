@@ -1,7 +1,7 @@
 'use strict';
 
 visitNotesApp.controller('cloudController',
-    function cloudController($scope, $location, $timeout, DateFactory, SearchFactory, SofaDocumentResources, WordResources){
+    function cloudController($scope, $location, $timeout, DateFactory, SearchFactory, VisitUuidFactory, SofaDocumentResources, WordResources){
 
         $scope.searchInput = "";
         
@@ -151,6 +151,19 @@ visitNotesApp.controller('cloudController',
 			}, 0);
 		
 		});
+        
+        $scope.visitDateUuid = "";
+        $scope.$watch('visitDateUuid', 
+            function(newVals, oldVals) {
+        		if($scope.visitDateUuid !== ""){
+        			VisitUuidFactory.setVisitDateUuid($scope.visitDateUuid);
+        			//reset visitDateUuid 
+        			$scope.visitDateUuid = "";
+        			//reset search Terms
+                	SearchFactory.setSearchTerms("");
+        			$location.url('/view2');
+        		}
+        	});
 
         $scope.words = WordResources.displayCloud({
 	 			startDate: formatDate($scope.sliderMinDate),

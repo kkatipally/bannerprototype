@@ -6,7 +6,8 @@ visitNotesApp.directive('visitDates', function($compile){
         restrict: 'E',
         scope: {
         	visitDatesData: '=visitDatesData',
-        	visitDatesDataUpdated: '=visitDatesDataUpdated'
+        	visitDatesDataUpdated: '=visitDatesDataUpdated',
+        	visitDateUuid: '=visitDateUuid'
         },
         link: function(scope, element, attrs, controller) {
         	
@@ -58,17 +59,23 @@ visitNotesApp.directive('visitDates', function($compile){
                 .attr("class", "heatmap")
                 .on("mouseover", function(d, i){
                                 
-                                tooltip.transition()
-                                    .duration(500)
-                                    .style("opacity", .9);
-                                tooltip.html("<strong>Date: " + new Date(d.dateCreated) + "</strong>")
-                                    .style("left", (d3.event.pageX) + "px")
-                                    .style("top", (d3.event.pageY - 28) + "px");
+                     tooltip.transition()
+                        .duration(500)
+                        .style("opacity", .9);
+                     tooltip.html("<strong>Date: " + new Date(d.dateCreated) + "</strong>")
+                        .style("left", (d3.event.pageX) + "px")
+                        .style("top", (d3.event.pageY - 28) + "px");
                 })
                 .on("mouseout", function(d, i){
-                                tooltip.transition()
-                                    .duration(500)
-                                    .style("opacity", 0);
+                      tooltip.transition()
+                         .duration(500)
+                         .style("opacity", 0);
+                 })
+                .on("click", function(d, i){
+                      console.log("visitDate clicked");
+                      scope.$apply(function() {
+                    	  scope.visitDateUuid = d.uuid;
+                      });
                  });
         		
         		var xAxis = svg.append("g").call(xAxisGen)

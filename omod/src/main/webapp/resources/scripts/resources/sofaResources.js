@@ -52,6 +52,12 @@ visitNotesApp.factory('SofaTextMentionUIResources', function($resource) {
 					'endDate' : "@endDate",
 					'searchTerms' : "@searchTerms"
 				}
-			}
+			},
+    		displayHeatMapForVisit : {
+    			method : 'GET',
+    			params : {
+    				'sofaDocUuid' : "@sofaDocUuid"
+    			}
+    		}
 		});
 });
