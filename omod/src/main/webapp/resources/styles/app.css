@@ -161,7 +161,7 @@ table{
 }
 
 .problem {
-  fill: red;
+  fill: purple
 }
 .treatment {
   fill: green;
@@ -175,7 +175,7 @@ table{
   margin-left:0px;
   font-family: "sans-serif";
   /*font-size: 14px;*/
-  color: red /*rgb(190, 53, 90)*/
+  color: purple
 }
 
 .mention-type-test {

@@ -1,3 +1,5 @@
+'use strict';
+
 visitNotesApp.factory('VisitUuidFactory', function() {
 
 	var data = {

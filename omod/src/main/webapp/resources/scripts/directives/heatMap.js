@@ -76,7 +76,7 @@ visitNotesApp.directive('heatMap', function($compile){
 
                 var svg = d3.select("#heatmapdir").append("svg")
                     .attr("width", width + margin.left + margin.right)
-                    .attr("height", ((searchTerms.length+6)*gridHeight) + margin.top + margin.bottom)
+                    .attr("height", ((searchTerms.length+7)*gridHeight) + margin.top + margin.bottom)
                     .append("g")
                     .attr("class", "g_main")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -202,7 +202,7 @@ visitNotesApp.directive('heatMap', function($compile){
                                 .domain([0, d3.max(AllRect, function(d){ return d.totFreq;})])
                                 //.domain([0, d3.max(totFreq)])
                                 //.range(['#ffffd9', '#081d58']); blue
-                                .range(['#ffffd9', '#ff0033']); //pink
+                                .range(['#ffffd9', '#ff0033']); //red
                   
                 nested.each(function(d1, nestedInd) {
 
@@ -452,21 +452,29 @@ visitNotesApp.directive('heatMap', function($compile){
                 var legend = svg.append("g")
                                .attr("class", "legend");
 
+                legend.append("text")
+                .text('Color Scale:')
+                .attr("x", 0)
+                .attr("y", (j+5)*gridHeight)
+                .style('text-anchor', 'start')
+                .style('font-family', 'sans-serif')
+                .attr('class', 'legendlabel');
+                
                  legend.selectAll('rect')
                    .data(colors)
                    .enter().append('rect')
-                   .attr("x", function(d, i) { return legendElementWidth * i; })
+                   .attr("x", function(d, i) { return legendElementWidth * (i+1); })
                    .attr("y", (j+4)*gridHeight)
                    .attr("width", legendElementWidth)
                    .attr("height", gridHeight)
                    .style("fill", function(d, i) { return d.color });
 
-                 legend.selectAll('text')
+                 legend.selectAll('colorScaletext')
                    .data(colors)
                    .enter().append('text')
                    .attr("class", "legendtext")
                    .text(function(d) { return d.index; })
-                   .attr("x", function(d, i) { return legendElementWidth * (i + (1/2)); })
+                   .attr("x", function(d, i) { return legendElementWidth * (i + (3/2)); })
                    .attr("y", (j+6)*gridHeight );
 
                  legend.exit().remove();
@@ -548,7 +556,7 @@ visitNotesApp.directive('heatMap', function($compile){
 
                 var svg = d3.select("#heatmapdir").append("svg")
                     .attr("width", width + margin.left + margin.right)
-                    .attr("height", ((allTerms.length+6)*gridHeight) + margin.top + margin.bottom)
+                    .attr("height", ((allTerms.length+7)*gridHeight) + margin.top + margin.bottom)
                     .append("g")
                     .attr("class", "g_main")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -669,7 +677,7 @@ visitNotesApp.directive('heatMap', function($compile){
                                 .domain([0, d3.max(AllRect, function(d){ return d.totFreq;})])
                                 //.domain([0, d3.max(totFreq)])
                                 //.range(['#ffffd9', '#081d58']); blue
-                                .range(['#ffffd9', '#ff0033']); //pink
+                                .range(['#ffffd9', '#ff0033']); //red
                     
                 nested
                     .each(function(d1, nestedInd) {
@@ -932,26 +940,34 @@ visitNotesApp.directive('heatMap', function($compile){
                      colors.push(element);
                  } 
                  
-                 //console.log("colors: " + JSON.stringify(colors));
+                 console.log("colors: " + JSON.stringify(colors));
 
                  var legend = svg.append("g")
                                 .attr("class", "legend");
+                 
+                 legend.append("text")
+                 .text('Color Scale:')
+                 .attr("x", 0)
+                 .attr("y", (j+5)*gridHeight)
+                 .style('text-anchor', 'start')
+                 .style('font-family', 'sans-serif')
+                 .attr('class', 'legendlabel');
 
                   legend.selectAll('rect')
                     .data(colors)
                     .enter().append('rect')
-                    .attr("x", function(d, i) { return legendElementWidth * i; })
+                    .attr("x", function(d, i) { return legendElementWidth * (i+1); })
                     .attr("y", (j+4)*gridHeight)
                     .attr("width", legendElementWidth)
                     .attr("height", gridHeight)
                     .style("fill", function(d, i) { return d.color });
 
-                  legend.selectAll('text')
+                  legend.selectAll('colorScaletext')
                     .data(colors)
                     .enter().append('text')
                     .attr("class", "legendtext")
                     .text(function(d) { return d.index; })
-                    .attr("x", function(d, i) { return legendElementWidth * (i + (1/2)); })
+                    .attr("x", function(d, i) { return legendElementWidth * (i + (3/2)); })
                     .attr("y", (j+6)*gridHeight );
 
                   legend.exit().remove();

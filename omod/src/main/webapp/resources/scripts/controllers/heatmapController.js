@@ -141,6 +141,9 @@ visitNotesApp
 							// 3 months
 							// ago from
 							// today
+							$scope.filterFromDate = $scope.startDate.name; 
+							$scope.filterToDate = $scope.endDate.name; 
+							$scope.matchTerm = "";
 						}
 					});
 
@@ -151,6 +154,9 @@ visitNotesApp
 							// date:
 							// start
 							// date
+							$scope.filterFromDate = $scope.startDate.name; 
+							$scope.filterToDate = $scope.endDate.name; 
+							$scope.matchTerm = "";
 						}
 					});
 
@@ -186,6 +192,7 @@ visitNotesApp
 						$timeout(function() {
 							$scope.resetMap = true;
 						}, 0);
+						//reset visit note list too
 						$scope.filterFromDate = $scope.startDate.name;
 						$scope.filterToDate = $scope.endDate.name;
 						$scope.matchTerm = "";
@@ -303,7 +310,7 @@ visitNotesApp
 						$location.url('/view1');
 					};
 
-					// visit note rendering
+					// visit note rendering upon click in the visit list
 					$scope.selectNote = function() {
 						$scope.selectedNote = this.visitNote;
 
@@ -318,20 +325,5 @@ visitNotesApp
 
 					// pagination in visit note list
 					$scope.currentPage = 1;
-					/*
-					 * $scope.paginatedVisitNotes = [], $scope.numPerPage = 2,
-					 * $scope.maxSize = 5;
-					 */
-
-					$scope.pageChanged = function() {
-						/*
-						 * var begin = (($scope.currentPage - 1) *
-						 * $scope.numPerPage), end = begin + $scope.numPerPage;
-						 * 
-						 * if($scope.visitNotes !== undefined){
-						 * $scope.paginatedVisitNotes =
-						 * $scope.visitNotes.slice(begin, end); }
-						 */
-					};
 
 				});

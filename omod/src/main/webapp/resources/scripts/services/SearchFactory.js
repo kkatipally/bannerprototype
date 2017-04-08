@@ -1,3 +1,5 @@
+'use strict';
+
 visitNotesApp.factory('SearchFactory', function() {
 
 	var data = {

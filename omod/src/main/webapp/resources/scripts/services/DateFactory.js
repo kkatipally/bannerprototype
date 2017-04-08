@@ -1,3 +1,5 @@
+'use strict';
+
 visitNotesApp.factory('DateFactory', function(){
 
 	var data = {

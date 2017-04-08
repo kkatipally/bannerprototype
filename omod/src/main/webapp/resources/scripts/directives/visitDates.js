@@ -7,11 +7,13 @@ visitNotesApp.directive('visitDates', function($compile){
         scope: {
         	visitDatesData: '=visitDatesData',
         	visitDatesDataUpdated: '=visitDatesDataUpdated',
-        	visitDateUuid: '=visitDateUuid'
+        	visitDateUuid: '=visitDateUuid',
+        	sliderMinDate: '=sliderMinDate',
+        	sliderMaxDate: '=sliderMaxDate'
         },
         link: function(scope, element, attrs, controller) {
         	
-        	function buildviz(data){
+        	function buildviz(data, minDate, maxDate){
         		
         		var width = 900,
         		height = 50,
@@ -28,11 +30,8 @@ visitNotesApp.directive('visitDates', function($compile){
         		for(var i=0; i<data.length; i++){
         			allDates.push(data[i].dateCreated);
         		}
-        		console.log("allDates: " + JSON.stringify(allDates));
+        		//console.log("allDates: " + JSON.stringify(allDates));
         		allDates.sort();
-        		
-        		var minDate = monthsBefore(new Date(), 24); /*new Date(allDates[0]);*/
-        		var maxDate = new Date(); /*new Date(allDates[allDates.length-1]);*/
         		
         		var xScale = d3.scaleTime()
                 .domain([minDate, maxDate])
@@ -81,24 +80,28 @@ visitNotesApp.directive('visitDates', function($compile){
         		var xAxis = svg.append("g").call(xAxisGen)
                 .attr("class","Xaxis")
                 .attr("transform", "translate(" + 0 + "," + 30 + ")");
-        	}
+        	}//end of buildviz
         	
-        	scope.$watch('visitDatesData', 
+      	
+        	scope.$watch('[visitDatesDataUpdated, sliderMinDate, sliderMaxDate]',
                     function(newVal, oldVal) {
                       //if(oldVal != newVal){
 
-                        d3.select("svg").remove();
-                        
-                     // if 'val' is undefined, exit
-                        if (!newVal) {
+                      // if 'val' is undefined, exit
+                        if (newVal[0] == false || !newVal[1] || !newVal[2]) {
                             return;
                         }
-
-                        var data = newVal;
-
-                        buildviz(data);
+                        
+                        d3.select("svg").remove();
+                        
+                        //var data = newVal[1];
+                        var data = scope.visitDatesData;
+                        var minDate = newVal[1];
+                        var maxDate = newVal[2];
+                        
+                        buildviz(data, minDate, maxDate);
                       //}
-        	}, true);
+        	}/*, true*/);
         	
         	function monthsBefore(d, months) {
         		  var nd = new Date(d.getTime());

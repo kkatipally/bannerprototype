@@ -243,4 +243,5 @@ public class SofaTextMention extends BaseOpenmrsData implements Serializable, Co
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
+	
 }

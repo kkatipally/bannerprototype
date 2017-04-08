@@ -183,11 +183,13 @@ public class NLPServiceImpl extends BaseOpenmrsService implements NLPService {
 				
 				List<SofaTextMentionUI> relatedstmUIList = new ArrayList<SofaTextMentionUI>();
 				for (SofaTextMentionUI stmUI : stmUIList) {
-					if (!(stmUI.getMentionText().equals(term))) {
-						stmUI.setRelatedTo(term);
-						relatedstmUIList.add(stmUI);
-					} else
-						stmUIAll.add(stmUI);
+					if (stmUI != null) { //fixes bug - no error when some search terms return no data
+						if (!(stmUI.getMentionText().equals(term))) {
+							stmUI.setRelatedTo(term);
+							relatedstmUIList.add(stmUI);
+						} else
+							stmUIAll.add(stmUI);
+					}
 				}
 				
 				for (SofaTextMentionUI relStmUI : relatedstmUIList) {
