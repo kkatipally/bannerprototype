@@ -7,6 +7,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Arrays;
+import java.util.Calendar;
 
 import org.hibernate.SessionFactory;
 import org.openmrs.Encounter;
@@ -134,14 +135,19 @@ public class NLPServiceImpl extends BaseOpenmrsService implements NLPService {
 		
 		Set<SofaTextMentionUI> stmUIAll = new LinkedHashSet<SofaTextMentionUI>();
 		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(endDate); //endDate shows 00:00:00 PDT so incrementing by a day
+		cal.add(Calendar.DATE, 1);
+		Date newEndDate = cal.getTime();
+		
 		if (searchTerms.length > 3) {
 			
-			stmUIAll = dao.getSofaTextMentionUIByConstraints(patient, startDate, endDate, searchTerms);
+			stmUIAll = dao.getSofaTextMentionUIByConstraints(patient, startDate, newEndDate, searchTerms);
 			
 		} else {
 			for (String term : searchTerms) {
 				
-				List<SofaDocument> sofaDocs = getSofaDocumentsByConstraints(patient, startDate, endDate, term);
+				List<SofaDocument> sofaDocs = getSofaDocumentsByConstraints(patient, startDate, newEndDate, term);
 				
 				WordCloud problemCloud = new WordCloud();
 				WordCloud treatmentCloud = new WordCloud();
@@ -178,7 +184,7 @@ public class NLPServiceImpl extends BaseOpenmrsService implements NLPService {
 				String[] allTopTermsArr = new String[allTopTerms.size()];
 				allTopTermsArr = allTopTerms.toArray(allTopTermsArr);
 				
-				Set<SofaTextMentionUI> stmUIList = dao.getSofaTextMentionUIByConstraints(patient, startDate, endDate,
+				Set<SofaTextMentionUI> stmUIList = dao.getSofaTextMentionUIByConstraints(patient, startDate, newEndDate,
 				    allTopTermsArr);
 				
 				List<SofaTextMentionUI> relatedstmUIList = new ArrayList<SofaTextMentionUI>();

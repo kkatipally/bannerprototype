@@ -18,7 +18,8 @@ visitNotesApp.directive('heatMap', function($compile){
 
         	var minDate = scope.startDate.name;
             var maxDate = scope.endDate.name;
-
+            //console.log("minDate, maxDate in dir: " + minDate + ", " + maxDate);
+            
             var numMonths = 1 + maxDate.getMonth() - minDate.getMonth() + (12 * (maxDate.getFullYear() - minDate.getFullYear()));
             //console.log("numMonths in updateviz: " + numMonths);
 
@@ -127,7 +128,8 @@ visitNotesApp.directive('heatMap', function($compile){
                     
                     i = 0;
 
-                    while(endRect < new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)){
+                    //while(endRect < new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)){
+                    while(endRect < maxDate){ //handles notes entered today
                         var listDates = [];
                         var newdate;
                         addFreq = 0;
@@ -148,7 +150,8 @@ visitNotesApp.directive('heatMap', function($compile){
                         	endRect = new Date(startRect.getFullYear(), startRect.getMonth() + groupMonths, 1, 0, 0, 0, 0);
                         }
 
-                        endRect = new Date(Math.min(endRect, new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)));
+                        //endRect = new Date(Math.min(endRect, new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)));
+                        endRect = new Date(Math.min(endRect, maxDate)); //handles notes entered today
                         //console.log("i, endRect:" + i + ' ' + endRect);
                         
                         for(k=0; k<d1.dateList.length; k++){ 
@@ -223,8 +226,8 @@ visitNotesApp.directive('heatMap', function($compile){
                         //console.log("Init startRect: " + startRect);
 
                         i = 0;
-                        while(endRect < new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)){
-                        
+                        //while(endRect < new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)){
+                        while(endRect < maxDate){ //handles notes entered today
                         	var listDates = [];
                             var newdate;
                             addFreq = 0;
@@ -243,8 +246,8 @@ visitNotesApp.directive('heatMap', function($compile){
                             else{
                             	endRect = new Date(startRect.getFullYear(), startRect.getMonth() + groupMonths, 1, 0, 0, 0, 0);
                             }
-                        	endRect = new Date(Math.min(endRect, new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)));
-
+                        	//endRect = new Date(Math.min(endRect, new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)));
+                        	endRect = new Date(Math.min(endRect, maxDate)); //handles notes entered today
                             //console.log("endRect: " + endRect);
 
                             for(k=0; k<d1.dateList.length; k++){
@@ -604,8 +607,8 @@ visitNotesApp.directive('heatMap', function($compile){
                     //console.log("Init startRect: " + startRect);
                     
                     i = 0;
-                    while(endRect < new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)){
-                    
+                    //while(endRect < new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)){
+                    while(endRect < maxDate){ //handles notes entered today
                     	var listDates = [];
                         var newdate;
                         addFreq = 0;
@@ -625,7 +628,8 @@ visitNotesApp.directive('heatMap', function($compile){
                         else{
                         	endRect = new Date(startRect.getFullYear(), startRect.getMonth() + groupMonths, 1, 0, 0, 0, 0);
                         }
-                        endRect = new Date(Math.min(endRect, new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)));
+                        //endRect = new Date(Math.min(endRect, new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)));
+                        endRect = new Date(Math.min(endRect, maxDate)); //handles notes entered today
                         //console.log("endRect: " + endRect);
                         
                         for(k=0; k<d1.dateList.length; k++){ 
@@ -700,8 +704,8 @@ visitNotesApp.directive('heatMap', function($compile){
 
                         i = 0;
                         //for(i=0; i<grps; i++){
-                        while(endRect < new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)){
-                        
+                        //while(endRect < new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)){
+                        while(endRect < maxDate){ //handles notes entered today
                         	var listDates = [];
                             var newdate;
                             addFreq = 0;
@@ -721,7 +725,8 @@ visitNotesApp.directive('heatMap', function($compile){
                             else{
                             	endRect = new Date(startRect.getFullYear(), startRect.getMonth() + groupMonths, 1, 0, 0, 0, 0);
                             }
-                            endRect = new Date(Math.min(endRect, new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)));
+                            //endRect = new Date(Math.min(endRect, new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 0, 0, 0, 0)));
+                            endRect = new Date(Math.min(endRect, maxDate)); //handles notes entered today
                             //console.log("endRect: " + endRect);
 
                             for(k=0; k<d1.dateList.length; k++){
@@ -940,7 +945,7 @@ visitNotesApp.directive('heatMap', function($compile){
                      colors.push(element);
                  } 
                  
-                 console.log("colors: " + JSON.stringify(colors));
+                 //console.log("colors: " + JSON.stringify(colors));
 
                  var legend = svg.append("g")
                                 .attr("class", "legend");

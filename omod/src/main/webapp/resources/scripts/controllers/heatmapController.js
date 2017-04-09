@@ -41,8 +41,7 @@ visitNotesApp
 											v : "full"
 										},
 										function() {
-											// console.log("heatmap:" +
-											// JSON.stringify($scope.stms.results));
+											//console.log("heatmap:" + JSON.stringify($scope.stms.results));
 											$scope.val = $scope.stms.results;
 											$scope.visitNotes = populateVisitNoteList($scope.stms.results);
 											// console.log("visitNotes:" +
@@ -234,8 +233,7 @@ visitNotesApp
 											v : "full"
 										},
 										function() {
-											// console.log("heatmap:" +
-											// JSON.stringify($scope.stms.results));
+											//console.log("heatmap:" + JSON.stringify($scope.stms.results));
 											$scope.val = $scope.stms.results;
 											$scope.visitNotes = populateVisitNoteList($scope.stms.results);
 											// console.log("visitNotes:" +
@@ -252,7 +250,7 @@ visitNotesApp
 											v : "full"
 										},
 										function() {
-											// console.log("heatmap:" +
+											//console.log("heatmap:" +
 											// JSON.stringify($scope.stms.results));
 											$scope.val = $scope.stms.results;
 											$scope.visitNotes = populateVisitNoteList($scope.stms.results);
@@ -294,7 +292,7 @@ visitNotesApp
 												}
 											});
 								});
-						console.log("visit notes: " + JSON.stringify(Notes));
+						//console.log("visit notes: " + JSON.stringify(Notes));
 						return Notes;
 					}
 

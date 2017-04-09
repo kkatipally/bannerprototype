@@ -3,6 +3,7 @@ package org.openmrs.module.bannerprototype.api.db.hibernate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -466,10 +467,17 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 	
 	@Override
 	public List<SofaDocument> getSofaDocumentsByPatientAndDateRange(Patient patient, Date startDate, Date endDate) {
+		
 		Criteria crit = sessionFactory.getCurrentSession().createCriteria(SofaDocument.class);
+		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(endDate); //endDate shows 00:00:00 PDT so incrementing by a day
+		cal.add(Calendar.DATE, 1);
+		Date newEndDate = cal.getTime();
+		
 		crit.add(Restrictions.eq("patient", patient));
-		crit.add(Restrictions.gt("dateCreated", startDate));
-		crit.add(Restrictions.lt("dateCreated", endDate));
+		crit.add(Restrictions.ge("dateCreated", startDate));
+		crit.add(Restrictions.le("dateCreated", newEndDate));
 		
 		return (List<SofaDocument>) crit.list();
 	}
