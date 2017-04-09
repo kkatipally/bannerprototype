@@ -262,7 +262,7 @@ visitNotesApp
 										});
 					}
 
-					$scope.rendering = "Morbi libero urna, pretium sed arcu vitae, luctus semper sem. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque quam dui, congue id gravida quis, tempor sit amet justo. Aliquam blandit placerat nisi, in condimentum erat semper sed.Cras quam lorem, vestibulum nec mi elementum, pulvinar venenatis sapien. Suspendisse vitae nulla mattis, laoreet nibh ut, elementum mi. Nullam vestibulum mi arcu, nec mattis lorem facilisis eget. Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+					$scope.noteRendering = "Morbi libero urna, pretium sed arcu vitae, luctus semper sem. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque quam dui, congue id gravida quis, tempor sit amet justo. Aliquam blandit placerat nisi, in condimentum erat semper sed.Cras quam lorem, vestibulum nec mi elementum, pulvinar venenatis sapien. Suspendisse vitae nulla mattis, laoreet nibh ut, elementum mi. Nullam vestibulum mi arcu, nec mattis lorem facilisis eget. Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
 
 					function populateVisitNoteList(results) {
 
@@ -284,11 +284,14 @@ visitNotesApp
 													$scope.sofadocInit = SofaDocumentResource
 															.get(
 																	{
-																		uuid : date.uuid
+																		uuid : date.uuid,
+																		v : "full"
 																	},
 																	function() {
-																		$scope.rendering = $scope.sofadocInit.text;
-																	});
+																		$timeout(function() {
+																			$scope.noteRendering = $scope.sofadocInit.annotatedHTML;
+																		}, 0);
+																	 });
 												}
 											});
 								});
@@ -313,11 +316,14 @@ visitNotesApp
 						$scope.selectedNote = this.visitNote;
 
 						$scope.sofadoc = SofaDocumentResource.get({
-							uuid : $scope.selectedNote.uuid
+							uuid : $scope.selectedNote.uuid,
+							v : "full"
 						}, function() {
 							// console.log("sofadoc:" +
 							// JSON.stringify($scope.sofadoc.text));
-							$scope.rendering = $scope.sofadoc.text;
+							$timeout(function() {
+								$scope.noteRendering = $scope.sofadoc.annotatedHTML;
+							}, 0);
 						});
 					}
 

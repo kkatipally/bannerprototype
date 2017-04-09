@@ -40,6 +40,7 @@ public class SofadocumentResource extends DataDelegatingCrudResource<SofaDocumen
 			description.addProperty("display");
 			description.addProperty("dateCreated");
 			description.addProperty("text");
+			description.addProperty("annotatedHTML");
 			description.addSelfLink();
 			return description;
 		}

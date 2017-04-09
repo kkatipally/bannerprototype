@@ -27,6 +27,7 @@ ui.includeJavascript("bannerprototype","lib/jQDateRangeSlider.js")
 ui.includeJavascript("bannerprototype","lib/jQRuler.js")
 ui.includeJavascript("bannerprototype", "lib/ui-bootstrap-tpls-2.4.0.min.js")
 ui.includeJavascript("bannerprototype","lib/d3.min.js")
+ui.includeJavascript("bannerprototype","lib/ng-scrollbar.min.js")
 
 ui.includeJavascript("bannerprototype","app.js")
 ui.includeJavascript("bannerprototype", "resources/sofaResources.js")
@@ -35,6 +36,7 @@ ui.includeJavascript("bannerprototype","controllers/heatmapController.js")
 ui.includeJavascript("bannerprototype", "directives/slider.js")
 ui.includeJavascript("bannerprototype","directives/heatMap.js")
 ui.includeJavascript("bannerprototype","directives/visitDates.js")
+ui.includeJavascript("bannerprototype","directives/renderNote.js")
 ui.includeJavascript("bannerprototype","services/DateFactory.js")
 ui.includeJavascript("bannerprototype","services/SearchFactory.js")
 ui.includeJavascript("bannerprototype","services/VisitUuidFactory.js")
@@ -44,6 +46,7 @@ ui.includeJavascript("bannerprototype","filters/uniqueNotes.js")
 ui.includeCss("bannerprototype", "bootstrap.min.css")
 ui.includeCss("bannerprototype", "iThing.css")
 ui.includeCss("bannerprototype", "app.css")
+ui.includeCss("bannerprototype", "ng-scrollbar.min.css")
 %>
 
 <script type="text/javascript">

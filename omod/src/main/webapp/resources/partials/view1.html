@@ -44,7 +44,7 @@
 			<span ng-repeat="term in finalCloud">
 			
 			<a ngHref="#" ng-click="addToSearch(term.word)">
-			<span data-i2="rate:{{term.count}}" ng-class="{'mention-type-problem': term.className === 'problem', 'mention-type-treatment': term.className === 'treatment','mention-type-test': term.className === 'test'}">
+			<span data-i2="rate:{{term.count}}" ng-class="{'cloud-problem': term.className === 'problem', 'cloud-treatment': term.className === 'treatment','cloud-test': term.className === 'test'}">
 			{{term.word}}
     		</span>
     		</a>

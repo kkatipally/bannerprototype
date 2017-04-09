@@ -5,7 +5,8 @@ var visitNotesApp = angular.module('visitNotesApp', [
   'ngResource',
   'ngAnimate',
   'ngSanitize',
-  'ui.bootstrap'
+  'ui.bootstrap',
+  'ngScrollbar'
 ])
 
     .config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {

@@ -126,12 +126,26 @@ h6 {
 #visit-note-rendering {
   border: 1px solid grey;
   border-radius: 5px;
-//margin: 5px;
-  padding: 5px;
+  padding: 10px;
   float: right;
-//width: 175px;
-//background-color: #474e5d;
-//color: #ffffff;
+  height: 500px;
+}
+
+.renderData{
+  margin-right: 20px;	
+}
+
+.scroll {
+  height: 450px;
+}
+
+#renderVisitNote{
+  font-family: sans-serif;
+  font-size:14px;	
+}
+
+.ngsb-track {
+  width: 10px;
 }
 
 .visitListInput{
@@ -170,29 +184,42 @@ table{
   fill: blue;
 }
 
-.mention-type-problem {
+span.cloud-problem {
   margin: 10px;
   margin-left:0px;
   font-family: "sans-serif";
-  /*font-size: 14px;*/
   color: purple
 }
 
-.mention-type-test {
+span.cloud-test {
   margin: 10px;
   margin-left:0px;
   font-family: "sans-serif";
-  /*font-size: 14px;*/
   color: blue /*rgb(17, 76, 126)*/
 }
 
-.mention-type-treatment {
+span.cloud-treatment {
   margin: 10px;
   margin-left:0px;
   font-family: "sans-serif";
-  /*font-size: 14px;*/
   color: green /*rgb(33, 119, 67)*/
 }
+
+span.mention-type-problem {
+  font-family: "sans-serif";
+  color: purple
+}
+
+span.mention-type-test {
+  font-family: "sans-serif";
+  color: blue /*rgb(17, 76, 126)*/
+}
+
+span.mention-type-treatment {
+  font-family: "sans-serif";
+  color: green /*rgb(33, 119, 67)*/
+}
+
 .hide {
   visibility: hidden;
 }
