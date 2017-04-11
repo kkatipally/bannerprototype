@@ -1,15 +1,20 @@
 <div ng-controller="heatmapController">
+
 <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="#">Search History</a></li>
-    <li class="breadcrumb-item"><a href="#">Hypothyroidism</a></li>
-    <li class="breadcrumb-item">interferon</li>
+    <li class="breadcrumb-item"><a>Search History</a></li>
+    <li class="breadcrumb-item" ng-repeat="term in breadCrumbs">
+    	<a ngHref="#" ng-click="clickBreadCrumb(term)">{{term.word}}</a>
+	</li>
 </ol>
+
+<div class="container-fluid">
+    <div class="row">
 <button id="clearHistory" type="button" class="btn btn-secondary" ng-click="clearHistory()">Clear History
 </button>
 <button id="backButton" type="button" class="btn btn-secondary" ng-click="backToSearchPage()">Back to Search Page
 </button>        
+</div>
 
-<div class="container-fluid">
     <div class="row">
         <form class="searchtop" ng-submit="page2Submit(searchInput)">
         <!-- <div class="form-group"> -->

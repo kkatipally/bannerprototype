@@ -25,6 +25,8 @@ visitNotesApp
 								$scope.finalSearchBarTerms
 										.push($scope.uniqueSearchBarTerms[i]);
 						}
+						
+						addBreadCrumb($scope.finalSearchBarTerms);
 
 						// console.log("Page 1 submitted with searchInput: " +
 						// $scope.searchInput);
@@ -223,6 +225,8 @@ visitNotesApp
 										.push($scope.uniqueSearchBarTerms[i]);
 						}
 
+						initiateBreadCrumb($scope.finalSearchBarTerms);
+						
 						$scope.stms = SofaTextMentionUIResources
 								.displayHeatMap(
 										{
@@ -309,6 +313,55 @@ visitNotesApp
 
 					$scope.backToSearchPage = function() {
 						$location.url('/view1');
+					};
+					
+					$scope.breadCrumbs = [];
+					
+					function initiateBreadCrumb(finSearchTerms) {
+						$scope.breadCrumbs = [];
+						finSearchTerms.forEach(function(e){
+							$timeout(function() {
+								$scope.breadCrumbs.push({"word": e, "startDate": $scope.startDate.name, "endDate": $scope.endDate.name});
+							}, 0);
+						});
+					};
+					
+					function addBreadCrumb(finSearchTerms) {
+						finSearchTerms.forEach(function(e){
+							$timeout(function() {
+								$scope.breadCrumbs.push({"word": e, "startDate": $scope.startDate.name, "endDate": $scope.endDate.name});
+							}, 0);
+						});
+					};
+					
+					$scope.clearHistory = function(term){ 
+						$scope.breadCrumbs = [];
+					}
+					
+					$scope.clickBreadCrumb = function(term){
+						
+						$scope.stms = SofaTextMentionUIResources
+						.displayHeatMap(
+								{
+									patient : $scope.patient,
+									startDate : formatDate(term.startDate),
+									endDate : formatDate(term.endDate),
+									searchTerms : term.word,
+									v : "full"
+								},
+								function() {
+									//console.log("heatmap:" + JSON.stringify($scope.stms.results));
+									$scope.val = $scope.stms.results;
+									$scope.visitNotes = populateVisitNoteList($scope.stms.results);
+									// console.log("visitNotes:" +
+									// JSON.stringify($scope.visitNotes));
+									// resetting visit note list filter
+									// parameters
+									$scope.filterFromDate = $scope.startDate.name;
+									$scope.filterToDate = $scope.endDate.name;
+									$scope.matchTerm = "";
+								});
+						
 					};
 
 					// visit note rendering upon click in the visit list
