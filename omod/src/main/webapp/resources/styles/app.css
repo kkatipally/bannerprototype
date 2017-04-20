@@ -1,10 +1,11 @@
 .center {
   margin-top: 10px;
   /*margin-left: 100px;*/
-  margin-right: 190px;
+  margin-right: 10px;
   margin-bottom: 10px;
   border: 1px solid grey;
   padding: 10px;
+  padding-bottom: 30px;
   border-radius: 15px;
 }
 
@@ -40,8 +41,8 @@ article{
 }
 
 #cloud {
-  margin-left: 100px;
-  margin-right: 100px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 #cloudborder{
@@ -55,11 +56,15 @@ article{
 
 .searchbottom {
   margin-top: 25px;
-  margin-left: 150px;
+  margin-left: 175px;
+}
+
+.container{
+  width: 980px;
 }
 
 .searchtop {
-  margin-left: 150px;
+  margin-left: 175px;
 }
 
 .pad{
@@ -82,13 +87,12 @@ article{
 
 #clearHistory {
   float: left;
-  margin-left: 5px;
+  /*margin-left: 5px;*/
   margin-bottom: 5px;
 }
 
 #backButton {
   float: right;
-  margin-right: 190px;
   margin-bottom: 5px;
 }
 
@@ -111,7 +115,7 @@ h6 {
 }
 
 #visit-note {
-  margin-right: 190px;
+  /*margin-right: 190px;*/
 }
 
 #visit-note-list {
@@ -128,7 +132,7 @@ h6 {
   border-radius: 5px;
   padding: 10px;
   float: right;
-  height: 500px;
+  height: 290px;
 }
 
 .renderData{
@@ -136,7 +140,7 @@ h6 {
 }
 
 .scroll {
-  height: 450px;
+  height: 230px;
 }
 
 #renderVisitNote{
@@ -260,8 +264,8 @@ div.tooltip {
 
 #heatmapsection {
   margin-top: 10px;
-  /*margin-left: 10px;*/
-  margin-right: 190px;
+  /*margin-left: 10px;
+  margin-right: 190px;*/
   margin-bottom: 10px;
   border: 1px solid grey;
   padding: 30px;

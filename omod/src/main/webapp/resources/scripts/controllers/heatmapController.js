@@ -4,7 +4,7 @@ visitNotesApp
 		.controller(
 				'heatmapController',
 				function($scope, $location, $timeout, DateFactory,
-						SearchFactory, VisitUuidFactory,
+						SearchFactory, VisitUuidFactory, BreadcrumbFactory,
 						dateRangeAndTermFilter, uniqueNotesFilter,
 						SofaDocumentResource, SofaTextMentionUIResources) {
 
@@ -26,7 +26,7 @@ visitNotesApp
 										.push($scope.uniqueSearchBarTerms[i]);
 						}
 						
-						addBreadCrumb($scope.finalSearchBarTerms);
+						addBreadCrumb($scope.searchInput);
 
 						// console.log("Page 1 submitted with searchInput: " +
 						// $scope.searchInput);
@@ -225,7 +225,7 @@ visitNotesApp
 										.push($scope.uniqueSearchBarTerms[i]);
 						}
 
-						initiateBreadCrumb($scope.finalSearchBarTerms);
+						initiateBreadCrumb($scope.searchInput);
 						
 						$scope.stms = SofaTextMentionUIResources
 								.displayHeatMap(
@@ -312,26 +312,31 @@ visitNotesApp
 					}
 
 					$scope.backToSearchPage = function() {
+						BreadcrumbFactory.setBreadCrumbs($scope.breadCrumbs);
 						$location.url('/view1');
 					};
 					
 					$scope.breadCrumbs = [];
+					if(BreadcrumbFactory.getBreadCrumbs() != "")
+						$scope.breadCrumbs = BreadcrumbFactory.getBreadCrumbs();
 					
-					function initiateBreadCrumb(finSearchTerms) {
+					function initiateBreadCrumb(searchInput) {
 						$scope.breadCrumbs = [];
-						finSearchTerms.forEach(function(e){
+						if(BreadcrumbFactory.getBreadCrumbs() != "")
+							$scope.breadCrumbs = BreadcrumbFactory.getBreadCrumbs();
+						//finSearchTerms.forEach(function(e){
 							$timeout(function() {
-								$scope.breadCrumbs.push({"word": e, "startDate": $scope.startDate.name, "endDate": $scope.endDate.name});
+								$scope.breadCrumbs.push({"word": searchInput, "startDate": $scope.startDate.name, "endDate": $scope.endDate.name});
 							}, 0);
-						});
+						//});
 					};
 					
-					function addBreadCrumb(finSearchTerms) {
-						finSearchTerms.forEach(function(e){
+					function addBreadCrumb(searchInput) {
+						//finSearchTerms.forEach(function(e){
 							$timeout(function() {
-								$scope.breadCrumbs.push({"word": e, "startDate": $scope.startDate.name, "endDate": $scope.endDate.name});
+								$scope.breadCrumbs.push({"word": searchInput, "startDate": $scope.startDate.name, "endDate": $scope.endDate.name});
 							}, 0);
-						});
+						//});
 					};
 					
 					$scope.clearHistory = function(term){ 
@@ -340,13 +345,31 @@ visitNotesApp
 					
 					$scope.clickBreadCrumb = function(term){
 						
+						$timeout(function() {
+							$scope.startDate = {"name" : term.startDate}
+							$scope.endDate= {"name" :  term.endDate}
+							$scope.searchInput = term.word;
+												
+						$scope.searchBarTerms = $scope.searchInput.split(",");
+						$scope.uniqueSearchBarTerms = $scope.searchBarTerms
+								.filter(onlyUnique);
+						$scope.finalSearchBarTerms = [];
+
+						for (var i = 0; i < $scope.uniqueSearchBarTerms.length; i++) {
+							$scope.uniqueSearchBarTerms[i] = $scope.uniqueSearchBarTerms[i]
+									.trim();
+							if ($scope.uniqueSearchBarTerms[i] !== "")
+								$scope.finalSearchBarTerms
+										.push($scope.uniqueSearchBarTerms[i]);
+						}
+							
 						$scope.stms = SofaTextMentionUIResources
 						.displayHeatMap(
 								{
 									patient : $scope.patient,
 									startDate : formatDate(term.startDate),
 									endDate : formatDate(term.endDate),
-									searchTerms : term.word,
+									searchTerms : $scope.finalSearchBarTerms,
 									v : "full"
 								},
 								function() {
@@ -361,7 +384,7 @@ visitNotesApp
 									$scope.filterToDate = $scope.endDate.name;
 									$scope.matchTerm = "";
 								});
-						
+						}, 0);
 					};
 
 					// visit note rendering upon click in the visit list
