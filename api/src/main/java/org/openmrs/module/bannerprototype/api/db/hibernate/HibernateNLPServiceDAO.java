@@ -277,6 +277,7 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 		int index = 0;
 		SofaTextMentionUI prevStmUI = null;
 		Set<SofaTextMentionUI> stmUISet = new LinkedHashSet<SofaTextMentionUI>();
+		
 		SofaDocumentUI sdUI = null;
 		
 		for (Object obj : results) {
@@ -295,29 +296,32 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-				int encounterID = (Integer) result[5];
-				Encounter e = Context.getEncounterService().getEncounter(encounterID);
-				String provider = e.getProvider().getGivenName() + " " + e.getProvider().getFamilyName();
-				String location = e.getLocation().getName();
+				String provider = "";
+				String location = "";
 				String diagnosis = "";
-				Set<Obs> obs = e.getAllObs();
-				
-				Concept c1 = Context.getConceptService().getConcept(1284); //coded diagnosis
-				Concept c2 = Context.getConceptService().getConcept(161602); //non coded diagnosis
-				
-				for (Obs o : obs) {
-					Concept obs_concept = o.getConcept();
+				if (result[5] != null) {
+					int encounterID = (Integer) result[5];
+					Encounter e = Context.getEncounterService().getEncounter(encounterID);
+					provider = e.getProvider().getGivenName() + " " + e.getProvider().getFamilyName();
+					location = e.getLocation().getName();
+					Set<Obs> obs = e.getAllObs();
 					
-					//if the concept associated with the observation is a diagnosis Concept, proceed
-					if ((obs_concept.equals(c2)) && (!o.getValueText().equals(""))) {
-						// extract diagnosis
-						diagnosis = o.getValueText();
-					}
-					if (obs_concept.equals(c1)) {
-						Concept valueCoded = o.getValueCoded();
-						ConceptName valueCodedName = o.getValueCodedName();
-						diagnosis = valueCodedName.toString();
+					Concept c1 = Context.getConceptService().getConcept(1284); //coded diagnosis
+					Concept c2 = Context.getConceptService().getConcept(161602); //non coded diagnosis
+					
+					for (Obs o : obs) {
+						Concept obs_concept = o.getConcept();
+						
+						//if the concept associated with the observation is a diagnosis Concept, proceed
+						if ((obs_concept.equals(c2)) && (!o.getValueText().equals(""))) {
+							// extract diagnosis
+							diagnosis = o.getValueText();
+						}
+						if (obs_concept.equals(c1)) {
+							Concept valueCoded = o.getValueCoded();
+							ConceptName valueCodedName = o.getValueCodedName();
+							diagnosis = valueCodedName.toString();
+						}
 					}
 				}
 				
@@ -397,28 +401,33 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 				e.printStackTrace();
 			}
 			
-			int encounterID = (Integer) result[5];
-			Encounter e = Context.getEncounterService().getEncounter(encounterID);
-			String provider = e.getProvider().getGivenName() + " " + e.getProvider().getFamilyName();
-			String location = e.getLocation().getName();
+			String provider = "";
+			String location = "";
 			String diagnosis = "";
-			Set<Obs> obs = e.getAllObs();
-			
-			Concept c1 = Context.getConceptService().getConcept(1284); //coded diagnosis
-			Concept c2 = Context.getConceptService().getConcept(161602); //non coded diagnosis
-			
-			for (Obs o : obs) {
-				Concept obs_concept = o.getConcept();
+			if (result[5] != null) {
+				int encounterID = (Integer) result[5];
+				Encounter e = Context.getEncounterService().getEncounter(encounterID);
+				provider = e.getProvider().getGivenName() + " " + e.getProvider().getFamilyName();
+				location = e.getLocation().getName();
 				
-				//if the concept associated with the observation is a diagnosis Concept, proceed
-				if ((obs_concept.equals(c2)) && (!o.getValueText().equals(""))) {
-					// extract diagnosis
-					diagnosis = o.getValueText();
-				}
-				if (obs_concept.equals(c1)) {
-					Concept valueCoded = o.getValueCoded();
-					ConceptName valueCodedName = o.getValueCodedName();
-					diagnosis = valueCodedName.toString();
+				Set<Obs> obs = e.getAllObs();
+				
+				Concept c1 = Context.getConceptService().getConcept(1284); //coded diagnosis
+				Concept c2 = Context.getConceptService().getConcept(161602); //non coded diagnosis
+				
+				for (Obs o : obs) {
+					Concept obs_concept = o.getConcept();
+					
+					//if the concept associated with the observation is a diagnosis Concept, proceed
+					if ((obs_concept.equals(c2)) && (!o.getValueText().equals(""))) {
+						// extract diagnosis
+						diagnosis = o.getValueText();
+					}
+					if (obs_concept.equals(c1)) {
+						Concept valueCoded = o.getValueCoded();
+						ConceptName valueCodedName = o.getValueCodedName();
+						diagnosis = valueCodedName.toString();
+					}
 				}
 			}
 			

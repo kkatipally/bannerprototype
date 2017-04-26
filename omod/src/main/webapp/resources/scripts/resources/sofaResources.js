@@ -5,7 +5,8 @@ visitNotesApp.config(function ($httpProvider) {
 });
 
 visitNotesApp.factory('SofaDocumentResource', function($resource) {
-    return $resource("/openmrs/ws/rest/v1/bannerprototype/sofadocument/:uuid");
+    //return $resource("/openmrs/ws/rest/v1/bannerprototype/sofadocument/:uuid");
+	return $resource("/" + OPENMRS_CONTEXT_PATH  + "/ws/rest/v1/bannerprototype/sofadocument/:uuid");
 });
 
 visitNotesApp.factory('SofaDocumentResources', function($resource) {
@@ -26,7 +27,7 @@ visitNotesApp.factory('SofaTextMentionResource', function($resource) {
 });
 
 visitNotesApp.factory('WordResources', function($resource) {
-	    return $resource("/openmrs/ws/rest/v1/bannerprototype/word", {},
+	    return $resource("/" + OPENMRS_CONTEXT_PATH  + "/ws/rest/v1/bannerprototype/word", {},
 			{
 				displayCloud : {
 					method : 'GET',
@@ -42,7 +43,7 @@ visitNotesApp.factory('WordResources', function($resource) {
 });
 
 visitNotesApp.factory('SofaTextMentionUIResources', function($resource) {
-    return $resource("/openmrs/ws/rest/v1/bannerprototype/sofatextmentionui", {},
+    return $resource("/" + OPENMRS_CONTEXT_PATH  + "/ws/rest/v1/bannerprototype/sofatextmentionui", {},
 		{
 			displayHeatMap : {
 				method : 'GET',
