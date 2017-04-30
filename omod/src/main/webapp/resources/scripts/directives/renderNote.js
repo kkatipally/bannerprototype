@@ -13,9 +13,9 @@ visitNotesApp.directive('renderNote', function($compile){
         	scope.$watch('noteRendering',
                     function(newVal, oldVal) {
         		
-        		if (!newVal) {
+        		/*if (!newVal) {
                     return;
-                }
+                }*/
         	   var container = $('.renderData');
             
         		container.html(newVal);

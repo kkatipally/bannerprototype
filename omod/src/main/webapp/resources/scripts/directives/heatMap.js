@@ -33,7 +33,6 @@ visitNotesApp.directive('heatMap', function($compile){
                 gridHeight = 20,
                 entityTypes = ['red', 'green', 'blue'],
                 buckets = 9,
-            	AllRect = [],
             	legendElementWidth = 100;
             
             function getJSDate(d){
@@ -108,7 +107,8 @@ visitNotesApp.directive('heatMap', function($compile){
                 var xAxisGen = d3.axisBottom(xScale).tickFormat(d3.timeFormat("%b %y"));
                 var yAxisGen = d3.axisLeft();
 
-                var j = 0;
+                var j = 0,
+                AllRect = [];
                 nested
                 .each(function(d1, nestedInd) {
                     
@@ -206,7 +206,7 @@ visitNotesApp.directive('heatMap', function($compile){
                                 //.domain([0, d3.max(totFreq)])
                                 //.range(['#ffffd9', '#081d58']); blue
                                 .range(['#ffffd9', '#ff0033']); //red
-                  
+                
                 nested.each(function(d1, nestedInd) {
 
                         var grps = Math.ceil(numMonths/groupMonths);
@@ -331,6 +331,14 @@ visitNotesApp.directive('heatMap', function($compile){
                                 	else
                                 		scope.searchInput += ", " + d.mentionText ;
                             	});
+                            })
+                            .on("click", function(d, i){
+                            	//console.log("mention clicked");
+                            	scope.$apply(function() {
+                            		scope.matchTerm = d.mentionText;
+                            		scope.filterFromDate = null;
+                            		scope.filterToDate = null;
+                            	});
                             });
                         
                         //console.log("heatRect data: " + JSON.stringify(DataRect));
@@ -446,7 +454,13 @@ visitNotesApp.directive('heatMap', function($compile){
             
                 var colors = [], element;
                 for (var c=0; c<5 ;c++){
-                    element = {"index": Math.round(d3.max(AllRect, function(d){ return d.totFreq;})*(c/4),0), "color": colorScale(Math.round(d3.max(AllRect, function(d){ return d.totFreq;})*(c/4)),0)};
+                	var indVal;
+                	if(AllRect.length == 0) 
+                		indVal = 0; 
+                	else 
+                		indVal = Math.round(d3.max(AllRect, function(d){ return d.totFreq;})*(c/4),0);
+                	
+                    element = {"index": indVal, "color": colorScale(indVal)};
                     colors.push(element);
                 } 
                 
@@ -488,7 +502,6 @@ visitNotesApp.directive('heatMap', function($compile){
                 var data1 = JSON.parse(JSON.stringify(origData));
                 var data2, data, termfound;
                 var toggleArray = [];
-                var AllRect = [];
 
                 //console.log("Updated min Date: " + minDate);
                 //console.log("Updated max Date: " + maxDate);
@@ -589,7 +602,8 @@ visitNotesApp.directive('heatMap', function($compile){
                     .domain([minDate, maxDate])
                     .range([0, width-termWidth*2]);
 
-                var j = 0;
+                var j = 0,
+                AllRect = [];
                 nested
                 .each(function(d1, nestedInd) {
 
@@ -682,7 +696,7 @@ visitNotesApp.directive('heatMap', function($compile){
                                 //.domain([0, d3.max(totFreq)])
                                 //.range(['#ffffd9', '#081d58']); blue
                                 .range(['#ffffd9', '#ff0033']); //red
-                    
+                 
                 nested
                     .each(function(d1, nestedInd) {
 
@@ -812,7 +826,15 @@ visitNotesApp.directive('heatMap', function($compile){
                                 	else
                                 		scope.searchInput += ", " + d.mentionText ;
                             	});
-                            });
+                            })
+                            .on("click", function(d, i){
+                            	//console.log("mention clicked");
+                            	scope.$apply(function() {
+                            		scope.matchTerm = d.mentionText;
+                            		scope.filterFromDate = null;
+                            		scope.filterToDate = null;
+                            	});
+                            });                            
 
                         d3.select(this).selectAll('.heatmap').remove();
                         
@@ -941,9 +963,16 @@ visitNotesApp.directive('heatMap', function($compile){
                 
                 var colors = [], element;
                  for (var c=0; c<5 ;c++){
-                     element = {"index": Math.round(d3.max(AllRect, function(d){ return d.totFreq;})*(c/4),0), "color": colorScale(Math.round(d3.max(AllRect, function(d){ return d.totFreq;})*(c/4)),0)};
+                	 var indVal;
+                 	 if(AllRect.length == 0) 
+                 		indVal = 0; 
+                 	 else 
+                 		indVal = Math.round(d3.max(AllRect, function(d){ return d.totFreq;})*(c/4),0);
+                 	
+                     element = {"index": indVal, "color": colorScale(indVal)};
                      colors.push(element);
-                 } 
+                     }
+                 
                  
                  //console.log("colors: " + JSON.stringify(colors));
 

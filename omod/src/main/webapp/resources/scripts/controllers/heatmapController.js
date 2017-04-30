@@ -70,7 +70,7 @@ visitNotesApp
 
 					function formatDate(date) {
 
-						console.log("date: " + date);
+						//console.log("date: " + date);
 						var day = date.getDate();
 						var month;
 						if (date.getMonth() < 9) {
@@ -254,8 +254,7 @@ visitNotesApp
 											v : "full"
 										},
 										function() {
-											//console.log("heatmap:" +
-											// JSON.stringify($scope.stms.results));
+											//console.log("heatmap:" + JSON.stringify($scope.stms.results));
 											$scope.val = $scope.stms.results;
 											$scope.visitNotes = populateVisitNoteList($scope.stms.results);
 											// console.log("visitNotes:" +
@@ -266,11 +265,15 @@ visitNotesApp
 										});
 					}
 
-					$scope.noteRendering = "Morbi libero urna, pretium sed arcu vitae, luctus semper sem. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque quam dui, congue id gravida quis, tempor sit amet justo. Aliquam blandit placerat nisi, in condimentum erat semper sed.Cras quam lorem, vestibulum nec mi elementum, pulvinar venenatis sapien. Suspendisse vitae nulla mattis, laoreet nibh ut, elementum mi. Nullam vestibulum mi arcu, nec mattis lorem facilisis eget. Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+					$scope.noteRendering = "";
 
 					function populateVisitNoteList(results) {
 
+						//console.log("results:" + JSON.stringify(results));
 						var Notes = [];
+						$timeout(function() {
+							$scope.noteRendering = "";
+						}, 0);
 						results
 								.forEach(function(result, i) {
 									result.dateList
