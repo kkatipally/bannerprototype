@@ -33,6 +33,8 @@ import org.openmrs.module.bannerprototype.SofaTextMentionConcept;
 import org.openmrs.module.bannerprototype.SofaTextMentionUI;
 import org.openmrs.module.bannerprototype.api.NLPService;
 import org.openmrs.module.bannerprototype.api.db.NLPServiceDAO;
+import org.openmrs.module.bannerprototype.wordcloud.Word;
+import org.openmrs.module.bannerprototype.wordcloud.WordCloud;
 
 public class HibernateNLPServiceDAO implements NLPServiceDAO {
 	
@@ -392,6 +394,26 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 			String typeMention = result[1].toString();
 			
 			String uuidDate = result[2].toString();
+			SofaDocument sd = getSofaDocumentByUuid(uuidDate);
+			
+			List<SofaTextMention> problemMentions = sd.getProblemMentions();
+			WordCloud problemCloud = new WordCloud();
+			for (SofaTextMention m : problemMentions)
+				problemCloud.addWord(m.getMentionText(), m.getMentionType());
+			List<Word> problemWordList = problemCloud.getAllWords();
+			
+			List<SofaTextMention> treatmentMentions = sd.getTreatmentMentions();
+			WordCloud treatmentCloud = new WordCloud();
+			for (SofaTextMention m : treatmentMentions)
+				treatmentCloud.addWord(m.getMentionText(), m.getMentionType());
+			List<Word> treatmentWordList = treatmentCloud.getAllWords();
+			
+			List<SofaTextMention> testMentions = sd.getTestMentions();
+			WordCloud testCloud = new WordCloud();
+			for (SofaTextMention m : testMentions)
+				testCloud.addWord(m.getMentionText(), m.getMentionType());
+			List<Word> testWordList = testCloud.getAllWords();
+			
 			Date dateCr = null;
 			try {
 				dateCr = new SimpleDateFormat("yyyy-MM-dd").parse(result[4].toString());
@@ -432,6 +454,9 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 			}
 			
 			SofaDocumentUI sdUI = new SofaDocumentUI(uuidDate, dateCr, provider, location, diagnosis);
+			sdUI.setProblemWordList(problemWordList);
+			sdUI.setTreatmentWordList(treatmentWordList);
+			sdUI.setTestWordList(testWordList);
 			
 			if ((index == 0) || !(prevStmUI.getMentionText().equals(textMention))) {
 				if (index > 0)

@@ -2,10 +2,11 @@ package org.openmrs.module.bannerprototype;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import org.openmrs.BaseOpenmrsData;
-import org.openmrs.Encounter;
 import org.openmrs.Patient;
+import org.openmrs.module.bannerprototype.wordcloud.Word;
 
 public class SofaDocumentUI extends BaseOpenmrsData implements Serializable {
 	
@@ -22,6 +23,12 @@ public class SofaDocumentUI extends BaseOpenmrsData implements Serializable {
 	private String provider;
 	
 	private String location;
+	
+	private List<Word> problemWordList;
+	
+	private List<Word> treatmentWordList;
+	
+	private List<Word> testWordList;
 	
 	/**
 	 * Default constructor
@@ -149,4 +156,27 @@ public class SofaDocumentUI extends BaseOpenmrsData implements Serializable {
 		this.mentionCount = mentionCount;
 	}
 	
+	public List<Word> getProblemWordList() {
+		return problemWordList;
+	}
+	
+	public void setProblemWordList(List<Word> problemWordList) {
+		this.problemWordList = problemWordList;
+	}
+	
+	public List<Word> getTreatmentWordList() {
+		return treatmentWordList;
+	}
+	
+	public void setTreatmentWordList(List<Word> treatmentWordList) {
+		this.treatmentWordList = treatmentWordList;
+	}
+	
+	public List<Word> getTestWordList() {
+		return testWordList;
+	}
+	
+	public void setTestWordList(List<Word> testWordList) {
+		this.testWordList = testWordList;
+	}
 }

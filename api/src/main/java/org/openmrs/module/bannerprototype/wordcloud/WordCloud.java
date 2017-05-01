@@ -27,7 +27,7 @@ public class WordCloud {
 	/**
 	 * get top n words, in shuffled order
 	 * 
-	 * @param top
+	 * @param n
 	 * @return
 	 */
 	public List<Word> getTopWordsShuffled(int n) {
@@ -56,5 +56,19 @@ public class WordCloud {
 			topList = wordlist.subList(0, top);
 		
 		return topList;
+	}
+	
+	/**
+	 * get all words
+	 * 
+	 * @return
+	 */
+	public List<Word> getAllWords() {
+		List<Word> wordlist = new ArrayList<Word>();
+		wordlist.addAll(words.values());
+		Collections.sort(wordlist);
+		Collections.reverse(wordlist);
+		
+		return wordlist;
 	}
 }

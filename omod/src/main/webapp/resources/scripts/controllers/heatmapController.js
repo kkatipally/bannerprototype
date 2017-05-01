@@ -25,7 +25,7 @@ visitNotesApp
 								$scope.finalSearchBarTerms
 										.push($scope.uniqueSearchBarTerms[i]);
 						}
-						
+
 						addBreadCrumb($scope.searchInput);
 
 						// console.log("Page 1 submitted with searchInput: " +
@@ -43,7 +43,8 @@ visitNotesApp
 											v : "full"
 										},
 										function() {
-											//console.log("heatmap:" + JSON.stringify($scope.stms.results));
+											// console.log("heatmap:" +
+											// JSON.stringify($scope.stms.results));
 											$scope.val = $scope.stms.results;
 											$scope.visitNotes = populateVisitNoteList($scope.stms.results);
 											// console.log("visitNotes:" +
@@ -70,7 +71,7 @@ visitNotesApp
 
 					function formatDate(date) {
 
-						//console.log("date: " + date);
+						// console.log("date: " + date);
 						var day = date.getDate();
 						var month;
 						if (date.getMonth() < 9) {
@@ -128,7 +129,7 @@ visitNotesApp
 					$scope.dateOptions1 = {
 						formatYear : 'yy',
 						minDate : $scope.minDate1, // min start date: 2 years
-													// ago from today
+						// ago from today
 						startingDay : 0
 					};
 
@@ -142,8 +143,8 @@ visitNotesApp
 							// 3 months
 							// ago from
 							// today
-							$scope.filterFromDate = $scope.startDate.name; 
-							$scope.filterToDate = $scope.endDate.name; 
+							$scope.filterFromDate = $scope.startDate.name;
+							$scope.filterToDate = $scope.endDate.name;
 							$scope.matchTerm = "";
 						}
 					});
@@ -155,8 +156,8 @@ visitNotesApp
 							// date:
 							// start
 							// date
-							$scope.filterFromDate = $scope.startDate.name; 
-							$scope.filterToDate = $scope.endDate.name; 
+							$scope.filterFromDate = $scope.startDate.name;
+							$scope.filterToDate = $scope.endDate.name;
 							$scope.matchTerm = "";
 						}
 					});
@@ -193,14 +194,14 @@ visitNotesApp
 						$timeout(function() {
 							$scope.resetMap = true;
 						}, 0);
-						//reset visit note list too
+						// reset visit note list too
 						$scope.filterFromDate = $scope.startDate.name;
 						$scope.filterToDate = $scope.endDate.name;
 						$scope.matchTerm = "";
 					};
 
-					$scope.filterFromDate = $scope.startDate.name; 
-					$scope.filterToDate = $scope.endDate.name; 
+					$scope.filterFromDate = $scope.startDate.name;
+					$scope.filterToDate = $scope.endDate.name;
 					$scope.matchTerm = "";
 
 					$scope.patient = getParameterByName('patientId');
@@ -210,7 +211,9 @@ visitNotesApp
 					}
 
 					$scope.searchInput = SearchFactory.getSearchTerms();
-					if ($scope.searchInput !== '') {
+					if ($scope.searchInput === '') {
+						$location.url('/view1');
+					} else {
 						$scope.searchBarTerms = $scope.searchInput.split(",");
 
 						$scope.uniqueSearchBarTerms = $scope.searchBarTerms
@@ -226,7 +229,7 @@ visitNotesApp
 						}
 
 						initiateBreadCrumb($scope.searchInput);
-						
+
 						$scope.stms = SofaTextMentionUIResources
 								.displayHeatMap(
 										{
@@ -237,7 +240,8 @@ visitNotesApp
 											v : "full"
 										},
 										function() {
-											//console.log("heatmap:" + JSON.stringify($scope.stms.results));
+											// console.log("heatmap:" +
+											// JSON.stringify($scope.stms.results));
 											$scope.val = $scope.stms.results;
 											$scope.visitNotes = populateVisitNoteList($scope.stms.results);
 											// console.log("visitNotes:" +
@@ -254,7 +258,8 @@ visitNotesApp
 											v : "full"
 										},
 										function() {
-											//console.log("heatmap:" + JSON.stringify($scope.stms.results));
+											// console.log("heatmap:" +
+											// JSON.stringify($scope.stms.results));
 											$scope.val = $scope.stms.results;
 											$scope.visitNotes = populateVisitNoteList($scope.stms.results);
 											// console.log("visitNotes:" +
@@ -286,6 +291,16 @@ visitNotesApp
 												note["diagnosis"] = date.diagnosis;
 												note["provider"] = date.provider;
 												note["location"] = date.location;
+												note["problemWordList"] = date.problemWordList.map(function(word) {
+												    return word.word;
+												});
+												note["treatmentWordList"] = date.treatmentWordList.map(function(word) {
+                                                	return word.word;
+                                                });
+                                                note["testWordList"] = date.testWordList.map(function(word) {
+                                                    return word.word;
+                                                });
+
 												Notes.push(note);
 												if ((i == 0) && (j == 0)) {
 													$scope.sofadocInit = SofaDocumentResource
@@ -295,14 +310,16 @@ visitNotesApp
 																		v : "full"
 																	},
 																	function() {
-																		$timeout(function() {
-																			$scope.noteRendering = $scope.sofadocInit.annotatedHTML;
-																		}, 0);
-																	 });
+																		$timeout(
+																				function() {
+																					$scope.noteRendering = $scope.sofadocInit.annotatedHTML;
+																				},
+																				0);
+																	});
 												}
 											});
 								});
-						//console.log("visit notes: " + JSON.stringify(Notes));
+						console.log("visit notes: " + JSON.stringify(Notes));
 						return Notes;
 					}
 
@@ -318,92 +335,117 @@ visitNotesApp
 						BreadcrumbFactory.setBreadCrumbs($scope.breadCrumbs);
 						$location.url('/view1');
 					};
-					
+
 					$scope.breadCrumbs = [];
-					if(BreadcrumbFactory.getBreadCrumbs() != "")
+					if (BreadcrumbFactory.getBreadCrumbs() != "")
 						$scope.breadCrumbs = BreadcrumbFactory.getBreadCrumbs();
-					
+
 					function initiateBreadCrumb(searchInput) {
 						$scope.breadCrumbs = [];
-						if(BreadcrumbFactory.getBreadCrumbs() != "")
-							$scope.breadCrumbs = BreadcrumbFactory.getBreadCrumbs();
-						//finSearchTerms.forEach(function(e){
-							$timeout(function() {
-								$scope.breadCrumbs.push({"word": searchInput, "startDate": $scope.startDate.name, "endDate": $scope.endDate.name});
-							}, 0);
-						//});
-					};
-					
+						if (BreadcrumbFactory.getBreadCrumbs() != "")
+							$scope.breadCrumbs = BreadcrumbFactory
+									.getBreadCrumbs();
+						// finSearchTerms.forEach(function(e){
+						$timeout(function() {
+							$scope.breadCrumbs.push({
+								"word" : searchInput,
+								"startDate" : $scope.startDate.name,
+								"endDate" : $scope.endDate.name
+							});
+						}, 0);
+						// });
+					}
+					;
+
 					function addBreadCrumb(searchInput) {
-						//finSearchTerms.forEach(function(e){
-							$timeout(function() {
-								$scope.breadCrumbs.push({"word": searchInput, "startDate": $scope.startDate.name, "endDate": $scope.endDate.name});
-							}, 0);
-						//});
-					};
-					
-					$scope.clearHistory = function(term){ 
+						// finSearchTerms.forEach(function(e){
+						$timeout(function() {
+							$scope.breadCrumbs.push({
+								"word" : searchInput,
+								"startDate" : $scope.startDate.name,
+								"endDate" : $scope.endDate.name
+							});
+						}, 0);
+						// });
+					}
+					;
+
+					$scope.clearHistory = function(term) {
 						$scope.breadCrumbs = [];
 					}
-					
-					$scope.clickBreadCrumb = function(term){
-						
-						$timeout(function() {
-							$scope.startDate = {"name" : term.startDate}
-							$scope.endDate= {"name" :  term.endDate}
-							$scope.searchInput = term.word;
-												
-						$scope.searchBarTerms = $scope.searchInput.split(",");
-						$scope.uniqueSearchBarTerms = $scope.searchBarTerms
-								.filter(onlyUnique);
-						$scope.finalSearchBarTerms = [];
 
-						for (var i = 0; i < $scope.uniqueSearchBarTerms.length; i++) {
-							$scope.uniqueSearchBarTerms[i] = $scope.uniqueSearchBarTerms[i]
-									.trim();
-							if ($scope.uniqueSearchBarTerms[i] !== "")
-								$scope.finalSearchBarTerms
-										.push($scope.uniqueSearchBarTerms[i]);
-						}
-							
-						$scope.stms = SofaTextMentionUIResources
-						.displayHeatMap(
-								{
-									patient : $scope.patient,
-									startDate : formatDate(term.startDate),
-									endDate : formatDate(term.endDate),
-									searchTerms : $scope.finalSearchBarTerms,
-									v : "full"
-								},
+					$scope.clickBreadCrumb = function(term) {
+
+						$timeout(
 								function() {
-									//console.log("heatmap:" + JSON.stringify($scope.stms.results));
-									$scope.val = $scope.stms.results;
-									$scope.visitNotes = populateVisitNoteList($scope.stms.results);
-									// console.log("visitNotes:" +
-									// JSON.stringify($scope.visitNotes));
-									// resetting visit note list filter
-									// parameters
-									$scope.filterFromDate = $scope.startDate.name;
-									$scope.filterToDate = $scope.endDate.name;
-									$scope.matchTerm = "";
-								});
-						}, 0);
+									$scope.startDate = {
+										"name" : term.startDate
+									}
+									$scope.endDate = {
+										"name" : term.endDate
+									}
+									$scope.searchInput = term.word;
+
+									$scope.searchBarTerms = $scope.searchInput
+											.split(",");
+									$scope.uniqueSearchBarTerms = $scope.searchBarTerms
+											.filter(onlyUnique);
+									$scope.finalSearchBarTerms = [];
+
+									for (var i = 0; i < $scope.uniqueSearchBarTerms.length; i++) {
+										$scope.uniqueSearchBarTerms[i] = $scope.uniqueSearchBarTerms[i]
+												.trim();
+										if ($scope.uniqueSearchBarTerms[i] !== "")
+											$scope.finalSearchBarTerms
+													.push($scope.uniqueSearchBarTerms[i]);
+									}
+
+									$scope.stms = SofaTextMentionUIResources
+											.displayHeatMap(
+													{
+														patient : $scope.patient,
+														startDate : formatDate(term.startDate),
+														endDate : formatDate(term.endDate),
+														searchTerms : $scope.finalSearchBarTerms,
+														v : "full"
+													},
+													function() {
+														// console.log("heatmap:"
+														// +
+														// JSON.stringify($scope.stms.results));
+														$scope.val = $scope.stms.results;
+														$scope.visitNotes = populateVisitNoteList($scope.stms.results);
+														// console.log("visitNotes:"
+														// +
+														// JSON.stringify($scope.visitNotes));
+														// resetting visit note
+														// list filter
+														// parameters
+														$scope.filterFromDate = $scope.startDate.name;
+														$scope.filterToDate = $scope.endDate.name;
+														$scope.matchTerm = "";
+													});
+								}, 0);
 					};
 
 					// visit note rendering upon click in the visit list
 					$scope.selectNote = function() {
 						$scope.selectedNote = this.visitNote;
 
-						$scope.sofadoc = SofaDocumentResource.get({
-							uuid : $scope.selectedNote.uuid,
-							v : "full"
-						}, function() {
-							// console.log("sofadoc:" +
-							// JSON.stringify($scope.sofadoc.text));
-							$timeout(function() {
-								$scope.noteRendering = $scope.sofadoc.annotatedHTML;
-							}, 0);
-						});
+						$scope.sofadoc = SofaDocumentResource
+								.get(
+										{
+											uuid : $scope.selectedNote.uuid,
+											v : "full"
+										},
+										function() {
+											// console.log("sofadoc:" +
+											// JSON.stringify($scope.sofadoc.text));
+											$timeout(
+													function() {
+														$scope.noteRendering = $scope.sofadoc.annotatedHTML;
+													}, 0);
+										});
 					}
 
 					// pagination in visit note list

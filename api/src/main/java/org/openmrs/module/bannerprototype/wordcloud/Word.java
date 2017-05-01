@@ -88,4 +88,13 @@ public class Word extends BaseOpenmrsData implements Serializable, Comparable {
 		
 	}
 	
+	/**
+	 * Added to handle ERROR - BaseRestController.handleException(106) Could not write JSON:
+	 * Conflicting getter definitions for property "voided"
+	 */
+	@Override
+	public Boolean isVoided() {
+		return super.isVoided();
+	}
+	
 }
