@@ -458,7 +458,7 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 			sb.append(" and sd.date_created <= :endDate ");
 		}
 		sb.append(" and stm.mention_text in :searchTerms");
-		sb.append(" ORDER by stm.mention_text");
+		sb.append(" ORDER by stm.mention_text, sd.date_created");
 		
 		String sqlQuery = sb.toString();
 		
