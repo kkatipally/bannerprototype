@@ -12,7 +12,31 @@ visitNotesApp.directive('visitDates', function($compile){
         	sliderMaxDate: '=sliderMaxDate'
         },
         link: function(scope, element, attrs, controller) {
-        	
+
+        	function formatDateForToolTip(date) {
+
+                  //console.log("date: " + date);
+                  var day = date.getDate();
+                  var month=new Array();
+                    month[0]="Jan";
+                    month[1]="Feb";
+                    month[2]="Mar";
+                    month[3]="Apr";
+                    month[4]="May";
+                    month[5]="Jun";
+                    month[6]="Jul";
+                    month[7]="Aug";
+                    month[8]="Sep";
+                    month[9]="Oct";
+                    month[10]="Nov";
+                    month[11]="Dec";
+
+                  var mon = month[date.getMonth()];
+                  var year = date.getFullYear();
+
+                  return day+ '-' + mon + '-' + year;
+            }
+
         	function buildviz(data, minDate, maxDate){
         		
         		var width = 900,
@@ -61,7 +85,7 @@ visitNotesApp.directive('visitDates', function($compile){
                      tooltip.transition()
                         .duration(500)
                         .style("opacity", .9);
-                     tooltip.html("<strong>Date: " + new Date(d.dateCreated) + "</strong>")
+                     tooltip.html("<strong>Date: " + formatDateForToolTip(new Date(d.dateCreated)) + "</strong>")
                         .style("left", (d3.event.pageX) + "px")
                         .style("top", (d3.event.pageY - 28) + "px");
                 })

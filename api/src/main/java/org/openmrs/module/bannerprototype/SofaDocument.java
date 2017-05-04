@@ -165,9 +165,11 @@ public class SofaDocument extends BaseOpenmrsData implements Serializable {
 		List<SofaText> sortedSofaTexts = new ArrayList<SofaText>(sofaText);
 		Collections.sort(sortedSofaTexts);
 		
+		int startIndex = 0;
 		for (SofaText st : sortedSofaTexts) {
 			
-			out.append(st.getAnnotatedHTML());
+			out.append(st.getAnnotatedHTML(startIndex));
+			startIndex += st.getSofaTextMention().size();
 		}
 		
 		return new String(out);

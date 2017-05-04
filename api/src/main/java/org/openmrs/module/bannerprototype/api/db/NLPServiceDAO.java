@@ -9,6 +9,7 @@ import org.hibernate.SessionFactory;
 import org.openmrs.Encounter;
 import org.openmrs.Patient;
 import org.openmrs.module.bannerprototype.SofaDocument;
+import org.openmrs.module.bannerprototype.SofaDocumentUI;
 import org.openmrs.module.bannerprototype.SofaText;
 import org.openmrs.module.bannerprototype.SofaTextMention;
 import org.openmrs.module.bannerprototype.SofaTextMentionConcept;
@@ -46,9 +47,14 @@ public interface NLPServiceDAO {
 	
 	public SofaTextMentionUI getSofaTextMentionUIByUuid(String uuid);
 	
+	public SofaDocumentUI getSofaDocumentUIBySofaDocUuid(String sofaDocUuid);
+	
 	public Set<SofaTextMentionUI> getSofaTextMentionUIBySofaDocUuid(String sofaDocUuid);
 	
 	public Set<SofaTextMentionUI> getSofaTextMentionUIByConstraints(Patient patient, Date startDate, Date endDate,
+	        String[] searchTerms);
+	
+	public List<SofaDocumentUI> getSofaDocumentUIByConstraints(Patient patient, Date startDate, Date endDate,
 	        String[] searchTerms);
 	
 	public SessionFactory getSessionFactory();

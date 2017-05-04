@@ -1,118 +1,214 @@
 <div ng-controller="heatmapController">
 
-<ol class="breadcrumb">
-    <li class="breadcrumb-item"><a>Search History</a></li>
-    <li class="breadcrumb-item" ng-repeat="term in breadCrumbs">
-    	<a ngHref="#" ng-click="clickBreadCrumb(term)">{{term.word}}</a>
-	</li>
-</ol>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a>Search History</a></li>
+        <li class="breadcrumb-item" ng-repeat="term in breadCrumbs">
+            <a ngHref="#" ng-click="clickBreadCrumb(term)">{{term.word}}</a>
+        </li>
+    </ol>
 
-<div class="container-fluid">
-    <div class="row">
-<button id="clearHistory" type="button" class="btn btn-secondary" ng-click="clearHistory()">Clear History
-</button>
-<button id="backButton" type="button" class="btn btn-secondary" ng-click="backToSearchPage()">Back to Search Page
-</button>        
-</div>
-
-    <div class="row">
-        <form class="searchtop" ng-submit="page2Submit(searchInput)">
-        <!-- <div class="form-group"> -->
-        		<div class="col-md-6 pad">
-            		<input type="text" class="form-control" ng-model="searchInput" placeholder="Search">
-        		</div>
-        		<div class="col-md-2 pad">
-            		<input type="submit" class="form-control">
-            	</div>
-        <!--<button type="submit" class="btn btn-default">
-            <span class="glyphicon glyphicon-search"></span> Submit
-        </button>-->
-    	</form>
-    </div>
-    <div id="heatmapsection">
+    <div class="container-fluid">
         <div class="row">
-            <div class="col-xs-1"><span class="label label-default">Start Date:</span></div>
+            <button id="clearHistory" type="button" class="btn btn-secondary inner" ng-click="clearHistory()">Clear History
+            </button>
+            <form class="searchtop inner" ng-submit="page2Submit(searchInput)">
+                <div class="col-xs-10 pad">
+                    <input type="text" class="form-control nomargin" ng-model="searchInput" placeholder="Search">
+                </div>
+                <div class="col-xs-2 pad">
+                    <input type="submit" class="form-control nomargin">
+                </div>
+            </form>
+            <button id="backButton" type="button" class="btn btn-secondary inner" ng-click="backToSearchPage()">Back
+            </button>
+        </div>
+
+        <div class="row dates">
+            <div class="col-xs-1"><span class="label label-default">Start Date</span></div>
             <div class="col-xs-3">
                 <p class="input-group">
-                    <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="startDate.name" ng-model-options="{timezone: 'utc'}"
+                    <input type="text" class="form-control" uib-datepicker-popup="{{format}}"
+                           ng-model="startDate.name" ng-model-options="{timezone: 'utc'}"
                            is-open="popup1.opened" datepicker-options="dateOptions1" close-text="Close"/>
                     <span class="input-group-btn">
-            <button type="button" class="btn btn-default" ng-click="open1()"><i
-                    class="glyphicon glyphicon-calendar"></i></button>
-          </span>
+                            <button type="button" class="btn btn-default" ng-click="open1()"><i
+                                    class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
                 </p>
             </div>
 
-            <div class="col-xs-1"><span class="label label-default">End Date:</span></div>
+            <div class="col-xs-1"><span class="label label-default">End Date</span></div>
             <div class="col-xs-3">
                 <p class="input-group">
-                    <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="endDate.name" ng-model-options="{timezone: 'utc'}"
+                    <input type="text" class="form-control" uib-datepicker-popup="{{format}}"
+                           ng-model="endDate.name" ng-model-options="{timezone: 'utc'}"
                            is-open="popup2.opened" datepicker-options="dateOptions2" close-text="Close"/>
                     <span class="input-group-btn">
-            <button type="button" class="btn btn-default" ng-click="open2()"><i
-                    class="glyphicon glyphicon-calendar"></i></button>
-          </span>
+                            <button type="button" class="btn btn-default" ng-click="open2()"><i
+                                    class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
                 </p>
             </div>
-             <button id="resetHeatMap" type="button" class="btn btn-secondary col-xs-2" ng-click="resetHeatMap()">Reset</button>
-            
+            <span id=report-problem>
+                <a href="mailto:$adminEmail?subject=Visit Notes Analysis Module Correction&body=[no document selected]">E-mail the administrator</a>
+	        </span>
         </div>
 
-        <div >
+        <div id="heatmapsection">
+            <div class="row">
+                <!--<div class="col-xs-1"><span class="label label-default">Start Date:</span></div>
+                <div class="col-xs-3">
+                    <p class="input-group">
+                        <input type="text" class="form-control" uib-datepicker-popup="{{format}}"
+                               ng-model="startDate.name" ng-model-options="{timezone: 'utc'}"
+                               is-open="popup1.opened" datepicker-options="dateOptions1" close-text="Close"/>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="open1()"><i
+                    class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </p>
+                </div>
 
-            <heat-map id="heatmapdir" val="val" start-date="startDate" end-date="endDate" 
-            filter-from-date="filterFromDate" filter-to-date="filterToDate" match-term="matchTerm"
-            search-input="searchInput" reset-map="resetMap">
-            </heat-map>
+                <div class="col-xs-1"><span class="label label-default">End Date:</span></div>
+                <div class="col-xs-3">
+                    <p class="input-group">
+                        <input type="text" class="form-control" uib-datepicker-popup="{{format}}"
+                               ng-model="endDate.name" ng-model-options="{timezone: 'utc'}"
+                               is-open="popup2.opened" datepicker-options="dateOptions2" close-text="Close"/>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="open2()"><i
+                    class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </p>
+                </div>-->
+                <button id="resetHeatMap" type="button" class="btn btn-secondary col-xs-1" ng-click="resetHeatMap()">
+                    Reset
+                </button>
+
+            </div>
+
+            <div>
+
+                <heat-map id="heatmapdir" val="val" start-date="startDate" end-date="endDate"
+                          filter-from-date="filterFromDate" filter-to-date="filterToDate" match-term="matchTerm"
+                          search-input="searchInput" reset-map="resetMap" scroll-to-list="scrollToList"
+                          visit-list-input="visitListInput">
+                </heat-map>
+            </div>
+        </div>
+
+        <div id="visit-note" class="row">
+            <div id="visit-note-list" class="col-xs-6">
+                <h6>Visit Note List</h6>
+                <form>
+                    <div class="col-xs-8">
+                        <input type="text" class="form-control visitListInput" ng-model="visitListInput"
+                               placeholder="Filter">
+                    </div>
+                    <button id="resetVisitList" type="button" class="btn btn-secondary col-xs-2"
+                            ng-click="resetVisitList()">Reset
+                    </button>
+                </form>
+                <h6 class="text"> Current filters:  {{filterFromDate | date}}  {{filterToDate | date}}  {{matchTerm}}</h6>
+                <table class="table table-bordered table-hover table-sm">
+                    <thead class="thead-default">
+                    <tr>
+                        <th>Date</th>
+                        <th>Diagnosis</th>
+                        <th>Provider</th>
+                        <th>Location</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="visitNote in filteredVisitNotes = (visitNotes | orderBy: 'date' | dateRangeAndTerm: filterFromDate : filterToDate : matchTerm | filter:visitListInput | uniqueNotes) | limitTo:5:5*(currentPage-1)"
+                        ng-click="selectNote()">
+                        <td>{{visitNote.date | date:'mediumDate'}}</td>
+                        <td>{{visitNote.diagnosis}}</td>
+                        <td>{{visitNote.provider}}</td>
+                        <td>{{visitNote.location}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div uib-pagination
+                     boundary-links="true"
+                     direction-links="true"
+                     rotate="false"
+                     total-items="filteredVisitNotes.length"
+                     ng-model="currentPage"
+                     class="pagination-sm pag"
+                     items-per-page="5"
+                     first-text="<<"
+                     previous-text="<"
+                     next-text=">"
+                     last-text=">>">
+                </div>
+            </div>
+
+            <div id="visit-note-rendering" class="col-xs-6">
+                <h6>Visit Note - Selected Date: {{selectedNoteDate | date}}</h6>
+                <form ng-submit="findMentionSubmit()">
+                    <div class="col-xs-8">
+                        <input type="text" class="form-control" ng-model="findMention"
+                               placeholder="Search">
+                    </div>
+                    <div class="col-xs-4">
+                        <input type="submit" class="form-control">
+                    </div>
+                </form>
+
+                <uib-tabset active="activeJustified" justified="true" class="tabHeading">
+                    <uib-tab index="0" heading="Note">
+                        <div class="render" id="entireNote">
+                            <render-note display="noteRendering"/>
+                        </div>
+                    </uib-tab>
+                    <uib-tab index="1" heading="Problems">
+                    <div class="render" data-i2="css:[{fontSize:'12px'},{fontSize:'30px'}]">
+
+                        <!--<render-note id="renderVisitNote" display="problemCloud">-->
+			            <span ng-repeat="term in problemCloud">
+
+			                <a ngHref="#" ng-click="addToFind(term.word)">
+			                    <span data-i2="rate:{{term.count}}"
+                                    ng-class="{'cloud-problem': term.className === 'problem', 'cloud-treatment': term.className === 'treatment','cloud-test': term.className === 'test'}">
+			                    {{term.word}}
+    		                    </span>
+    		                </a>
+			            </span>
+                        <!--</render-note>-->
+                    </div>
+                    </uib-tab>
+                    <uib-tab index="2" heading="Treatments">
+                    <div class="render" data-i2="css:[{fontSize:'12px'},{fontSize:'30px'}]">
+
+			            <span ng-repeat="term in treatmentCloud">
+
+			                <a ngHref="#" ng-click="addToFind(term.word)">
+			                    <span data-i2="rate:{{term.count}}"
+                                      ng-class="{'cloud-problem': term.className === 'problem', 'cloud-treatment': term.className === 'treatment','cloud-test': term.className === 'test'}">
+			                    {{term.word}}
+    		                    </span>
+    		                </a>
+			            </span>
+                    </div>
+                    </uib-tab>
+                    <uib-tab index="3" heading="Tests">
+                        <div class="render" data-i2="css:[{fontSize:'12px'},{fontSize:'30px'}]">
+
+			            <span ng-repeat="term in testCloud">
+
+			                <a ngHref="#" ng-click="addToFind(term.word)">
+			                    <span data-i2="rate:{{term.count}}"
+                                      ng-class="{'cloud-problem': term.className === 'problem', 'cloud-treatment': term.className === 'treatment','cloud-test': term.className === 'test'}">
+			                    {{term.word}}
+    		                    </span>
+    		                </a>
+			            </span>
+                        </div>
+                    </uib-tab>
+                </uib-tabset>
+
+            </div>
         </div>
     </div>
-
-    <div id="visit-note" class="row">
-        <div id="visit-note-list" class="col-xs-6">
-            <h6>Visit Note List</h6>
-            <form>
-        				<div class="col-xs-6">
-            				<input type="text" class="form-control visitListInput" ng-model="visitListInput" placeholder="Search">
-        				</div>
-        				<button id="resetVisitList" type="button" class="btn btn-secondary col-xs-2" ng-click="resetVisitList()">Reset</button>
-    		</form>
-            <table class="table table-bordered table-hover table-sm">
-                <thead class="thead-default">
-                <tr>
-                    <th>Date</th>
-                    <th>Diagnosis</th>
-                    <th>Provider</th>
-                    <th>Location</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="visitNote in filteredVisitNotes = (visitNotes | orderBy: 'date' | dateRangeAndTerm: filterFromDate : filterToDate : matchTerm | filter:visitListInput | uniqueNotes) | limitTo:2:2*(currentPage-1)" ng-click="selectNote()">
-                    <td>{{visitNote.date | date:'mediumDate'}}</td>
-                    <td>{{visitNote.diagnosis}}</td>
-                    <td>{{visitNote.provider}}</td>
-                    <td>{{visitNote.location}}</td>
-                </tr>
-                </tbody>
-            </table>
-            <div uib-pagination 
-	  			boundary-links="true"
-                direction-links="true"
-                rotate="false"
-                total-items="filteredVisitNotes.length"
-                ng-model="currentPage"
-                class="pagination-sm pag"
-                items-per-page="2"
-           		first-text="<<"
-                previous-text="<"
-                next-text=">"
-                last-text=">>">
-    		</div>
-        </div>
-
-        <div id="visit-note-rendering" class="col-xs-6">
-            <h6>Visit Note Rendering</h6>
-           		<render-note id="renderVisitNote" note-rendering="noteRendering"/>
-        </div>
-    </div>
-</div>
 </div>

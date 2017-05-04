@@ -4,27 +4,27 @@ visitNotesApp.directive('renderNote', function($compile){
 
     return {
         restrict: 'E',
-        templateUrl: '/' + OPENMRS_CONTEXT_PATH + '/ms/uiframework/resource/bannerprototype/partials/render.html',
+        //templateUrl: '/' + OPENMRS_CONTEXT_PATH + '/ms/uiframework/resource/bannerprototype/partials/render.html',
         scope: {
-        	noteRendering: '=noteRendering'
+        	display: '=display'
         },
         link: function(scope, element, attrs, controller) {
         	
-        	scope.$watch('noteRendering',
+        	scope.$watch('display',
                     function(newVal, oldVal) {
         		
         		/*if (!newVal) {
                     return;
                 }*/
-        	   var container = $('.renderData');
-            
-        		container.html(newVal);
-        	   
-        		//element.html(newVal);
+
+        	   element.html(newVal);
                //element.html(newVal).show();
                //$compile(element.contents())(scope);
-        	   
-        	   scope.$broadcast('rebuild:me');
+
+        	   /*var container = $('.renderData');
+
+               container.html(newVal);
+        	   scope.$broadcast('rebuild:me');*/
         	});
         }
     }

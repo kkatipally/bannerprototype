@@ -5,7 +5,6 @@ visitNotesApp.config(function ($httpProvider) {
 });
 
 visitNotesApp.factory('SofaDocumentResource', function($resource) {
-    //return $resource("/openmrs/ws/rest/v1/bannerprototype/sofadocument/:uuid");
 	return $resource("/" + OPENMRS_CONTEXT_PATH  + "/ws/rest/v1/bannerprototype/sofadocument/:uuid");
 });
 
@@ -19,6 +18,25 @@ visitNotesApp.factory('SofaDocumentResources', function($resource) {
 			}
 		}
 	});
+});
+
+visitNotesApp.factory('SofaDocumentUIResource', function($resource) {
+	return $resource("/" + OPENMRS_CONTEXT_PATH  + "/ws/rest/v1/bannerprototype/sofadocumentui/:uuid");
+});
+
+visitNotesApp.factory('SofaDocumentUIResources', function($resource) {
+    return $resource("/" + OPENMRS_CONTEXT_PATH  + "/ws/rest/v1/bannerprototype/sofadocumentui", {},
+		{
+			displayNoteList : {
+				method : 'GET',
+				params : {
+					'patient' : "@patient",
+					'startDate' : "@startDate",
+					'endDate' : "@endDate",
+					'searchTerms' : "@searchTerms"
+				}
+			}
+		});
 });
 
 visitNotesApp.factory('SofaTextMentionResource', function($resource) {
@@ -53,12 +71,13 @@ visitNotesApp.factory('SofaTextMentionUIResources', function($resource) {
 					'endDate' : "@endDate",
 					'searchTerms' : "@searchTerms"
 				}
-			},
+			}/*,
     		displayHeatMapForVisit : {
     			method : 'GET',
     			params : {
     				'sofaDocUuid' : "@sofaDocUuid"
     			}
-    		}
+    		}*/
 		});
 });
+

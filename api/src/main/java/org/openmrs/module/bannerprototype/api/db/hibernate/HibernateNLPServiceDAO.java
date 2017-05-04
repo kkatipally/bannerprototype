@@ -244,12 +244,99 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 		dateList.add(sdUI);
 		
 		//String uuidMention = result[0].toString();
-		String textMention = result[1].toString();
+		String textMention = result[1].toString().toLowerCase();
 		String typeMention = result[2].toString();
 		SofaTextMentionUI stmUI = new SofaTextMentionUI(/*uuidMention, */textMention, typeMention, dateList);
 		
 		return stmUI;
 		
+	}
+	
+	public SofaDocumentUI getSofaDocumentUIBySofaDocUuid(String sofaDocUuid) {
+		
+		StringBuffer sb = new StringBuffer();
+		
+		sb.append("select sd.uuid as dateUuid, sd.patient_id as patientId, ");
+		sb.append(" sd.date_created as dateCreated, sd.encounter_id as encounterId");
+		sb.append(" from sofa_document sd");
+		sb.append(" WHERE sd.uuid = :sofaDocUuid ");
+		
+		String sqlQuery = sb.toString();
+		
+		Object[] result = (Object[]) sessionFactory.getCurrentSession().createSQLQuery(sqlQuery)
+		        .addScalar("dateUuid", new StringType()).addScalar("patientId", new IntegerType())
+		        .addScalar("dateCreated", new DateType()).addScalar("encounterId", new IntegerType())
+		        .setParameter("sofaDocUuid", sofaDocUuid).uniqueResult();
+		
+		SofaDocumentUI sdUI = null;
+		
+		String uuidDate = result[0].toString();
+		SofaDocument sd = getSofaDocumentByUuid(uuidDate);
+		
+		List<SofaTextMention> problemMentions = sd.getProblemMentions();
+		WordCloud problemCloud = new WordCloud();
+		for (SofaTextMention m : problemMentions) {
+			problemCloud.addWord(m.getMentionText().toLowerCase(), m.getMentionType());
+		}
+		List<Word> problemWordList = problemCloud.getAllWords();
+		
+		List<SofaTextMention> treatmentMentions = sd.getTreatmentMentions();
+		WordCloud treatmentCloud = new WordCloud();
+		for (SofaTextMention m : treatmentMentions) {
+			treatmentCloud.addWord(m.getMentionText().toLowerCase(), m.getMentionType());
+		}
+		List<Word> treatmentWordList = treatmentCloud.getAllWords();
+		
+		List<SofaTextMention> testMentions = sd.getTestMentions();
+		WordCloud testCloud = new WordCloud();
+		for (SofaTextMention m : testMentions) {
+			testCloud.addWord(m.getMentionText().toLowerCase(), m.getMentionType());
+		}
+		List<Word> testWordList = testCloud.getAllWords();
+		
+		Date dateCr = null;
+		try {
+			dateCr = new SimpleDateFormat("yyyy-MM-dd").parse(result[2].toString());
+		}
+		catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String provider = "";
+		String location = "";
+		String diagnosis = "";
+		if (result[3] != null) {
+			int encounterID = (Integer) result[3];
+			Encounter e = Context.getEncounterService().getEncounter(encounterID);
+			provider = e.getProvider().getGivenName() + " " + e.getProvider().getFamilyName();
+			location = e.getLocation().getName();
+			Set<Obs> obs = e.getAllObs();
+			
+			Concept c1 = Context.getConceptService().getConcept(1284); //coded diagnosis
+			Concept c2 = Context.getConceptService().getConcept(161602); //non coded diagnosis
+			
+			for (Obs o : obs) {
+				Concept obs_concept = o.getConcept();
+				
+				//if the concept associated with the observation is a diagnosis Concept, proceed
+				if ((obs_concept.equals(c2)) && (!o.getValueText().equals(""))) {
+					// extract diagnosis
+					diagnosis = o.getValueText();
+				}
+				if (obs_concept.equals(c1)) {
+					Concept valueCoded = o.getValueCoded();
+					ConceptName valueCodedName = o.getValueCodedName();
+					diagnosis = valueCodedName.toString();
+				}
+			}
+		}
+		
+		sdUI = new SofaDocumentUI(uuidDate, dateCr, provider, location, diagnosis);
+		sdUI.setProblemWordList(problemWordList);
+		sdUI.setTreatmentWordList(treatmentWordList);
+		sdUI.setTestWordList(testWordList);
+		
+		return sdUI;
 	}
 	
 	public Set<SofaTextMentionUI> getSofaTextMentionUIBySofaDocUuid(String sofaDocUuid) {
@@ -285,11 +372,12 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 		for (Object obj : results) {
 			
 			Object[] result = (Object[]) obj;
-			String textMention = result[0].toString();
+			String textMention = result[0].toString().toLowerCase();
 			String typeMention = result[1].toString();
 			
 			if (index == 0) {
 				String uuidDate = result[2].toString();
+				
 				Date dateCr = null;
 				try {
 					dateCr = new SimpleDateFormat("yyyy-MM-dd").parse(result[4].toString());
@@ -390,29 +478,10 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 		for (Object obj : results) {
 			
 			Object[] result = (Object[]) obj;
-			String textMention = result[0].toString();
+			String textMention = result[0].toString().toLowerCase();
 			String typeMention = result[1].toString();
 			
 			String uuidDate = result[2].toString();
-			SofaDocument sd = getSofaDocumentByUuid(uuidDate);
-			
-			List<SofaTextMention> problemMentions = sd.getProblemMentions();
-			WordCloud problemCloud = new WordCloud();
-			for (SofaTextMention m : problemMentions)
-				problemCloud.addWord(m.getMentionText(), m.getMentionType());
-			List<Word> problemWordList = problemCloud.getAllWords();
-			
-			List<SofaTextMention> treatmentMentions = sd.getTreatmentMentions();
-			WordCloud treatmentCloud = new WordCloud();
-			for (SofaTextMention m : treatmentMentions)
-				treatmentCloud.addWord(m.getMentionText(), m.getMentionType());
-			List<Word> treatmentWordList = treatmentCloud.getAllWords();
-			
-			List<SofaTextMention> testMentions = sd.getTestMentions();
-			WordCloud testCloud = new WordCloud();
-			for (SofaTextMention m : testMentions)
-				testCloud.addWord(m.getMentionText(), m.getMentionType());
-			List<Word> testWordList = testCloud.getAllWords();
 			
 			Date dateCr = null;
 			try {
@@ -454,9 +523,6 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 			}
 			
 			SofaDocumentUI sdUI = new SofaDocumentUI(uuidDate, dateCr, provider, location, diagnosis);
-			sdUI.setProblemWordList(problemWordList);
-			sdUI.setTreatmentWordList(treatmentWordList);
-			sdUI.setTestWordList(testWordList);
 			
 			if ((index == 0) || !(prevStmUI.getMentionText().equals(textMention))) {
 				if (index > 0)
@@ -475,6 +541,117 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 		stmUISet.add(prevStmUI);
 		
 		return stmUISet;
+	}
+	
+	public List<SofaDocumentUI> getSofaDocumentUIByConstraints(Patient patient, Date startDate, Date endDate,
+	        String[] searchTerms) {
+		
+		StringBuffer sb = new StringBuffer();
+		
+		sb.append("select distinct sd.uuid as dateUuid, sd.patient_id as patientId,");
+		sb.append(" sd.date_created as dateCreated, sd.encounter_id as encounterId");
+		sb.append(" from sofatext_mention stm");
+		sb.append(" INNER JOIN sofatext st");
+		sb.append(" ON stm.sofatext_id = st.sofatext_id");
+		sb.append(" INNER JOIN sofa_document sd");
+		sb.append(" ON st.sofa_document_id = sd.sofa_document_id");
+		sb.append(" WHERE sd.patient_id = :patient ");
+		if (startDate != null) {
+			sb.append(" and sd.date_created >= :startDate ");
+		}
+		if (endDate != null) {
+			sb.append(" and sd.date_created <= :endDate ");
+		}
+		sb.append(" and stm.mention_text in :searchTerms");
+		sb.append(" ORDER by sd.date_created");
+		
+		String sqlQuery = sb.toString();
+		
+		Query query = sessionFactory.getCurrentSession().createSQLQuery(sqlQuery).addScalar("dateUuid", new StringType())
+		        .addScalar("patientId", new IntegerType()).addScalar("dateCreated", new DateType())
+		        .addScalar("encounterId", new IntegerType()).setParameter("startDate", startDate)
+		        .setParameter("endDate", endDate).setParameter("patient", patient);
+		
+		query.setParameterList("searchTerms", searchTerms);
+		
+		List results = query.list();
+		
+		List<SofaDocumentUI> dateList = new ArrayList<SofaDocumentUI>();
+		
+		for (Object obj : results) {
+			
+			Object[] result = (Object[]) obj;
+			
+			String uuidDate = result[0].toString();
+			SofaDocument sd = getSofaDocumentByUuid(uuidDate);
+			
+			List<SofaTextMention> problemMentions = sd.getProblemMentions();
+			WordCloud problemCloud = new WordCloud();
+			for (SofaTextMention m : problemMentions)
+				problemCloud.addWord(m.getMentionText().toLowerCase(), m.getMentionType());
+			List<Word> problemWordList = problemCloud.getAllWords();
+			
+			List<SofaTextMention> treatmentMentions = sd.getTreatmentMentions();
+			WordCloud treatmentCloud = new WordCloud();
+			for (SofaTextMention m : treatmentMentions)
+				treatmentCloud.addWord(m.getMentionText().toLowerCase(), m.getMentionType());
+			List<Word> treatmentWordList = treatmentCloud.getAllWords();
+			
+			List<SofaTextMention> testMentions = sd.getTestMentions();
+			WordCloud testCloud = new WordCloud();
+			for (SofaTextMention m : testMentions)
+				testCloud.addWord(m.getMentionText().toLowerCase(), m.getMentionType());
+			List<Word> testWordList = testCloud.getAllWords();
+			
+			Date dateCr = null;
+			try {
+				dateCr = new SimpleDateFormat("yyyy-MM-dd").parse(result[2].toString());
+			}
+			catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			String provider = "";
+			String location = "";
+			String diagnosis = "";
+			if (result[3] != null) {
+				int encounterID = (Integer) result[3];
+				Encounter e = Context.getEncounterService().getEncounter(encounterID);
+				provider = e.getProvider().getGivenName() + " " + e.getProvider().getFamilyName();
+				location = e.getLocation().getName();
+				
+				Set<Obs> obs = e.getAllObs();
+				
+				Concept c1 = Context.getConceptService().getConcept(1284); //coded diagnosis
+				Concept c2 = Context.getConceptService().getConcept(161602); //non coded diagnosis
+				
+				for (Obs o : obs) {
+					Concept obs_concept = o.getConcept();
+					
+					//if the concept associated with the observation is a diagnosis Concept, proceed
+					if ((obs_concept.equals(c2)) && (!o.getValueText().equals(""))) {
+						// extract diagnosis
+						diagnosis = o.getValueText();
+					}
+					if (obs_concept.equals(c1)) {
+						Concept valueCoded = o.getValueCoded();
+						ConceptName valueCodedName = o.getValueCodedName();
+						diagnosis = valueCodedName.toString();
+					}
+				}
+			}
+			
+			SofaDocumentUI sdUI = new SofaDocumentUI(uuidDate, dateCr, provider, location, diagnosis);
+			sdUI.setProblemWordList(problemWordList);
+			sdUI.setTreatmentWordList(treatmentWordList);
+			sdUI.setTestWordList(testWordList);
+			
+			dateList.add(sdUI);
+			
+		}
+		
+		return dateList;
 	}
 	
 	private Set<SofaTextMention> getSofaTextMentionsBySofaText(SofaText sofaText) {

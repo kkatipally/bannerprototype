@@ -12,14 +12,19 @@ visitNotesApp.directive('heatMap', function($compile){
             filterToDate: '=filterToDate', //Used to filter visit notes
             matchTerm: '=matchTerm', //Used to filter visit notes
             searchInput: '=searchInput', //Used to add term to the search bar
-            resetMap: '=resetMap' //Reset the heatmap
+            resetMap: '=resetMap', //Reset the heatmap
+            scrollToList: '=scrollToList', //Scroll down to the Visit List section upon click in heatmap
+            visitListInput: '=visitListInput'
         },
         link: function(scope, element, attrs, controller) {
 
         	var minDate = scope.startDate.name;
             var maxDate = scope.endDate.name;
             //console.log("minDate, maxDate in dir: " + minDate + ", " + maxDate);
-            
+
+            if((minDate === "") || (maxDate === ""))
+                return;
+
             var numMonths = 1 + maxDate.getMonth() - minDate.getMonth() + (12 * (maxDate.getFullYear() - minDate.getFullYear()));
             //console.log("numMonths in updateviz: " + numMonths);
 
@@ -27,12 +32,10 @@ visitNotesApp.directive('heatMap', function($compile){
                 groupMonths = 3,
                 margin = { top: 30, right: 0, bottom: 0, left: 0 },
                 width = 870 - margin.left - margin.right,
-                height = 430 - margin.top - margin.bottom, //not used
                 termWidth = 200,
                 gridWidth = ((width-2*termWidth)/numMonths),
                 gridHeight = 20,
                 entityTypes = ['red', 'green', 'blue'],
-                buckets = 9,
             	legendElementWidth = 100;
             
             function getJSDate(d){
@@ -63,6 +66,30 @@ visitNotesApp.directive('heatMap', function($compile){
 
               	  return year + month + day;
               	}
+
+            function formatDateForToolTip(date) {
+
+                  //console.log("date: " + date);
+                  var day = date.getDate();
+                  var month=new Array();
+                    month[0]="Jan";
+                    month[1]="Feb";
+                    month[2]="Mar";
+                    month[3]="Apr";
+                    month[4]="May";
+                    month[5]="Jun";
+                    month[6]="Jul";
+                    month[7]="Aug";
+                    month[8]="Sep";
+                    month[9]="Oct";
+                    month[10]="Nov";
+                    month[11]="Dec";
+
+                  var mon = month[date.getMonth()];
+                  var year = date.getFullYear();
+
+                  return day+ '-' + mon + '-' + year;
+            }
             
             function buildviz(data, minDate, maxDate){
 
@@ -76,7 +103,7 @@ visitNotesApp.directive('heatMap', function($compile){
 
                 var svg = d3.select("#heatmapdir").append("svg")
                     .attr("width", width + margin.left + margin.right)
-                    .attr("height", ((searchTerms.length+7)*gridHeight) + margin.top + margin.bottom)
+                    .attr("height", ((searchTerms.length+6)*gridHeight) + margin.top + margin.bottom)
                     .append("g")
                     .attr("class", "g_main")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -300,7 +327,7 @@ visitNotesApp.directive('heatMap', function($compile){
                         var expandLabel = d3.select(this).append("text")
                             .text('(+)')
                             .attr("x", 0)
-                            .attr("y", function (d, i) { return ((gridHeight*7)/4) + (j * gridHeight); })
+                            .attr("y", function (d, i) { return ((gridHeight*3)/4) + (j * gridHeight); })
                             .style('text-anchor', 'start')
                             .style('font-family', 'sans-serif')
                             .style('font-size', '15')
@@ -313,7 +340,7 @@ visitNotesApp.directive('heatMap', function($compile){
                         var yLabel = d3.select(this).append("text")
                             .text(function (d) { return d.mentionText; })
                             .attr("x", 1.4*termWidth)
-                            .attr("y", function (d, i) { return ((gridHeight*7)/4) + (j * gridHeight); })
+                            .attr("y", function (d, i) { return ((gridHeight*3)/4) + (j * gridHeight); })
                             .style('text-anchor', 'end')
                             .style('font-family', 'sans-serif')
                             .attr('class', 'yLabel')
@@ -335,9 +362,11 @@ visitNotesApp.directive('heatMap', function($compile){
                             .on("click", function(d, i){
                             	//console.log("mention clicked");
                             	scope.$apply(function() {
-                            		scope.matchTerm = d.mentionText;
+                            		/*scope.matchTerm = d.mentionText;
                             		scope.filterFromDate = null;
-                            		scope.filterToDate = null;
+                            		scope.filterToDate = null;*/
+                            		scope.scrollToList = true;
+                            		scope.visitListInput = d.mentionText;
                             	});
                             });
                         
@@ -347,7 +376,7 @@ visitNotesApp.directive('heatMap', function($compile){
                             .data(DataRect)
                             .enter().append('rect')
                             .attr('x', function(d){ return 1.5*termWidth + xScale(d.startRect) })
-                            .attr('y', function(d){ return ((d.yRect+1)*gridHeight); })
+                            .attr('y', function(d){ return ((d.yRect)*gridHeight); })
                             .attr("rx", 4)
                             .attr("ry", 4)
                             .attr('width', function(d){ return xScale(d.endRect)-xScale(d.startRect)/*groupMonths*gridWidth*/})
@@ -389,6 +418,7 @@ visitNotesApp.directive('heatMap', function($compile){
                             		scope.filterFromDate = new Date(d.startRect);
                             		scope.filterToDate = new Date(d.endRect);
                             		scope.matchTerm = d.mention;
+                            		scope.scrollToList = true;
                             	});
                             });
 
@@ -399,7 +429,7 @@ visitNotesApp.directive('heatMap', function($compile){
                                 .data(d2.listDates).enter()
                                 .append('rect')
                                 .attr('x', function(d1){ return 1.5*termWidth + xScale(d1.date) })
-                                .attr('y', function(d1){ return (d1.yDate+1)*gridHeight; })
+                                .attr('y', function(d1){ return (d1.yDate)*gridHeight; })
                                 .attr("rx", 4)
                                 .attr("ry", 4)
                                 .attr('width', 4)
@@ -418,7 +448,7 @@ visitNotesApp.directive('heatMap', function($compile){
                              tooltip.transition()
                              .duration(500)
                              .style("opacity", .9);
-                             tooltip.html("<strong>Date: " + d.date + "</strong><br/><strong>Diagnosis: " + d.diagnosis + "</strong><br/><strong>Provider: " + d.provider + "</strong><br/><strong>Location: " + d.location + "</strong>")
+                             tooltip.html("<strong>Date: " + formatDateForToolTip(d.date) + "</strong><br/><strong>Diagnosis: " + d.diagnosis + "</strong><br/><strong>Provider: " + d.provider + "</strong><br/><strong>Location: " + d.location + "</strong>")
                              .style("left", (d3.event.pageX) + "px")
                              .style("top", (d3.event.pageY - 28) + "px");
                              })
@@ -433,6 +463,7 @@ visitNotesApp.directive('heatMap', function($compile){
                                 		scope.filterFromDate = new Date(d.date);
                                 		scope.filterToDate = new Date(d.date);
                                 		scope.matchTerm = d2.mention;
+                                		scope.scrollToList = true;
                                 	});
                              })
                             });
@@ -440,7 +471,7 @@ visitNotesApp.directive('heatMap', function($compile){
                         var Xdelete = d3.select(this).append("text")
                             .text('X')
                             .attr("x", width)
-                            .attr("y", function (d, i) { return ((gridHeight*7)/4) + (j * gridHeight);/*(d.yRect*gridHeight);*/ })
+                            .attr("y", function (d, i) { return ((gridHeight*3)/4) + (j * gridHeight);/*(d.yRect*gridHeight);*/ })
                             .style('text-anchor', 'end')
                             .style('font-family', 'sans-serif')
                             .attr('class', 'Xdelete');
@@ -450,7 +481,7 @@ visitNotesApp.directive('heatMap', function($compile){
 
                 var xAxis = svg.append("g").call(xAxisGen)
                     .attr("class","Xaxis")
-                    .attr("transform", "translate(" + 1.5*termWidth + "," + (j+2)*gridHeight + ")");
+                    .attr("transform", "translate(" + 1.5*termWidth + "," + (j+1)*gridHeight + ")");
             
                 var colors = [], element;
                 for (var c=0; c<5 ;c++){
@@ -472,7 +503,7 @@ visitNotesApp.directive('heatMap', function($compile){
                 legend.append("text")
                 .text('Color Scale:')
                 .attr("x", 0)
-                .attr("y", (j+5)*gridHeight)
+                .attr("y", (j+4)*gridHeight)
                 .style('text-anchor', 'start')
                 .style('font-family', 'sans-serif')
                 .attr('class', 'legendlabel');
@@ -481,7 +512,7 @@ visitNotesApp.directive('heatMap', function($compile){
                    .data(colors)
                    .enter().append('rect')
                    .attr("x", function(d, i) { return legendElementWidth * (i+1); })
-                   .attr("y", (j+4)*gridHeight)
+                   .attr("y", (j+3)*gridHeight)
                    .attr("width", legendElementWidth)
                    .attr("height", gridHeight)
                    .style("fill", function(d, i) { return d.color });
@@ -492,7 +523,7 @@ visitNotesApp.directive('heatMap', function($compile){
                    .attr("class", "legendtext")
                    .text(function(d) { return d.index; })
                    .attr("x", function(d, i) { return legendElementWidth * (i + (3/2)); })
-                   .attr("y", (j+6)*gridHeight );
+                   .attr("y", (j+5)*gridHeight );
 
                  legend.exit().remove();
             } //end of buildviz
@@ -572,7 +603,7 @@ visitNotesApp.directive('heatMap', function($compile){
 
                 var svg = d3.select("#heatmapdir").append("svg")
                     .attr("width", width + margin.left + margin.right)
-                    .attr("height", ((allTerms.length+7)*gridHeight) + margin.top + margin.bottom)
+                    .attr("height", ((allTerms.length+5)*gridHeight) + margin.top + margin.bottom)
                     .append("g")
                     .attr("class", "g_main")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -794,7 +825,7 @@ visitNotesApp.directive('heatMap', function($compile){
                         var expandLabel = d3.select(this).append("text")
                             .text(function(d) { return d.symbol})
                             .attr("x", 0)
-                            .attr("y", function (d, i) { return ((gridHeight*7)/4) + (j * gridHeight);/*(d.yRect*gridHeight);*/ })
+                            .attr("y", function (d, i) { return ((gridHeight*3)/4) + (j * gridHeight);/*(d.yRect*gridHeight);*/ })
                             .style('text-anchor', 'start')
                             .style('font-family', 'sans-serif')
                             .style('font-size', '15')
@@ -809,7 +840,7 @@ visitNotesApp.directive('heatMap', function($compile){
                         var yLabel = d3.select(this).append("text")
                             .text(function (d) { return d.mentionText; })
                             .attr("x", 1.4*termWidth)
-                            .attr("y", function (d, i) { return ((gridHeight*7)/4) + (j * gridHeight); })
+                            .attr("y", function (d, i) { return ((gridHeight*3)/4) + (j * gridHeight); })
                             .style('text-anchor', 'end')
                             .style('font-family', 'sans-serif')
                             .attr('class', 'yLabel')
@@ -830,9 +861,11 @@ visitNotesApp.directive('heatMap', function($compile){
                             .on("click", function(d, i){
                             	//console.log("mention clicked");
                             	scope.$apply(function() {
-                            		scope.matchTerm = d.mentionText;
-                            		scope.filterFromDate = null;
-                            		scope.filterToDate = null;
+                            		/*scope.matchTerm = d.mentionText;
+                                    scope.filterFromDate = null;
+                                    scope.filterToDate = null;*/
+                                    scope.scrollToList = true;
+                                    scope.visitListInput = d.mentionText;
                             	});
                             });                            
 
@@ -844,7 +877,7 @@ visitNotesApp.directive('heatMap', function($compile){
                             .data(DataRect)
                             .enter().append('rect')
                             .attr('x', function(d){ return 1.5*termWidth + xScale(d.startRect) })
-                            .attr('y', function(d){ return ((d.yRect+1)*gridHeight); })
+                            .attr('y', function(d){ return ((d.yRect)*gridHeight); })
                             .attr("rx", 4)
                             .attr("ry", 4)
                             .attr('width', function(d){ return xScale(d.endRect)-xScale(d.startRect)/*groupMonths*gridWidth*/})
@@ -885,6 +918,7 @@ visitNotesApp.directive('heatMap', function($compile){
                             		scope.filterFromDate = new Date(d.startRect);
                             		scope.filterToDate = new Date(d.endRect);
                             		scope.matchTerm = d.mention;
+                            		scope.scrollToList = true;
                             	});
                             });
                         
@@ -896,7 +930,7 @@ visitNotesApp.directive('heatMap', function($compile){
                                 .data(d2.listDates).enter()
                                 .append('rect')
                                 .attr('x', function(d1){ return 1.5*termWidth + xScale(d1.date) })
-                                .attr('y', function(d1){ return (d1.yDate+1)*gridHeight; })
+                                .attr('y', function(d1){ return (d1.yDate)*gridHeight; })
                                 .attr("rx", 4)
                                 .attr("ry", 4)
                                 .attr('width', 4)
@@ -916,7 +950,7 @@ visitNotesApp.directive('heatMap', function($compile){
                              tooltip.transition()
                              .duration(500)
                              .style("opacity", .9);
-                             tooltip.html("<strong>Date: " + d.date + "</strong><br/><strong>Diagnosis: " + d.diagnosis + "</strong><br/><strong>Provider: " + d.provider + "</strong><br/><strong>Location: " + d.location + "</strong>")
+                             tooltip.html("<strong>Date: " + formatDateForToolTip(d.date) + "</strong><br/><strong>Diagnosis: " + d.diagnosis + "</strong><br/><strong>Provider: " + d.provider + "</strong><br/><strong>Location: " + d.location + "</strong>")
                              .style("left", (d3.event.pageX) + "px")
                              .style("top", (d3.event.pageY - 28) + "px");
                              })
@@ -936,6 +970,7 @@ visitNotesApp.directive('heatMap', function($compile){
                                 		scope.filterFromDate = new Date(d.date);
                                 		scope.filterToDate = new Date(d.date);
                                 		scope.matchTerm = d2.mention;
+                                		scope.scrollToList = true;
                                 	});
                               })
                             });
@@ -945,7 +980,7 @@ visitNotesApp.directive('heatMap', function($compile){
                         var Xdelete = d3.select(this).append("text")
                             .text('X')
                             .attr("x", width)
-                            .attr("y", function (d, i) { return ((gridHeight*7)/4) + (j * gridHeight);/*(d.yRect*gridHeight);*/ })
+                            .attr("y", function (d, i) { return ((gridHeight*3)/4) + (j * gridHeight);/*(d.yRect*gridHeight);*/ })
                             .style('text-anchor', 'end')
                             .style('font-family', 'sans-serif')
                             .attr('class', 'Xdelete');
@@ -957,7 +992,7 @@ visitNotesApp.directive('heatMap', function($compile){
 
                 var xAxis = svg.append("g").call(xAxisGen)
                     .attr("class","Xaxis")
-                    .attr("transform", "translate(" + 1.5*termWidth + "," + (j+2)*gridHeight + ")");
+                    .attr("transform", "translate(" + 1.5*termWidth + "," + (j+1)*gridHeight + ")");
 
                 svg.selectAll(".legend").remove();
                 
@@ -982,7 +1017,7 @@ visitNotesApp.directive('heatMap', function($compile){
                  legend.append("text")
                  .text('Color Scale:')
                  .attr("x", 0)
-                 .attr("y", (j+5)*gridHeight)
+                 .attr("y", (j+4)*gridHeight)
                  .style('text-anchor', 'start')
                  .style('font-family', 'sans-serif')
                  .attr('class', 'legendlabel');
@@ -991,7 +1026,7 @@ visitNotesApp.directive('heatMap', function($compile){
                     .data(colors)
                     .enter().append('rect')
                     .attr("x", function(d, i) { return legendElementWidth * (i+1); })
-                    .attr("y", (j+4)*gridHeight)
+                    .attr("y", (j+3)*gridHeight)
                     .attr("width", legendElementWidth)
                     .attr("height", gridHeight)
                     .style("fill", function(d, i) { return d.color });
@@ -1002,7 +1037,7 @@ visitNotesApp.directive('heatMap', function($compile){
                     .attr("class", "legendtext")
                     .text(function(d) { return d.index; })
                     .attr("x", function(d, i) { return legendElementWidth * (i + (3/2)); })
-                    .attr("y", (j+6)*gridHeight );
+                    .attr("y", (j+5)*gridHeight );
 
                   legend.exit().remove();
                   
@@ -1040,19 +1075,22 @@ visitNotesApp.directive('heatMap', function($compile){
 
             } //end of updateviz
 
-            scope.$watch('[val, startDate, endDate, resetMap]', 
+            //scope.$watch('[val, resetMap, startDate, endDate]',
+            scope.$watch('[val, resetMap]',
             function(newVals, oldVals) {
               if((oldVals[0] != newVals[0]) || 
-            	 (oldVals[1] != newVals[1]) || 
+            	 (oldVals[1] != newVals[1]) /*||
             	 (oldVals[2] != newVals[2]) ||
-            	 (oldVals[3] != newVals[3])){
+            	 (oldVals[3] != newVals[3])*/){
               
                // clear the elements inside of the directive
                 d3.select("svg").remove();
 
                 var data = newVals[0];
-                var minDate = newVals[1].name;
-                var maxDate = newVals[2].name;
+                //var minDate = newVals[2].name;
+                //var maxDate = newVals[3].name;
+                var minDate = scope.startDate.name;
+                var maxDate = scope.endDate.name;
                 
                 //console.log("data: " + JSON.stringify(data));
 

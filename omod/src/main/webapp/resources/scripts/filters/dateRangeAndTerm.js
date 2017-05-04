@@ -5,25 +5,42 @@ visitNotesApp.filter('dateRangeAndTerm', function(){
     return function(items, fromDate, toDate, matchTerm){
     	
     	var filteredItems = [];
-    	if((matchTerm !== "") && (fromDate !== null) && (toDate !== null)){
+    	if(matchTerm && fromDate && toDate){
     		angular.forEach(items, function(item) {
-    			if((item.date >= fromDate) && (item.date <= toDate) && (item.term === matchTerm)) {
-    				filteredItems.push(item);
+    			if(item.date >= fromDate && item.date <= toDate){
+    			    for (var i = 0; i < item.problemWordList.length; i++) {
+    			        if(item.problemWordList[i].word === matchTerm) {
+    				        filteredItems.push(item);
+    				        break;
+    				    }
+    				}
+    				for (var i = 0; i < item.treatmentWordList.length; i++) {
+                        if(item.treatmentWordList[i].word === matchTerm) {
+                        	filteredItems.push(item);
+                        	break;
+                        }
+                    }
+                    for (var i = 0; i < item.testWordList.length; i++) {
+                        if(item.testWordList[i].word === matchTerm) {
+                            filteredItems.push(item);
+                            break;
+                        }
+                    }
     			}
     		});
     	}
-    	else if((matchTerm !== "") && (fromDate === null) && (toDate === null)){
+    	else if (fromDate && toDate){
+            angular.forEach(items, function(item) {
+                if((item.date >= fromDate) && (item.date <= toDate)) {
+                    filteredItems.push(item);
+                }
+            });
+        }
+    	else if (!fromDate && !toDate){
     		angular.forEach(items, function(item) {
-    			if(item.term === matchTerm) {
+    			//if((item.date >= fromDate) && (item.date <= toDate)) {
     				filteredItems.push(item);
-    			}
-    		});
-    	}
-    	else if ((fromDate !== null) && (toDate !== null)){
-    		angular.forEach(items, function(item) {
-    			if((item.date >= fromDate) && (item.date <= toDate)) {
-    				filteredItems.push(item);
-    			}
+    			//}
     		});
     	}
     	

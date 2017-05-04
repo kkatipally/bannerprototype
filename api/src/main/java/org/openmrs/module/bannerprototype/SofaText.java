@@ -249,18 +249,22 @@ public class SofaText extends BaseOpenmrsData implements Serializable, Comparabl
 	 * 
 	 * @return
 	 */
-	public String getAnnotatedHTML() {
+	public String getAnnotatedHTML(int startIndex) {
 		String html = new String(text);
 		String tagged;
-		for (SofaTextMention m : sofaTextMention) {
-			tagged = wrapInMentionTypeTag(m.getMentionText(), m.getMentionType());
-			//System.out.println(tagged);
+		List<SofaTextMention> sofaTextMentionList = new ArrayList<SofaTextMention>();
+		sofaTextMentionList.addAll(sofaTextMention);
+		Collections.sort(sofaTextMentionList);
+		
+		for (SofaTextMention m : sofaTextMentionList) {
+			tagged = wrapInMentionTypeTag(m.getMentionText(), m.getMentionType(), startIndex);
 			
-			if (!m.getSofaTextMentionConcept().isEmpty())
+			if (!m.getSofaTextMentionConcept().isEmpty()) {
 				tagged = wrapInConceptTag(tagged, m);
+			}
 			
 			html = html.replace(m.getMentionText(), tagged);
-			//html = html.replaceAll("\\n", "<br/>");
+			startIndex++;
 		}
 		return html;
 	}
@@ -271,10 +275,9 @@ public class SofaText extends BaseOpenmrsData implements Serializable, Comparabl
 		    tagged);
 	}
 	
-	private String wrapInMentionTypeTag(String mentionText, String mentionType) {
-		
-		return String.format("<span class=\"mention-type-%s\">%s</span>", mentionType, mentionText);
-		
+	private String wrapInMentionTypeTag(String mentionText, String mentionType, int startIndex) {
+		return String.format("<span id=\"visit-note-span-%d\" class=\"mention-type-%s\">%s</span>", startIndex, mentionType,
+		    mentionText);
 	}
 	
 	/**

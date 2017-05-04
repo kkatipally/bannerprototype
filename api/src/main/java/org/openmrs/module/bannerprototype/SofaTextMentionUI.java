@@ -137,7 +137,7 @@ public class SofaTextMentionUI extends BaseOpenmrsData implements Serializable {
 		}
 		
 		SofaTextMentionUI other = (SofaTextMentionUI) o;
-		return this.mentionText.equals(other.mentionText);
+		return this.mentionText.toLowerCase().equals(other.mentionText.toLowerCase());
 	}
 	
 	@Override

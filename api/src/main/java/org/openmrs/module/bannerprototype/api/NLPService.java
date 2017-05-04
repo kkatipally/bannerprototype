@@ -9,10 +9,7 @@ import org.hibernate.SessionFactory;
 import org.openmrs.Encounter;
 import org.openmrs.Patient;
 import org.openmrs.api.OpenmrsService;
-import org.openmrs.module.bannerprototype.SofaDocument;
-import org.openmrs.module.bannerprototype.SofaText;
-import org.openmrs.module.bannerprototype.SofaTextMention;
-import org.openmrs.module.bannerprototype.SofaTextMentionUI;
+import org.openmrs.module.bannerprototype.*;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -110,6 +107,14 @@ public interface NLPService extends OpenmrsService {
 	public SofaTextMentionUI getSofaTextMentionUIByUuid(String uuid);
 	
 	/**
+	 * returns SofaDocumentUI by SofaDoc UUID
+	 * 
+	 * @param sofaDocUuid
+	 * @return
+	 */
+	public SofaDocumentUI getSofaDocumentUIBySofaDocUuid(String sofaDocUuid);
+	
+	/**
 	 * returns SofaTextMentionUIs by SofaDoc UUID
 	 * 
 	 * @param sofaDocUuid
@@ -123,6 +128,14 @@ public interface NLPService extends OpenmrsService {
 	 * @return
 	 */
 	public Set<SofaTextMentionUI> getSofaTextMentionUIByConstraints(Patient patient, Date startDate, Date endDate,
+	        String[] searchTerms);
+	
+	/**
+	 * returns SofaDocumentUIs by constraints
+	 * 
+	 * @return
+	 */
+	public List<SofaDocumentUI> getSofaDocumentUIByConstraints(Patient patient, Date startDate, Date endDate,
 	        String[] searchTerms);
 	
 	/**
