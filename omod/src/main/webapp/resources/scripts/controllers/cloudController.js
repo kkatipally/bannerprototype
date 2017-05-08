@@ -90,9 +90,7 @@ visitNotesApp.controller('cloudController',
 			$timeout(function() {
 				$scope.visitDatesDataUpdated = true;
 				$scope.visitDatesData = $scope.allSofadocs.results ;
-				//console.log('visitDatesData:' + JSON.stringify($scope.visitDatesData));
 			}, 0);
-		
 		});
         
         $scope.visitDateUuid = "";

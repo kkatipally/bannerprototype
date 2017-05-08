@@ -101,28 +101,20 @@ public class SofatextmentionUIResource extends DataDelegatingCrudResource<SofaTe
 		
 		Set<SofaTextMentionUI> stmUISet;
 		
-		if (context.getParameter("sofaDocUuid") != null) {
-			String sofaDocUuid = context.getParameter("sofaDocUuid");
-			
-			stmUISet = Context.getService(NLPService.class).getSofaTextMentionUIBySofaDocUuid(sofaDocUuid);
-			
-		} else {
-			Patient patient = context.getParameter("patient") != null ? Context.getPatientService().getPatientByUuid(
-			    context.getParameter("patient")) : null;
-			
-			Date startDate = context.getParameter("startDate") != null ? (Date) ConversionUtil.convert(
-			    context.getParameter("startDate"), Date.class) : null;
-			
-			Date endDate = context.getParameter("endDate") != null ? (Date) ConversionUtil.convert(
-			    context.getParameter("endDate"), Date.class) : null;
-			
-			//String searchTerm = context.getParameter("searchTerm");
-			String[] searchTerms;
-			searchTerms = context.getRequest().getParameterValues("searchTerms");
-			
-			stmUISet = Context.getService(NLPService.class).getSofaTextMentionUIByConstraints(patient, startDate, endDate,
-			    searchTerms);
-		}
+		Patient patient = context.getParameter("patient") != null ? Context.getPatientService().getPatientByUuid(
+		    context.getParameter("patient")) : null;
+		
+		Date startDate = context.getParameter("startDate") != null ? (Date) ConversionUtil.convert(
+		    context.getParameter("startDate"), Date.class) : null;
+		
+		Date endDate = context.getParameter("endDate") != null ? (Date) ConversionUtil.convert(
+		    context.getParameter("endDate"), Date.class) : null;
+		
+		String[] searchTerms;
+		searchTerms = context.getRequest().getParameterValues("searchTerms");
+		
+		stmUISet = Context.getService(NLPService.class).getSofaTextMentionUIByConstraints(patient, startDate, endDate,
+		    searchTerms);
 		
 		List<SofaTextMentionUI> stmUIList = new ArrayList<SofaTextMentionUI>();
 		stmUIList.addAll(stmUISet);
@@ -130,14 +122,6 @@ public class SofatextmentionUIResource extends DataDelegatingCrudResource<SofaTe
 		return new NeedsPaging<SofaTextMentionUI>(stmUIList, context);
 		
 	}
-	
-	/*
-	 * private void addToCloud(WordCloud wordcloud, List<SofaTextMention>
-	 * mentions) {
-	 * 
-	 * for (SofaTextMention m : mentions) wordcloud.addWord(m.getMentionText(),
-	 * m.getMentionType()); }
-	 */
 	
 	/**
 	 * Returns a display string

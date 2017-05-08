@@ -1,7 +1,5 @@
 package org.openmrs.module.bannerprototype.rest.resource;
 
-import java.util.List;
-
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.bannerprototype.SofaDocument;

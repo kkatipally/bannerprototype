@@ -21,48 +21,11 @@ import org.springframework.aop.MethodBeforeAdvice;
  * 
  * @author ryaneshleman
  */
-public class VisitNoteAdvice implements MethodBeforeAdvice, AfterReturningAdvice {
+public class VisitNoteAdvice implements AfterReturningAdvice {
 	
 	DocumentTagger dt = new DocumentTagger();
 	
 	Log log = LogFactory.getLog(getClass());
-	
-	@Override
-	public void before(Method method, Object[] args, Object arg2) throws Throwable {
-		/*log.info("Tagging Document");
-		
-		// if "saveEncounter" was called
-		if (method != null && method.getName().equals("saveEncounter")) {
-			
-			//get observations from Encounter object
-			Set<Obs> obs = ((Encounter) args[0]).getAllObs();
-			
-			//get VisitNote concept
-			Concept c = null;
-			String noteConceptId = Context.getAdministrationService().getGlobalProperty("bannerprototype.noteConceptId");
-			if (noteConceptId != null && !noteConceptId.isEmpty()) {
-				c = Context.getConceptService().getConcept(Integer.parseInt(noteConceptId));
-			} else {
-				c = Context.getConceptService().getConcept("Text of encounter note");
-			}
-			
-			for (Obs o : obs) {
-				Concept obs_concept = o.getConcept();
-				
-				//if the concept associated with the observation is the VisitNote Concept, proceed
-				if (obs_concept.equals(c)) {
-					// extract VisitNote Text
-					String sofa = o.getValueText();
-					Patient p = o.getPatient();
-					
-					SofaDocument sofaDocument = dt.tagDocument(sofa);
-					sofaDocument.setPatient(p);
-					
-					Context.getService(NLPService.class).saveSofaDocument(sofaDocument);
-				}
-			}
-		}*/
-	}
 	
 	@Override
 	public void afterReturning(Object returnValue, Method method, Object[] args, Object arg2) throws Throwable {
@@ -72,7 +35,6 @@ public class VisitNoteAdvice implements MethodBeforeAdvice, AfterReturningAdvice
 		if (method != null && method.getName().equals("saveEncounter")) {
 			
 			//get observations from Encounter object
-			//Set<Obs> obs = ((Encounter) args[0]).getAllObs();
 			Encounter e = (Encounter) returnValue;
 			Set<Obs> obs = (e).getAllObs();
 			

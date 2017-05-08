@@ -130,28 +130,19 @@ public class DocumentTagger implements Serializable {
 	}
 	
 	/**
-	 * naively split sentences on periods
+	 * uses openNLP sentence detector to split sentences
 	 * 
 	 * @param document
 	 * @return
 	 */
-	ArrayList<SofaText> splitSentences(String document) throws FileNotFoundException, IOException {
+	ArrayList<SofaText> splitSentences(String document) throws IOException {
 		
-		//int prevPeriod = -1;
-		//int nextPeriod = document.indexOf('.');
 		SofaText sofa;
 		ArrayList<SofaText> sofaTexts = new ArrayList<SofaText>();
 		int sentenceStart = 0;
 		int sentenceEnd;
-		/* while (nextPeriod != -1) {
-			sofa = new SofaText(document.substring(prevPeriod + 1, nextPeriod + 1), prevPeriod + 1, nextPeriod + 1);
-			sofaTexts.add(sofa);
-			prevPeriod = nextPeriod;
-			nextPeriod = document.indexOf('.', prevPeriod + 1);
-		}*/
 		
-		//List<String> sentenceList = new ArrayList<String>();
-		long startTime = System.nanoTime();
+		//long startTime = System.nanoTime();
 		String openNLPmodel = this.getClass().getClassLoader().getResource("en-sent.bin").getFile();
 		InputStream is = new FileInputStream(openNLPmodel);
 		SentenceModel model = new SentenceModel(is);
@@ -164,12 +155,11 @@ public class DocumentTagger implements Serializable {
 			sentenceEnd = sentenceStart + sentence.length();
 			sofa = new SofaText(sentence, sentenceStart + 1, sentenceEnd);
 			sofaTexts.add(sofa);
-			//sentenceList.add(sentenceString.toString());
 			sentenceStart = sentenceEnd;
 		}
 		
-		long timeTaken = System.nanoTime() - startTime;
-		System.out.println(timeTaken);
+		//long timeTaken = System.nanoTime() - startTime;
+		//System.out.println(timeTaken);
 		
 		return sofaTexts;
 	}

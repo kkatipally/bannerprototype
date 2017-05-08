@@ -9,40 +9,21 @@ import org.openmrs.BaseOpenmrsData;
 
 public class SofaTextMentionUI extends BaseOpenmrsData implements Serializable {
 	
-	//private String uuid;
-	
 	private String mentionText;
 	
 	private String mentionType;
 	
 	private String relatedTo;
 	
-	//private HashMap<String, SofaDocumentUI> dateList;
 	private List<SofaDocumentUI> dateList;
 	
-	/**
-	 * Default constructor
-	 */
-	public SofaTextMentionUI(SofaTextMention sofaTextMention) {
-		//setUuid(sofaTextMention.getUuid());
-		setMentionText(sofaTextMention.getMentionText());
-		setMentionType(sofaTextMention.getMentionType());
-	}
-	
-	public SofaTextMentionUI(/*String uuid, */String mentionText, String mentionType, List<SofaDocumentUI> dateList) {
-		//this.uuid = uuid;
+	public SofaTextMentionUI(String mentionText, String mentionType, List<SofaDocumentUI> dateList) {
 		this.mentionText = mentionText;
 		this.mentionType = mentionType;
 		this.dateList = dateList;
 	}
 	
 	public void addDate(SofaDocumentUI sofaDocumentUI) {
-		/*if(dateList.containsKey(sofadocument.getUuid())){
-			dateList.get(sofadocument.getUuid()).incrementCount();
-		}
-		else {
-			dateList.put(sofadocument.getUuid(), new SofaDocumentUI(sofadocument));
-		}*/
 		
 		boolean found = false;
 		for (SofaDocumentUI date : dateList) {
@@ -68,14 +49,6 @@ public class SofaTextMentionUI extends BaseOpenmrsData implements Serializable {
 		// TODO Auto-generated method stub
 		
 	}
-	
-	/*public String getUuid() {
-		return uuid;
-	}
-	
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}*/
 	
 	/**
 	 * @return the mentionText

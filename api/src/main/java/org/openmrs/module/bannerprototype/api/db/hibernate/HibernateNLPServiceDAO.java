@@ -150,8 +150,6 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 	 */
 	public SofaDocument getSofaDocumentByUuid(String uuid) {
 		
-		// SofaDocument sofaDocument = (SofaDocument)
-		// session.get(SofaDocument.class, sofaDocumentId);
 		Criteria crit = sessionFactory.getCurrentSession().createCriteria(SofaDocument.class);
 		crit.add(Restrictions.eq("uuid", uuid));
 		SofaDocument sofaDocument = (SofaDocument) crit.uniqueResult();
@@ -458,7 +456,7 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 			sb.append(" and sd.date_created <= :endDate ");
 		}
 		sb.append(" and stm.mention_text in :searchTerms");
-		sb.append(" ORDER by stm.mention_text, sd.date_created");
+		sb.append(" ORDER by stm.mention_type, stm.mention_text, sd.date_created");
 		
 		String sqlQuery = sb.toString();
 		
@@ -682,7 +680,7 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 		Criteria crit = sessionFactory.getCurrentSession().createCriteria(SofaDocument.class);
 		
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(endDate); //endDate shows 00:00:00 PDT so incrementing by a day
+		cal.setTime(endDate); //endDate shows 00:00:00 so incrementing by a day
 		cal.add(Calendar.DATE, 1);
 		Date newEndDate = cal.getTime();
 		

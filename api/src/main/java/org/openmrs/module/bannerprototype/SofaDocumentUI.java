@@ -30,16 +30,6 @@ public class SofaDocumentUI extends BaseOpenmrsData implements Serializable {
 	
 	private List<Word> testWordList;
 	
-	/**
-	 * Default constructor
-	 */
-	public SofaDocumentUI(SofaDocument sofadocument) {
-		setUuid(sofadocument.getUuid());
-		setDateCreated(sofadocument.getDateCreated());
-		setPatient(sofadocument.getPatient());
-		this.setMentionCount(1);
-	}
-	
 	public SofaDocumentUI(String uuid, Date dateCreated, String provider, String location, String diagnosis) {
 		this.uuid = uuid;
 		this.dateCreated = dateCreated;
