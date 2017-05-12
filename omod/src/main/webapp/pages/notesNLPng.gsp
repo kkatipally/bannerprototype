@@ -91,7 +91,10 @@ var userId = ${user}
 
 </script> 
 
-<html ng-app="visitNotesApp"/>
-<base href="/"/>
+<html>
+ <body ng-app="visitNotesApp">
+    <base href="/"/>
 
-<div ng-view></div>
+    <div ng-view></div>
+ </body>
+</html>

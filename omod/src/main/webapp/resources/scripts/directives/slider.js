@@ -29,7 +29,7 @@ visitNotesApp.directive('slider', function($compile){
                         return month + "-" + days + "-" + year;
                     },
                     range:{
-                    min: {months: 3},   //User has to select a minimum of 6 months
+                    min: {months: 3},   //User has to select a minimum of 3 months
                     max: false
                     },
                     scales: [{          //displays the Jan, Feb, etc ticks on the slider
@@ -54,14 +54,11 @@ visitNotesApp.directive('slider', function($compile){
             
             scope.sliderMinDate = monthsBefore(new Date(), 24);
             scope.sliderMaxDate = new Date();
-        	//console.log("Initial slider min/max in slider: " + scope.sliderMinDate + " " + scope.sliderMaxDate);
 
             element.bind("userValuesChanged", function(e, data){
-                //console.log("Values just changed. min: " + data.values.min + " max: " + data.values.max);
                 scope.$apply(function() {
                 	scope.sliderMinDate = data.values.min ;
                 	scope.sliderMaxDate = data.values.max ;
-                	//console.log("Slider min/max in slider: " + scope.sliderMinDate + " " + scope.sliderMaxDate);
                 });
                 
             });

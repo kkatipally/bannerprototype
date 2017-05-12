@@ -118,7 +118,7 @@ public class SofadocumentUIResource extends DataDelegatingCrudResource<SofaDocum
 		String[] searchTerms;
 		searchTerms = context.getRequest().getParameterValues("searchTerms");
 		
-		dateList = Context.getService(NLPService.class).getSofaDocumentUIByConstraints(patient, startDate, endDate,
+		dateList = Context.getService(NLPService.class).getSofaDocumentUIsByConstraints(patient, startDate, endDate,
 		    searchTerms);
 		
 		return new NeedsPaging<SofaDocumentUI>(dateList, context);

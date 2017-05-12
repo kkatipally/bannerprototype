@@ -337,7 +337,7 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 		return sdUI;
 	}
 	
-	public Set<SofaTextMentionUI> getSofaTextMentionUIBySofaDocUuid(String sofaDocUuid) {
+	public Set<SofaTextMentionUI> getSofaTextMentionUIsBySofaDocUuid(String sofaDocUuid) {
 		
 		StringBuffer sb = new StringBuffer();
 		
@@ -435,7 +435,7 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 		return stmUISet;
 	}
 	
-	public Set<SofaTextMentionUI> getSofaTextMentionUIByConstraints(Patient patient, Date startDate, Date endDate,
+	public List<SofaTextMentionUI> getSofaTextMentionUIsByConstraints(Patient patient, Date startDate, Date endDate,
 	        String[] searchTerms) {
 		
 		StringBuffer sb = new StringBuffer();
@@ -472,7 +472,7 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 		
 		int index = 0;
 		SofaTextMentionUI prevStmUI = null;
-		Set<SofaTextMentionUI> stmUISet = new LinkedHashSet<SofaTextMentionUI>();
+		List<SofaTextMentionUI> stmUIList = new ArrayList<SofaTextMentionUI>();
 		for (Object obj : results) {
 			
 			Object[] result = (Object[]) obj;
@@ -524,7 +524,7 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 			
 			if ((index == 0) || !(prevStmUI.getMentionText().equals(textMention))) {
 				if (index > 0)
-					stmUISet.add(prevStmUI);
+					stmUIList.add(prevStmUI);
 				
 				List<SofaDocumentUI> dateList = new ArrayList<SofaDocumentUI>();
 				dateList.add(sdUI);
@@ -536,12 +536,12 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 			}
 			index++;
 		}
-		stmUISet.add(prevStmUI);
+		stmUIList.add(prevStmUI);
 		
-		return stmUISet;
+		return stmUIList;
 	}
 	
-	public List<SofaDocumentUI> getSofaDocumentUIByConstraints(Patient patient, Date startDate, Date endDate,
+	public List<SofaDocumentUI> getSofaDocumentUIsByConstraints(Patient patient, Date startDate, Date endDate,
 	        String[] searchTerms) {
 		
 		StringBuffer sb = new StringBuffer();

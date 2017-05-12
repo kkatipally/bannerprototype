@@ -244,9 +244,11 @@ public class SofaText extends BaseOpenmrsData implements Serializable, Comparabl
 	}
 	
 	/**
-	 * Helper method to generate HTML, will be moved to controller in future, the html contains the
-	 * text of the SofaText object with each mention wrapped in a span tag
+	 * Helper method to generate HTML. The html contains the text of the SofaText object with each
+	 * mention wrapped in a span tag. Each mention in the SofaDocument is given a unique ID.
+	 * startIndex is the ID for the first mention in this SofaText.
 	 * 
+	 * @param startIndex ID for the first mention in this SofaText
 	 * @return
 	 */
 	public String getAnnotatedHTML(int startIndex) {

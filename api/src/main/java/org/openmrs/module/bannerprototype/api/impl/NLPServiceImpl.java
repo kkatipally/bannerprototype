@@ -130,16 +130,16 @@ public class NLPServiceImpl extends BaseOpenmrsService implements NLPService {
 	
 	@Override
 	@Transactional
-	public Set<SofaTextMentionUI> getSofaTextMentionUIBySofaDocUuid(String sofaDocUuid) {
-		return dao.getSofaTextMentionUIBySofaDocUuid(sofaDocUuid);
+	public Set<SofaTextMentionUI> getSofaTextMentionUIsBySofaDocUuid(String sofaDocUuid) {
+		return dao.getSofaTextMentionUIsBySofaDocUuid(sofaDocUuid);
 	}
 	
 	@Override
 	@Transactional
-	public Set<SofaTextMentionUI> getSofaTextMentionUIByConstraints(Patient patient, Date startDate, Date endDate,
+	public List<SofaTextMentionUI> getSofaTextMentionUIsByConstraints(Patient patient, Date startDate, Date endDate,
 	        String[] searchTerms) {
 		
-		Set<SofaTextMentionUI> stmUIAll = new LinkedHashSet<SofaTextMentionUI>();
+		List<SofaTextMentionUI> stmUIAll = new ArrayList<SofaTextMentionUI>();
 		
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(endDate); //endDate shows 00:00:00 PDT so incrementing by a day
@@ -148,7 +148,7 @@ public class NLPServiceImpl extends BaseOpenmrsService implements NLPService {
 		
 		if (searchTerms.length > 3) {
 			
-			stmUIAll = dao.getSofaTextMentionUIByConstraints(patient, startDate, newEndDate, searchTerms);
+			stmUIAll = dao.getSofaTextMentionUIsByConstraints(patient, startDate, newEndDate, searchTerms);
 			
 		} else {
 			for (String term : searchTerms) {
@@ -190,17 +190,18 @@ public class NLPServiceImpl extends BaseOpenmrsService implements NLPService {
 				String[] allTopTermsArr = new String[allTopTerms.size()];
 				allTopTermsArr = allTopTerms.toArray(allTopTermsArr);
 				
-				Set<SofaTextMentionUI> stmUISet = dao.getSofaTextMentionUIByConstraints(patient, startDate, newEndDate,
+				List<SofaTextMentionUI> stmUIList = dao.getSofaTextMentionUIsByConstraints(patient, startDate, newEndDate,
 				    allTopTermsArr);
 				
 				List<SofaTextMentionUI> relatedstmUIList = new ArrayList<SofaTextMentionUI>();
-				for (SofaTextMentionUI stmUI : stmUISet) {
+				for (SofaTextMentionUI stmUI : stmUIList) {
 					if (stmUI != null) { //fixes bug - no error when some search terms return no data
 						if (!(stmUI.getMentionText().equals(term))) {
 							stmUI.setRelatedTo(term);
 							relatedstmUIList.add(stmUI);
-						} else
+						} else {
 							stmUIAll.add(stmUI);
+						}
 					}
 				}
 				
@@ -215,7 +216,7 @@ public class NLPServiceImpl extends BaseOpenmrsService implements NLPService {
 	
 	@Override
 	@Transactional
-	public List<SofaDocumentUI> getSofaDocumentUIByConstraints(Patient patient, Date startDate, Date endDate,
+	public List<SofaDocumentUI> getSofaDocumentUIsByConstraints(Patient patient, Date startDate, Date endDate,
 	        String[] searchTerms) {
 		
 		List<SofaDocumentUI> dateList = new ArrayList<SofaDocumentUI>();
@@ -227,7 +228,7 @@ public class NLPServiceImpl extends BaseOpenmrsService implements NLPService {
 		
 		if (searchTerms.length > 3) {
 			
-			dateList = dao.getSofaDocumentUIByConstraints(patient, startDate, newEndDate, searchTerms);
+			dateList = dao.getSofaDocumentUIsByConstraints(patient, startDate, newEndDate, searchTerms);
 			
 		} else {
 			
@@ -273,7 +274,7 @@ public class NLPServiceImpl extends BaseOpenmrsService implements NLPService {
 			String[] allTopTermsArr = new String[allTopTerms.size()];
 			allTopTermsArr = allTopTerms.toArray(allTopTermsArr);
 			
-			dateList = dao.getSofaDocumentUIByConstraints(patient, startDate, newEndDate, allTopTermsArr);
+			dateList = dao.getSofaDocumentUIsByConstraints(patient, startDate, newEndDate, allTopTermsArr);
 		}
 		
 		return dateList;

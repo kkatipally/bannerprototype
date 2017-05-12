@@ -49,12 +49,12 @@ public interface NLPServiceDAO {
 	
 	public SofaDocumentUI getSofaDocumentUIBySofaDocUuid(String sofaDocUuid);
 	
-	public Set<SofaTextMentionUI> getSofaTextMentionUIBySofaDocUuid(String sofaDocUuid);
+	public Set<SofaTextMentionUI> getSofaTextMentionUIsBySofaDocUuid(String sofaDocUuid);
 	
-	public Set<SofaTextMentionUI> getSofaTextMentionUIByConstraints(Patient patient, Date startDate, Date endDate,
+	public List<SofaTextMentionUI> getSofaTextMentionUIsByConstraints(Patient patient, Date startDate, Date endDate,
 	        String[] searchTerms);
 	
-	public List<SofaDocumentUI> getSofaDocumentUIByConstraints(Patient patient, Date startDate, Date endDate,
+	public List<SofaDocumentUI> getSofaDocumentUIsByConstraints(Patient patient, Date startDate, Date endDate,
 	        String[] searchTerms);
 	
 	public SessionFactory getSessionFactory();

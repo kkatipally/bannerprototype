@@ -99,7 +99,7 @@ public class SofatextmentionUIResource extends DataDelegatingCrudResource<SofaTe
 	@Override
 	protected PageableResult doSearch(RequestContext context) {
 		
-		Set<SofaTextMentionUI> stmUISet;
+		List<SofaTextMentionUI> stmUIList;
 		
 		Patient patient = context.getParameter("patient") != null ? Context.getPatientService().getPatientByUuid(
 		    context.getParameter("patient")) : null;
@@ -113,12 +113,9 @@ public class SofatextmentionUIResource extends DataDelegatingCrudResource<SofaTe
 		String[] searchTerms;
 		searchTerms = context.getRequest().getParameterValues("searchTerms");
 		
-		stmUISet = Context.getService(NLPService.class).getSofaTextMentionUIByConstraints(patient, startDate, endDate,
+		stmUIList = Context.getService(NLPService.class).getSofaTextMentionUIsByConstraints(patient, startDate, endDate,
 		    searchTerms);
-		
-		List<SofaTextMentionUI> stmUIList = new ArrayList<SofaTextMentionUI>();
-		stmUIList.addAll(stmUISet);
-		
+
 		return new NeedsPaging<SofaTextMentionUI>(stmUIList, context);
 		
 	}

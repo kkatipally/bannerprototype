@@ -8,7 +8,7 @@ var visitNotesApp = angular.module('visitNotesApp', [
   'ui.bootstrap'
 ])
 
-    .config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
+    .config(['$routeProvider', function($routeProvider) {
 
   $routeProvider.when('/view1', {
 	templateUrl: '/' + OPENMRS_CONTEXT_PATH + '/ms/uiframework/resource/bannerprototype/partials/view1.html',

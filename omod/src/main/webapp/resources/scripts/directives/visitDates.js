@@ -15,7 +15,6 @@ visitNotesApp.directive('visitDates', function($compile){
 
         	function formatDateForToolTip(date) {
 
-                  //console.log("date: " + date);
                   var day = date.getDate();
                   var month=new Array();
                     month[0]="Jan";
@@ -54,7 +53,6 @@ visitNotesApp.directive('visitDates', function($compile){
         		for(var i=0; i<data.length; i++){
         			allDates.push(data[i].dateCreated);
         		}
-        		//console.log("allDates: " + JSON.stringify(allDates));
         		allDates.sort();
         		
         		var xScale = d3.scaleTime()
@@ -62,8 +60,7 @@ visitNotesApp.directive('visitDates', function($compile){
                 .range([0, width]);
 
         		var xAxisGen = d3.axisBottom(xScale).tickFormat(d3.timeFormat("%b %y"));
-        		var yAxisGen = d3.axisLeft();
-        		
+
                 var tooltip = d3.select("#visitdatesdir").append("div")
                 .attr("class", "tooltip")
                 .style("opacity", 0);
@@ -109,7 +106,6 @@ visitNotesApp.directive('visitDates', function($compile){
       	
         	scope.$watch('[visitDatesDataUpdated, sliderMinDate, sliderMaxDate]',
                     function(newVal, oldVal) {
-                      //if(oldVal != newVal){
 
                       // if 'val' is undefined, exit
                         if (newVal[0] == false || !newVal[1] || !newVal[2]) {
@@ -118,20 +114,13 @@ visitNotesApp.directive('visitDates', function($compile){
                         
                         d3.select("svg").remove();
                         
-                        //var data = newVal[1];
                         var data = scope.visitDatesData;
                         var minDate = newVal[1];
                         var maxDate = newVal[2];
                         
                         buildviz(data, minDate, maxDate);
-                      //}
-        	}/*, true*/);
-        	
-        	function monthsBefore(d, months) {
-        		  var nd = new Date(d.getTime());
-        		  nd.setMonth(d.getMonth() - months);
-        		  return nd;
-        		}
+        	});
+
         }
     }
 });

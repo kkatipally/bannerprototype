@@ -16,7 +16,7 @@
                     <input type="text" class="form-control nomargin" ng-model="searchInput" placeholder="Search">
                 </div>
                 <div class="col-xs-2 pad">
-                    <input type="submit" class="form-control nomargin">
+                    <input type="submit" class="form-control nomargin" value="Search">
                 </div>
             </form>
             <button id="backButton" type="button" class="btn btn-secondary inner" ng-click="backToSearchPage()">Back
@@ -56,31 +56,7 @@
 
         <div id="heatmapsection">
             <div class="row">
-                <!--<div class="col-xs-1"><span class="label label-default">Start Date:</span></div>
-                <div class="col-xs-3">
-                    <p class="input-group">
-                        <input type="text" class="form-control" uib-datepicker-popup="{{format}}"
-                               ng-model="startDate.name" ng-model-options="{timezone: 'utc'}"
-                               is-open="popup1.opened" datepicker-options="dateOptions1" close-text="Close"/>
-                        <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="open1()"><i
-                    class="glyphicon glyphicon-calendar"></i></button>
-                        </span>
-                    </p>
-                </div>
 
-                <div class="col-xs-1"><span class="label label-default">End Date:</span></div>
-                <div class="col-xs-3">
-                    <p class="input-group">
-                        <input type="text" class="form-control" uib-datepicker-popup="{{format}}"
-                               ng-model="endDate.name" ng-model-options="{timezone: 'utc'}"
-                               is-open="popup2.opened" datepicker-options="dateOptions2" close-text="Close"/>
-                        <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="open2()"><i
-                    class="glyphicon glyphicon-calendar"></i></button>
-                        </span>
-                    </p>
-                </div>-->
                 <button id="resetHeatMap" type="button" class="btn btn-secondary col-xs-1" ng-click="resetHeatMap()">
                     Reset
                 </button>
@@ -100,6 +76,7 @@
         <div id="visit-note" class="row">
             <div id="visit-note-list" class="col-xs-6">
                 <h6>Visit Note List</h6>
+                <h6 class="text"> Current filters:  {{filterFromDate | date}}  {{filterToDate | date}}  {{matchTerm}}</h6>
                 <form>
                     <div class="col-xs-8">
                         <input type="text" class="form-control visitListInput" ng-model="visitListInput"
@@ -109,7 +86,6 @@
                             ng-click="resetVisitList()">Reset
                     </button>
                 </form>
-                <h6 class="text"> Current filters:  {{filterFromDate | date}}  {{filterToDate | date}}  {{matchTerm}}</h6>
                 <table class="table table-bordered table-hover table-sm">
                     <thead class="thead-default">
                     <tr>
@@ -152,7 +128,7 @@
                                placeholder="Search">
                     </div>
                     <div class="col-xs-4">
-                        <input type="submit" class="form-control">
+                        <input type="submit" class="form-control" value="Search">
                     </div>
                 </form>
 
@@ -165,7 +141,6 @@
                     <uib-tab index="1" heading="Problems">
                     <div class="render" data-i2="css:[{fontSize:'12px'},{fontSize:'30px'}]">
 
-                        <!--<render-note id="renderVisitNote" display="problemCloud">-->
 			            <span ng-repeat="term in problemCloud">
 
 			                <a ngHref="#" ng-click="addToFind(term.word)">
@@ -175,7 +150,6 @@
     		                    </span>
     		                </a>
 			            </span>
-                        <!--</render-note>-->
                     </div>
                     </uib-tab>
                     <uib-tab index="2" heading="Treatments">

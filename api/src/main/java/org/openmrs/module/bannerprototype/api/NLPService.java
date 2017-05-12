@@ -99,7 +99,7 @@ public interface NLPService extends OpenmrsService {
 	public SofaTextMention getSofaTextMentionByUuid(String uuid);
 	
 	/**
-	 * returns the SofaTextMention by UUID
+	 * returns the SofaTextMentionUI by SofaTextMention UUID
 	 * 
 	 * @param uuid
 	 * @return
@@ -107,7 +107,7 @@ public interface NLPService extends OpenmrsService {
 	public SofaTextMentionUI getSofaTextMentionUIByUuid(String uuid);
 	
 	/**
-	 * returns SofaDocumentUI by SofaDoc UUID
+	 * returns the SofaDocumentUI by SofaDocument UUID
 	 * 
 	 * @param sofaDocUuid
 	 * @return
@@ -115,27 +115,36 @@ public interface NLPService extends OpenmrsService {
 	public SofaDocumentUI getSofaDocumentUIBySofaDocUuid(String sofaDocUuid);
 	
 	/**
-	 * returns SofaTextMentionUIs by SofaDoc UUID
+	 * returns SofaTextMentionUI objects by SofaDocument UUID
 	 * 
 	 * @param sofaDocUuid
 	 * @return
 	 */
-	public Set<SofaTextMentionUI> getSofaTextMentionUIBySofaDocUuid(String sofaDocUuid);
+	public Set<SofaTextMentionUI> getSofaTextMentionUIsBySofaDocUuid(String sofaDocUuid);
 	
 	/**
-	 * returns SofaTextMentionUIs by constraints
+	 * returns SofaTextMentionUI objects associated with patient, start and end dates, and search
+	 * terms
 	 * 
+	 * @param patient
+	 * @param startDate
+	 * @param endDate
+	 * @param searchTerms
 	 * @return
 	 */
-	public Set<SofaTextMentionUI> getSofaTextMentionUIByConstraints(Patient patient, Date startDate, Date endDate,
+	public List<SofaTextMentionUI> getSofaTextMentionUIsByConstraints(Patient patient, Date startDate, Date endDate,
 	        String[] searchTerms);
 	
 	/**
-	 * returns SofaDocumentUIs by constraints
+	 * returns SofaDocumentUI objects associated with patient, start and end dates, and search terms
 	 * 
+	 * @param patient
+	 * @param startDate
+	 * @param endDate
+	 * @param searchTerms
 	 * @return
 	 */
-	public List<SofaDocumentUI> getSofaDocumentUIByConstraints(Patient patient, Date startDate, Date endDate,
+	public List<SofaDocumentUI> getSofaDocumentUIsByConstraints(Patient patient, Date startDate, Date endDate,
 	        String[] searchTerms);
 	
 	/**
@@ -154,17 +163,23 @@ public interface NLPService extends OpenmrsService {
 	public List<SofaDocument> getSofaDocumentsByPatient(Patient patient);
 	
 	/**
-	 * returns all SofaDocument objects associated with patient
+	 * returns all SofaDocument objects associated with patient, start and end dates
 	 * 
 	 * @param patient
+	 * @param startDate
+	 * @param endDate
 	 * @return
 	 */
 	public List<SofaDocument> getSofaDocumentsByPatientAndDateRange(Patient patient, Date startDate, Date endDate);
 	
 	/**
-	 * returns all SofaDocument objects associated with patient, date range and searchTerm
+	 * returns all SofaDocument objects associated with patient, start and end dates, and search
+	 * terms
 	 * 
 	 * @param patient
+	 * @param startDate
+	 * @param endDate
+	 * @param searchTerm
 	 * @return
 	 */
 	public List<SofaDocument> getSofaDocumentsByConstraints(Patient patient, Date startDate, Date endDate, String searchTerm);

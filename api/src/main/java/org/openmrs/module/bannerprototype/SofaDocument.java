@@ -150,8 +150,8 @@ public class SofaDocument extends BaseOpenmrsData implements Serializable {
 	}
 	
 	/**
-	 * Helper method to generate HTML for controller. This method will be moved to the controller
-	 * class in the
+	 * Helper method to generate HTML to render on the UI. Each mention in the SofaDocument is given
+	 * a unique id. startIndex is the ID for the first mention in a SofaText.
 	 * 
 	 * @return the annotatedHTML
 	 */

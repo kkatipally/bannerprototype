@@ -1,34 +1,38 @@
 <div ng-app="visitNotesApp" class="center">
-<div ng-controller="cloudController">
-    <h4>Select start and end dates, entity type (all/problems/treatments/tests) and number of entities to view:</h4>
-    
-    <div >
-    <visit-dates id="visitdatesdir" visit-dates-data="visitDatesData" visit-dates-data-updated="visitDatesDataUpdated" visit-date-uuid="visitDateUuid" slider-min-date="sliderMinDate" slider-max-date="sliderMaxDate"/>
-	</div>
-	
-    <article>
-        <div id="slider" slider slider-min-date=sliderMinDate slider-max-date=sliderMaxDate></div>
-    </article>
+    <div ng-controller="cloudController">
+        <h4>Select start and end dates, entity type (all/problems/treatments/tests) and number of entities to view:</h4>
+
+        <div>
+            <visit-dates id="visitdatesdir" visit-dates-data="visitDatesData"
+                         visit-dates-data-updated="visitDatesDataUpdated" visit-date-uuid="visitDateUuid"
+                         slider-min-date="sliderMinDate" slider-max-date="sliderMaxDate"/>
+        </div>
+
+        <article>
+            <div id="slider" slider slider-min-date=sliderMinDate slider-max-date=sliderMaxDate></div>
+        </article>
 
 
-        <div id="entityTypes" class="btn-group" data-toggle="buttons-radio" name="entityType" ng-model="entityTypes.selectedValue">
-            <entityType ng-repeat="entityType in entityTypes" >
+        <div id="entityTypes" class="btn-group" data-toggle="buttons-radio" name="entityType"
+             ng-model="entityTypes.selectedValue">
+            <entityType ng-repeat="entityType in entityTypes">
                 <button type="button" class="btn btn-secondary" ng-click="selectEntityType(entityType)">
                     {{entityType.name}}
                 </button>
             </entityType>
         </div>
-        
-        
+
+
         <div id="dropdownpage1" class="btn-group">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Number of entities
                 <span class="caret"></span></button>
-            <ul id="numTermsDropdownMenu" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" ng-model="displayNumTerms.selectedValue">
+            <ul id="numTermsDropdownMenu" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton"
+                ng-model="displayNumTerms.selectedValue">
                 <li ng-repeat="displayNumTerm in displayNumTerms">
                     <a class="dropdown-item" ng-click="selectDisplayNumTerms(displayNumTerm)">
-                    {{displayNumTerm.name}}
+                        {{displayNumTerm.name}}
                     </a>
                 </li>
             </ul>
@@ -37,39 +41,39 @@
         <br>
 
 
-   <div id="cloudborder">
-        <div id="cloud">
-        <div data-i2="css:[{fontSize:'12px'},{fontSize:'30px'}]">
+        <div id="cloudborder">
+            <div id="cloud">
+                <div data-i2="css:[{fontSize:'12px'},{fontSize:'30px'}]">
 		
 			<span ng-repeat="term in finalCloud">
 			
 			<a ngHref="#" ng-click="addToSearch(term.word)">
-			<span data-i2="rate:{{term.count}}" ng-class="{'cloud-problem': term.className === 'problem', 'cloud-treatment': term.className === 'treatment','cloud-test': term.className === 'test'}">
+			<span data-i2="rate:{{term.count}}"
+                  ng-class="{'cloud-problem': term.className === 'problem', 'cloud-treatment': term.className === 'treatment','cloud-test': term.className === 'test'}">
 			{{term.word}}
     		</span>
     		</a>
 			</span>
-		
-            
-	</div>
-        </div>
-    </div>
 
- 
-    <div class="container">
-    <form class="searchbottom" ng-submit="page1Submit(searchInput)">
-        <!-- <div class="form-group"> -->
-        <div class="row"> 
-        <div class="col-md-6">
-            <input type="text" class="form-control" ng-model="searchInput" placeholder="Search">
-        </div>
-        <div class="col-md-2 pad">
-            <input type="submit" class="form-control">
+
+                </div>
             </div>
         </div>
-    </form>
-</div>
- </div> 
+
+
+        <div class="container">
+            <form class="searchbottom" ng-submit="page1Submit(searchInput)">
+                <div class="row">
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" ng-model="searchInput" placeholder="Search">
+                    </div>
+                    <div class="col-md-2 pad">
+                        <input type="submit" class="form-control" value="Search">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 
