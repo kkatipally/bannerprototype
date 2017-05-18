@@ -13,6 +13,8 @@ visitNotesApp.directive('renderNote', function($compile){
                     function(newVal, oldVal) {
         		
         	   element.html(newVal);
+        	   var path = OPENMRS_CONTEXT_PATH;
+        	   element.html(element.html().replace(/OPENMRS_CONTEXT_PATH/g, path));
         	});
         }
     }

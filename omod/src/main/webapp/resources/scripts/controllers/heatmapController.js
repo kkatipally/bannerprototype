@@ -139,6 +139,7 @@ visitNotesApp
         }
 
         $scope.noteRendering = "";
+        $scope.noteText = "";
 
         //populates visit note list when a visit date is clicked on page 1
         function populateVisitNote(sofadocUI) {
@@ -181,6 +182,7 @@ visitNotesApp
                                 $timeout(
                                         function() {
                                             $scope.noteRendering = $scope.sofadocInit.annotatedHTML;
+                                            $scope.noteText = $scope.sofadocInit.text;
                                             $scope.updateMailTo();
                                             $scope.previousSearchTerm = "";
                                         },
@@ -237,6 +239,7 @@ visitNotesApp
                                             $timeout(
                                                     function() {
                                                         $scope.noteRendering = $scope.sofadocInit.annotatedHTML;
+                                                        $scope.noteText = $scope.sofadocInit.text;
                                                         $scope.updateMailTo();
                                                         $scope.previousSearchTerm = "";
                                                     },
@@ -467,6 +470,7 @@ visitNotesApp
                                 $timeout(
                                         function() {
                                             $scope.noteRendering = $scope.sofadoc.annotatedHTML;
+                                            $scope.noteText = $scope.sofadocInit.text;
                                             $scope.updateMailTo();
                                             $scope.previousSearchTerm = "";
                                         }, 0);
@@ -568,7 +572,7 @@ visitNotesApp
                            +"\nDocument Number: " + $scope.selectedNoteUuid
                            +"\nDocument Date: "+ $scope.selectedNoteDate
                            +"\nPatient MRN: " + patientMRN
-                           +"\nVisit Note Text:\n\n " + $scope.noteRendering;
+                           +"\nVisit Note Text:\n\n " + $scope.noteText;
 
             var href = "mailto:"+email
                            +"?subject="+escape(subject)

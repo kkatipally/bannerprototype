@@ -72,7 +72,3 @@ nb-configuration.xml
 /webapp/src/main/webapp/WEB-INF/dwr-modules.xml
 /webapp/src/main/webapp/WEB-INF/module_messages*
 #############
-
-
-
-*.log

@@ -273,8 +273,8 @@ public class SofaText extends BaseOpenmrsData implements Serializable, Comparabl
 	
 	private String wrapInConceptTag(String tagged, SofaTextMention m) {
 		SofaTextMentionConcept c = (SofaTextMentionConcept) m.getSofaTextMentionConcept().toArray()[0];
-		return String.format("<a href=/openmrs/dictionary/concept.htm?conceptId=%d>%s</a>", c.getConcept().getConceptId(),
-		    tagged);
+		return String.format("<a href=/OPENMRS_CONTEXT_PATH/dictionary/concept.htm?conceptId=%d>%s</a>", c.getConcept()
+		        .getConceptId(), tagged);
 	}
 	
 	private String wrapInMentionTypeTag(String mentionText, String mentionType, int startIndex) {
