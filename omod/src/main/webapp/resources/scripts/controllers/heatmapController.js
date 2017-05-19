@@ -470,7 +470,7 @@ visitNotesApp
                                 $timeout(
                                         function() {
                                             $scope.noteRendering = $scope.sofadoc.annotatedHTML;
-                                            $scope.noteText = $scope.sofadocInit.text;
+                                            $scope.noteText = $scope.sofadoc.text;
                                             $scope.updateMailTo();
                                             $scope.previousSearchTerm = "";
                                         }, 0);
