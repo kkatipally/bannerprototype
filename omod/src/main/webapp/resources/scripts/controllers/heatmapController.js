@@ -65,7 +65,7 @@ visitNotesApp
         $scope.minDate1 = monthsBefore(new Date(), 24);
 
         $scope.dateOptions1 = {
-            formatYear : 'yy',
+            formatYear : 'yyyy',
             minDate : $scope.minDate1, // min start date: 2 years ago from today
             startingDay : 0
         };
@@ -85,7 +85,7 @@ visitNotesApp
         });
 
         $scope.dateOptions2 = {
-            formatYear : 'yy',
+            formatYear : 'yyyy',
             maxDate : new Date(), // max end date: today
             startingDay : 0
         };

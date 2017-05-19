@@ -445,7 +445,13 @@ visitNotesApp.directive('heatMap', function($compile){
 
                 var xAxis = svg.append("g").call(xAxisGen)
                     .attr("class","Xaxis")
-                    .attr("transform", "translate(" + 1.5*termWidth + "," + (j+1)*gridHeight + ")");
+                    .attr("transform", "translate(" + 1.5*termWidth + "," + (j+1)*gridHeight + ")")
+                    .selectAll("text")
+                    .attr("y", 0)
+                    .attr("x", 9)
+                    .attr("dy", ".35em")
+                    .attr("transform", "rotate(45)")
+                    .style("text-anchor", "start");
 
                 svg.selectAll(".legend").remove();
                 

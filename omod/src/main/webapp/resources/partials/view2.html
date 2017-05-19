@@ -27,7 +27,7 @@
             <div class="col-xs-1"><span class="label label-default">Start Date</span></div>
             <div class="col-xs-3">
                 <p class="input-group">
-                    <input type="text" class="form-control" uib-datepicker-popup="{{format}}"
+                    <input type="text" readonly class="form-control" uib-datepicker-popup="{{format}}"
                            ng-model="startDate.name" ng-model-options="{timezone: 'utc'}"
                            is-open="popup1.opened" datepicker-options="dateOptions1" close-text="Close"/>
                     <span class="input-group-btn">
@@ -40,7 +40,7 @@
             <div class="col-xs-1"><span class="label label-default">End Date</span></div>
             <div class="col-xs-3">
                 <p class="input-group">
-                    <input type="text" class="form-control" uib-datepicker-popup="{{format}}"
+                    <input type="text" readonly class="form-control" uib-datepicker-popup="{{format}}"
                            ng-model="endDate.name" ng-model-options="{timezone: 'utc'}"
                            is-open="popup2.opened" datepicker-options="dateOptions2" close-text="Close"/>
                     <span class="input-group-btn">

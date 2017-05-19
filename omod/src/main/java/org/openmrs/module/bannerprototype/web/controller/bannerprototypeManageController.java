@@ -25,6 +25,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -171,7 +172,7 @@ public class bannerprototypeManageController {
 		System.out.println("2");
 		Concept c = null;
 		String noteConceptId = Context.getAdministrationService().getGlobalProperty("bannerprototype.noteConceptId");
-		if (noteConceptId != null || !noteConceptId.isEmpty()) {
+		if (StringUtils.isNotEmpty(noteConceptId)) {
 			c = Context.getConceptService().getConcept(Integer.parseInt(noteConceptId));
 		} else {
 			c = Context.getConceptService().getConcept("Text of encounter note");

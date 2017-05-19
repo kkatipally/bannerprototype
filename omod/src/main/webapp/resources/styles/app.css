@@ -1,6 +1,5 @@
 .center {
   margin-top: 10px;
-  /*margin-left: 100px;*/
   margin-right: 10px;
   margin-bottom: 10px;
   border: 1px solid grey;
@@ -25,14 +24,11 @@ article{
 
 #entityTypes {
   margin-left: 100px;
-  /*margin-top: 25px;
-  margin-bottom: 25px;*/
 }
 
 #dropdownpage1 {
   float: right;
   margin-right: 100px;
-  /*margin-top: 25px;*/
   margin-bottom: 5px;
 }
 
@@ -46,7 +42,6 @@ article{
 }
 
 #cloudborder{
-  /*margin-top: 25px;*/
   margin-left: 25px;
   margin-right: 25px;
   border: 1px solid grey;
@@ -102,7 +97,6 @@ article{
 
 #clearHistory {
   float: left;
-  /*margin-left: 5px;*/
   margin-bottom: 5px;
 }
 
@@ -112,14 +106,13 @@ article{
 }
 
 #report-problem{
-   font-family: sans-serif;
    font-size:14px;
    float: right;
    margin-top: 10px;
 }
 
 .inner{
-     display: inline-block;
+   display: inline-block;
  }
 
 rect.bar {
@@ -127,30 +120,15 @@ rect.bar {
   stroke-width:2px;
 }
 
-/*#heatmap {
-  height: 450px;
-  border: 1px solid grey;
-  border-radius: 5px;
-  margin: 5px;
-  padding: 5px;
-}*/
-
 h6 {
   background-color: #eceeef;
-//background-color: #1abc9c;
-}
-
-#visit-note {
-  /*margin-right: 190px;*/
 }
 
 #visit-note-list {
   border: 1px solid grey;
   border-radius: 15px;
-/*margin: 5px;*/
   padding: 10px;
   float: left;
-/*width: 375px;*/
   height: 550px;
 }
 
@@ -166,18 +144,6 @@ h6 {
 	background-color: rgb(157, 198, 245);
 }
 
-/*.renderData{
-  margin-right: 20px;	
-}
-
-.ngsb-track {
-  width: 10px;
-}
-
-.scroll {
-  height: 230px;
-}*/
-
 .tabHeading{
   margin-top: 10px;
 }
@@ -189,7 +155,6 @@ h6 {
 }
 
 .render{
-  font-family: sans-serif;
   font-size:14px;
   height: 370px;
   overflow-y: scroll;
@@ -213,12 +178,10 @@ h6 {
 }
 
 p{
-  font-family: sans-serif;
   font-size:14px;
 }
 
 table{
-  font-family: sans-serif;
   font-size:14px;
 }
 
@@ -235,36 +198,30 @@ table{
 span.cloud-problem {
   margin: 10px;
   margin-left:0px;
-  font-family: "sans-serif";
   color: purple
 }
 
 span.cloud-test {
   margin: 10px;
   margin-left:0px;
-  font-family: "sans-serif";
   color: blue /*rgb(17, 76, 126)*/
 }
 
 span.cloud-treatment {
   margin: 10px;
   margin-left:0px;
-  font-family: "sans-serif";
   color: green /*rgb(33, 119, 67)*/
 }
 
 span.mention-type-problem {
-  font-family: "sans-serif";
   color: purple
 }
 
 span.mention-type-test {
-  font-family: "sans-serif";
   color: blue /*rgb(17, 76, 126)*/
 }
 
 span.mention-type-treatment {
-  font-family: "sans-serif";
   color: green /*rgb(33, 119, 67)*/
 }
 
@@ -278,11 +235,6 @@ span.mention-type-treatment {
   cursor:pointer;
   pointer-events: all;
 }
-
-/*heatmap:hover
-  {
-     visibility: hidden;
-  }*/
 
 #heatmapdir {
   margin-top: 5px;
@@ -302,7 +254,6 @@ div.tooltip {
   border-radius: 5px;
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
   pointer-events: none; /* VERY IMPORTANT! */
-  font-family: sans-serif;
   font-size:12px;
 }
 
@@ -318,6 +269,5 @@ div.tooltip {
 }
 
 .legendtext {
-  font-family: sans-serif;
   font-size:12px;
 }
