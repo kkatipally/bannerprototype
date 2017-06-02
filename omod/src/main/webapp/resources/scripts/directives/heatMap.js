@@ -118,7 +118,7 @@ visitNotesApp.directive('heatMap', function($compile){
 
                 var svg = d3.select("#heatmapdir").append("svg")
                     .attr("width", width + margin.left + margin.right)
-                    .attr("height", ((allTerms.length+5)*gridHeight) + margin.top + margin.bottom)
+                    .attr("height", ((allTerms.length+searchTerms.length+4)*gridHeight) + margin.top + margin.bottom)
                     .append("g")
                     .attr("class", "g_main")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -215,6 +215,20 @@ visitNotesApp.directive('heatMap', function($compile){
                 //Draws all the visualization row by row
                 nested
                     .each(function(d1, nestedInd) {
+
+                        if ((searchTerms.indexOf(d1.mentionText) > -1) && (nestedInd > 0)){
+                            var emptyLine = d3.select(this)
+                                .selectAll('.emptyline')
+                                .data(d1)
+                                .enter().append('rect')
+                                .attr('x', 0)
+                                .attr("y", function (d, i) { return ((gridHeight*3)/4) + ((j+1) * gridHeight); })
+                                .attr('width', width)
+                                .attr('height', gridHeight)
+                                .attr('fill', 'white')
+                                .attr("class", "emptyline");
+                            j++;
+                        }
 
                         var grps = Math.ceil(numMonths/groupMonths);
                         var startRect, endRect, lengthRect, yRect, totFreq, addFreq, currentDate, mention;
