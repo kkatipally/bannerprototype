@@ -241,10 +241,9 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 		List<SofaDocumentUI> dateList = new ArrayList<SofaDocumentUI>();
 		dateList.add(sdUI);
 		
-		//String uuidMention = result[0].toString();
 		String textMention = result[1].toString().toLowerCase();
 		String typeMention = result[2].toString();
-		SofaTextMentionUI stmUI = new SofaTextMentionUI(/*uuidMention, */textMention, typeMention, dateList);
+		SofaTextMentionUI stmUI = new SofaTextMentionUI(textMention, typeMention, dateList);
 		
 		return stmUI;
 		
@@ -335,104 +334,6 @@ public class HibernateNLPServiceDAO implements NLPServiceDAO {
 		sdUI.setTestWordList(testWordList);
 		
 		return sdUI;
-	}
-	
-	public Set<SofaTextMentionUI> getSofaTextMentionUIsBySofaDocUuid(String sofaDocUuid) {
-		
-		StringBuffer sb = new StringBuffer();
-		
-		sb.append("select stm.mention_text as mentionText, stm.mention_type as mentionType,");
-		sb.append(" sd.uuid as dateUuid, sd.patient_id as patientId, sd.date_created as dateCreated,");
-		sb.append(" sd.encounter_id as encounterId");
-		sb.append(" from sofatext_mention stm");
-		sb.append(" INNER JOIN sofatext st");
-		sb.append(" ON stm.sofatext_id = st.sofatext_id");
-		sb.append(" INNER JOIN sofa_document sd");
-		sb.append(" ON st.sofa_document_id = sd.sofa_document_id");
-		sb.append(" WHERE sd.uuid = :sofaDocUuid ");
-		sb.append(" ORDER by stm.mention_text");
-		
-		String sqlQuery = sb.toString();
-		
-		Query query = sessionFactory.getCurrentSession().createSQLQuery(sqlQuery).addScalar("mentionText", new StringType())
-		        .addScalar("mentionType", new StringType()).addScalar("dateUuid", new StringType())
-		        .addScalar("patientId", new IntegerType()).addScalar("dateCreated", new DateType())
-		        .addScalar("encounterId", new IntegerType()).setParameter("sofaDocUuid", sofaDocUuid);
-		
-		List results = query.list();
-		
-		int index = 0;
-		SofaTextMentionUI prevStmUI = null;
-		Set<SofaTextMentionUI> stmUISet = new LinkedHashSet<SofaTextMentionUI>();
-		
-		SofaDocumentUI sdUI = null;
-		
-		for (Object obj : results) {
-			
-			Object[] result = (Object[]) obj;
-			String textMention = result[0].toString().toLowerCase();
-			String typeMention = result[1].toString();
-			
-			if (index == 0) {
-				String uuidDate = result[2].toString();
-				
-				Date dateCr = null;
-				try {
-					dateCr = new SimpleDateFormat("yyyy-MM-dd").parse(result[4].toString());
-				}
-				catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				String provider = "";
-				String location = "";
-				String diagnosis = "";
-				if (result[5] != null) {
-					int encounterID = (Integer) result[5];
-					Encounter e = Context.getEncounterService().getEncounter(encounterID);
-					provider = e.getProvider().getGivenName() + " " + e.getProvider().getFamilyName();
-					location = e.getLocation().getName();
-					Set<Obs> obs = e.getAllObs();
-					
-					Concept c1 = Context.getConceptService().getConcept(1284); //coded diagnosis
-					Concept c2 = Context.getConceptService().getConcept(161602); //non coded diagnosis
-					
-					for (Obs o : obs) {
-						Concept obs_concept = o.getConcept();
-						
-						//if the concept associated with the observation is a diagnosis Concept, proceed
-						if ((obs_concept.equals(c2)) && (!o.getValueText().equals(""))) {
-							// extract diagnosis
-							diagnosis = o.getValueText();
-						}
-						if (obs_concept.equals(c1)) {
-							Concept valueCoded = o.getValueCoded();
-							ConceptName valueCodedName = o.getValueCodedName();
-							diagnosis = valueCodedName.toString();
-						}
-					}
-				}
-				
-				sdUI = new SofaDocumentUI(uuidDate, dateCr, provider, location, diagnosis);
-			}
-			
-			if ((index == 0) || !(prevStmUI.getMentionText().equals(textMention))) {
-				if (index > 0)
-					stmUISet.add(prevStmUI);
-				
-				List<SofaDocumentUI> dateList = new ArrayList<SofaDocumentUI>();
-				dateList.add(sdUI);
-				
-				SofaTextMentionUI stmUI = new SofaTextMentionUI(textMention, typeMention, dateList);
-				prevStmUI = stmUI;
-			} else {
-				prevStmUI.addDate(sdUI);
-			}
-			index++;
-		}
-		stmUISet.add(prevStmUI);
-		
-		return stmUISet;
 	}
 	
 	public List<SofaTextMentionUI> getSofaTextMentionUIsByConstraints(Patient patient, Date startDate, Date endDate,

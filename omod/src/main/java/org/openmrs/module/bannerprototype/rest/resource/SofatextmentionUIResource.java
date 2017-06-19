@@ -115,7 +115,7 @@ public class SofatextmentionUIResource extends DataDelegatingCrudResource<SofaTe
 		
 		stmUIList = Context.getService(NLPService.class).getSofaTextMentionUIsByConstraints(patient, startDate, endDate,
 		    searchTerms);
-
+		
 		return new NeedsPaging<SofaTextMentionUI>(stmUIList, context);
 		
 	}

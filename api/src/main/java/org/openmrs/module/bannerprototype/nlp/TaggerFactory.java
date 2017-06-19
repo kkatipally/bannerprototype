@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+
 import org.openmrs.api.context.Context;
 import org.springframework.core.io.ClassPathResource;
 
@@ -68,7 +69,7 @@ public class TaggerFactory {
 		
 		File f = null;
 		try {
-			//hack because ClassPathResource() doesnt find 
+			//hack because ClassPathResource() doesnt find
 			// newly uploaded files, must find manually
 			ClassPathResource cpr = new ClassPathResource("taggers");
 			for (File fi : cpr.getFile().listFiles()) {

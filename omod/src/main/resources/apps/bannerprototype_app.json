@@ -1,25 +1,24 @@
 [
-    {
-        "id": "${project.parent.artifactId}.app",
-        "description": "Allow Concept Extraction of Notes",
-        "extensionPoints": [
-            {
-                "id": "subApp.apps",
-                "description": "Apps on the basic Apps App Home Page"
-            }
-        ],
-        "extensions": [
-            {
-                "id": "${project.parent.artifactId}.appId1",
-                "extensionPointId": "patientDashboard.overallActions",
-                "type": "link",
-                "label": "Visit Notes Analysis",
-                "url": "bannerprototype/notesNLPng.page?patientId={{patient.uuid}}",
-                "icon": "icon-signin",
-                "order": 23,
-                "requiredPrivilege": "Task: some random privilege"
-            }
- 
-        ]
-    }
+  {
+    "id": "${project.parent.artifactId}.app",
+    "description": "Allow Concept Extraction of Notes",
+    "extensionPoints": [
+      {
+        "id": "subApp.apps",
+        "description": "Apps on the basic Apps App Home Page"
+      }
+    ],
+    "extensions": [
+      {
+        "id": "${project.parent.artifactId}.appId1",
+        "extensionPointId": "patientDashboard.overallActions",
+        "type": "link",
+        "label": "Visit Notes Analysis",
+        "url": "bannerprototype/notesNLPng.page?patientId={{patient.uuid}}",
+        "icon": "icon-signin",
+        "order": 23,
+        "requiredPrivilege": "Task: some random privilege"
+      }
+    ]
+  }
 ]

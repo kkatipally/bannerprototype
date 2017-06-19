@@ -11,6 +11,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.sentdetect.SentenceModel;
 import org.junit.Test;
@@ -25,7 +26,6 @@ public class DocumentTaggerTest extends BaseModuleContextSensitiveTest {
 	@Test
 	public void testsplitSentences() throws IOException {
 		
-		//System.out.println("splitSentences");
 		BufferedReader br = new BufferedReader(new FileReader(this.getClass().getClassLoader().getResource("visitnote.txt")
 		        .getFile()));
 		StringBuilder sb = new StringBuilder();
@@ -40,27 +40,12 @@ public class DocumentTaggerTest extends BaseModuleContextSensitiveTest {
 		String document = sb.toString();
 		br.close();
 		
-		SofaText sofa;
-		ArrayList<SofaText> sofaTexts = new ArrayList<SofaText>();
+		DocumentTagger dt = new DocumentTagger();
+		ArrayList<SofaText> sofaTexts = dt.splitSentences(document);
 		
-		String openNLPmodel = this.getClass().getClassLoader().getResource("en-sent.bin").getFile();
-		InputStream is = new FileInputStream(openNLPmodel);
-		SentenceModel model = new SentenceModel(is);
-		SentenceDetectorME sdetector = new SentenceDetectorME(model);
-		is.close();
-		
-		long startTime = System.nanoTime();
-		
-		String sentences[] = sdetector.sentDetect(document);
-		
-		for (String sentence : sentences) {
-			//System.out.println(sentence);
-			sofa = new SofaText(sentence);
-			sofaTexts.add(sofa);
+		for (SofaText st : sofaTexts) {
+			System.out.println(st.getText());
 		}
-		
-		long timeTaken = System.nanoTime() - startTime;
-		//System.out.println("Time taken: " + timeTaken);
 		
 	}
 }

@@ -4,7 +4,7 @@
 
     <groupId>org.openmrs.module</groupId>
     <artifactId>bannerprototype</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>2.0</version>
     <packaging>pom</packaging>
     <name>Visit Note Analysis Module</name>
     <description>Module for Natural Language Processing of Visit Notes</description>

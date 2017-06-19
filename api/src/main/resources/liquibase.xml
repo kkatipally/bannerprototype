@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
- 
+
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
     <!--
         See http://www.liquibase.org/manual/home#available_database_refactorings
@@ -11,28 +11,28 @@
     <changeSet author="eshleman" id="eshleman_bannertables">
         <preConditions onFail="WARN" onError="WARN">
             <not>
-                <tableExists tableName="sofa_document" />
-                <tableExists tableName="sofatext" />
-                <tableExists tableName="sofatext_mention" />
-                <tableExists tableName="sofatext_mention_concept" />
+                <tableExists tableName="sofa_document"/>
+                <tableExists tableName="sofatext"/>
+                <tableExists tableName="sofatext_mention"/>
+                <tableExists tableName="sofatext_mention_concept"/>
             </not>
         </preConditions>
-         
-         <createTable tableName="sofa_document">
-            
+
+        <createTable tableName="sofa_document">
+
             <column name="date_created" type="datetime"></column>
-            
+
             <column name="sofa_document_id" type="int" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="encounter_id" type="int"></column>
             <column name="obs_id" type="int"></column>
-            
+
             <column name="patient_id" type="int"></column>
             <column name="uuid" type="char(38)"></column>
             <column name="text" type="text"></column>
         </createTable>
-        
+
         <createTable tableName="sofatext">
             <column name="sofatext_id" type="int" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -44,7 +44,7 @@
             <column name="uuid" type="char(38)"></column>
             <column name="text" type="varchar(1024)"></column>
         </createTable>
-        
+
         <createTable tableName="sofatext_mention">
             <column name="sofatext_mention_id" type="int" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -55,9 +55,9 @@
             <column name="mention_start" type="int"></column>
             <column name="mention_end" type="int"></column>
             <column name="mention_type" type="varchar(255)"></column>
-            
+
         </createTable>
-        
+
         <createTable tableName="sofatext_mention_concept">
             <column name="sofatext_mention_concept_id" type="int" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -65,9 +65,9 @@
             <column name="sofatext_mention_id" type="int"></column>
             <column name="concept_id" type="int"></column>
             <column name="uuid" type="varchar(255)"></column>
-            
+
         </createTable>
     </changeSet>
-    
-    
+
+
 </databaseChangeLog>

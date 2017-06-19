@@ -121,7 +121,7 @@ public class SofaText extends BaseOpenmrsData implements Serializable, Comparabl
 			}
 			
 		}
-		//add mention to SofaText 
+		//add mention to SofaText
 		sofaTextMention.add(new SofaTextMention(this, m, new ArrayList<Concept>()));
 		return true;
 		

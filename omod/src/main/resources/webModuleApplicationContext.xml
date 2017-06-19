@@ -20,70 +20,71 @@
   		    http://www.springframework.org/schema/util
   		    http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
-	<!-- Add here beans related to the web context -->
+    <!-- Add here beans related to the web context -->
 
-	 
-	<!-- Annotation based controllers -->
-	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
-	
-	<context:component-scan base-package="org.openmrs.module.bannerprototype.web.controller" />
-	
-	<bean parent="serviceContext">
-		<property name="moduleService">
-			<list>
-				<value>${project.parent.groupId}.${project.parent.artifactId}.api.NLPService</value>
-				<bean
-					class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-					<property name="transactionManager">
-						<ref bean="transactionManager" />
-					</property>
-					<property name="target">
-						<bean class="${project.parent.groupId}.${project.parent.artifactId}.api.impl.NLPServiceImpl">
-							<property name="dao">
-								<bean class="${project.parent.groupId}.${project.parent.artifactId}.api.db.hibernate.HibernateNLPServiceDAO">
-									<property name="sessionFactory">
-										<ref bean="sessionFactory" />
-									</property>
-								</bean>
-							</property>
-						</bean>
-					</property>
-					<property name="preInterceptors">
-						<ref bean="serviceInterceptors" />
-					</property>
-					<property name="transactionAttributeSource">
-						<ref bean="transactionAttributeSource" />
-					</property>
-				</bean>
-			</list>
-		</property>
-	</bean>
-	
-	<bean id="bannerPatientTabUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+
+    <!-- Annotation based controllers -->
+    <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
+
+    <context:component-scan base-package="org.openmrs.module.bannerprototype.web.controller"/>
+
+    <bean parent="serviceContext">
+        <property name="moduleService">
+            <list>
+                <value>${project.parent.groupId}.${project.parent.artifactId}.api.NLPService</value>
+                <bean
+                        class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+                    <property name="transactionManager">
+                        <ref bean="transactionManager"/>
+                    </property>
+                    <property name="target">
+                        <bean class="${project.parent.groupId}.${project.parent.artifactId}.api.impl.NLPServiceImpl">
+                            <property name="dao">
+                                <bean class="${project.parent.groupId}.${project.parent.artifactId}.api.db.hibernate.HibernateNLPServiceDAO">
+                                    <property name="sessionFactory">
+                                        <ref bean="sessionFactory"/>
+                                    </property>
+                                </bean>
+                            </property>
+                        </bean>
+                    </property>
+                    <property name="preInterceptors">
+                        <ref bean="serviceInterceptors"/>
+                    </property>
+                    <property name="transactionAttributeSource">
+                        <ref bean="transactionAttributeSource"/>
+                    </property>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="bannerPatientTabUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
         <property name="order">
             <value>51</value>
         </property>   <!-- this will ensure the mapping is loaded before mappings from core
          we are replacing the core jsp with ours; this is used to replace patient dashboard regimen tab with our tab -->
         <property name="mappings">
-           
-            <props>              
+
+            <props>
                 <prop key="**/nlpPatientNotes.portlet">MyNLPNotesPortletController</prop>
             </props>
         </property>
     </bean>
-    	 
-    <!-- Annotation based controllers  -->	
+
+    <!-- Annotation based controllers  -->
     <bean class="org.openmrs.ui.framework.StandardModuleUiConfiguration">
         <property name="moduleId" value="bannerprototype"/>
     </bean>
-	
 
-    <bean id="MyNLPNotesPortletController" class="org.openmrs.module.bannerprototype.web.controller.NLPPatientNotesPortletController" />
-	
-	<!-- Annotation based controllers -->
-	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
-	
-	<context:component-scan base-package="org.openmrs.module.bannerprototype.web.controller" />
- 
-		
+
+    <bean id="MyNLPNotesPortletController"
+          class="org.openmrs.module.bannerprototype.web.controller.NLPPatientNotesPortletController"/>
+
+    <!-- Annotation based controllers -->
+    <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
+
+    <context:component-scan base-package="org.openmrs.module.bannerprototype.web.controller"/>
+
+
 </beans>

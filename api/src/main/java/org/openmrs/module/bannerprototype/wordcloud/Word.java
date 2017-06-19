@@ -67,7 +67,6 @@ public class Word extends BaseOpenmrsData implements Serializable, Comparable {
 		
 		return 0;
 	}*/
-	
 	public String getClassName() {
 		return className;
 	}

@@ -9,7 +9,8 @@
 
     <div class="container-fluid">
         <div class="row">
-            <button id="clearHistory" type="button" class="btn btn-secondary inner" ng-click="clearHistory()">Clear History
+            <button id="clearHistory" type="button" class="btn btn-secondary inner" ng-click="clearHistory()">Clear
+                History
             </button>
             <form class="searchtop inner" ng-submit="page2Submit(searchInput)">
                 <div class="col-xs-10 pad">
@@ -76,7 +77,7 @@
         <div id="visit-note" class="row">
             <div id="visit-note-list" class="col-xs-6">
                 <h6>Visit Note List</h6>
-                <h6 class="text"> Current filters:  {{filterFromDate | date}}  {{filterToDate | date}}  {{matchTerm}}</h6>
+                <h6 class="text"> Current filters: {{filterFromDate | date}} {{filterToDate | date}} {{matchTerm}}</h6>
                 <form>
                     <div class="col-xs-8">
                         <input type="text" class="form-control visitListInput" ng-model="visitListInput"
@@ -139,21 +140,21 @@
                         </div>
                     </uib-tab>
                     <uib-tab index="1" heading="Problems">
-                    <div class="render" data-i2="css:[{fontSize:'12px'},{fontSize:'30px'}]">
+                        <div class="render" data-i2="css:[{fontSize:'12px'},{fontSize:'30px'}]">
 
 			            <span ng-repeat="term in problemCloud">
 
 			                <a ngHref="#" ng-click="addToFind(term.word)">
 			                    <span data-i2="rate:{{term.count}}"
-                                    ng-class="{'cloud-problem': term.className === 'problem', 'cloud-treatment': term.className === 'treatment','cloud-test': term.className === 'test'}">
+                                      ng-class="{'cloud-problem': term.className === 'problem', 'cloud-treatment': term.className === 'treatment','cloud-test': term.className === 'test'}">
 			                    {{term.word}}
     		                    </span>
     		                </a>
 			            </span>
-                    </div>
+                        </div>
                     </uib-tab>
                     <uib-tab index="2" heading="Treatments">
-                    <div class="render" data-i2="css:[{fontSize:'12px'},{fontSize:'30px'}]">
+                        <div class="render" data-i2="css:[{fontSize:'12px'},{fontSize:'30px'}]">
 
 			            <span ng-repeat="term in treatmentCloud">
 
@@ -164,7 +165,7 @@
     		                    </span>
     		                </a>
 			            </span>
-                    </div>
+                        </div>
                     </uib-tab>
                     <uib-tab index="3" heading="Tests">
                         <div class="render" data-i2="css:[{fontSize:'12px'},{fontSize:'30px'}]">

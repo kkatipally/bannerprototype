@@ -5,9 +5,9 @@
  */
 
 /**
- * This is a slightly modified version of the CRFTagger class distributed with the BANNER source code.  
- * 
- * It is unlikely that future OpenMRS developers will want to modify this file.  
+ * This is a slightly modified version of the CRFTagger class distributed with the BANNER source code.
+ * <p>
+ * It is unlikely that future OpenMRS developers will want to modify this file.
  * Changes will most likely be made to classes in the in the org.openmrs.module.bannerprototype.nlp package
  */
 package com.sfsu.bannertrain.train;

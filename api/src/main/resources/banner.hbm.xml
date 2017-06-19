@@ -1,131 +1,129 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC
-    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 
 <hibernate-mapping package="org.openmrs.module.bannerprototype">
 
 
-	<class name="SofaDocument"
-		table="sofa_document">
-		<id name="sofaDocumentId" type="int" column="sofa_document_id" unsaved-value="0">
-			<generator class="native" />
-		</id>
-		<discriminator column="sofa_document_id" insert="false" />
-		<property name="uuid" type="java.lang.String" column="uuid"
-			length="38" unique="true" />
+    <class name="SofaDocument"
+           table="sofa_document">
+        <id name="sofaDocumentId" type="int" column="sofa_document_id" unsaved-value="0">
+            <generator class="native"/>
+        </id>
+        <discriminator column="sofa_document_id" insert="false"/>
+        <property name="uuid" type="java.lang.String" column="uuid"
+                  length="38" unique="true"/>
 
-        
-		<property name="text" type="java.lang.String" column="text" />
-		
-		<property name="dateCreated" type="java.util.Date" column="date_created"/>
-		
-		<set name="sofaText" table="sofatext" 
-				inverse="true" lazy="false" fetch="select">
+
+        <property name="text" type="java.lang.String" column="text"/>
+
+        <property name="dateCreated" type="java.util.Date" column="date_created"/>
+
+        <set name="sofaText" table="sofatext"
+             inverse="true" lazy="false" fetch="select">
             <key>
-                <column name="sofa_document_id" not-null="true" />
+                <column name="sofa_document_id" not-null="true"/>
             </key>
-            <one-to-many class="SofaText" />
+            <one-to-many class="SofaText"/>
         </set>
-        
-        <many-to-one
-            name="patient"
-            column="patient_id"
-            class="org.openmrs.Patient"
-            not-null="true"/>
-        
-        <many-to-one
-            name="encounter"
-            column="encounter_id"
-            class="org.openmrs.Encounter"
-            not-null="true"/>
-	    
-	</class>
-	
-	<class name="SofaText"
-		table="sofatext">
-		<id name="sofaTextId" type="int" column="sofatext_id" unsaved-value="0">
-			<generator class="native" />
-		</id>
-		<discriminator column="sofatext_id" insert="false" />
-		<property name="uuid" type="java.lang.String" column="uuid"
-			length="38" unique="true" />
 
-        
+        <many-to-one
+                name="patient"
+                column="patient_id"
+                class="org.openmrs.Patient"
+                not-null="true"/>
+
+        <many-to-one
+                name="encounter"
+                column="encounter_id"
+                class="org.openmrs.Encounter"
+                not-null="true"/>
+
+    </class>
+
+    <class name="SofaText"
+           table="sofatext">
+        <id name="sofaTextId" type="int" column="sofatext_id" unsaved-value="0">
+            <generator class="native"/>
+        </id>
+        <discriminator column="sofatext_id" insert="false"/>
+        <property name="uuid" type="java.lang.String" column="uuid"
+                  length="38" unique="true"/>
+
+
         <property name="textStart" type="int" column="text_start"/>
         <property name="textEnd" type="int" column="text_end"/>
-		<property name="text" type="java.lang.String" column="text" />
-		
-		<set name="sofaTextMention" table="sofatext_mention" 
-				inverse="true" lazy="false" fetch="select">
+        <property name="text" type="java.lang.String" column="text"/>
+
+        <set name="sofaTextMention" table="sofatext_mention"
+             inverse="true" lazy="false" fetch="select">
             <key>
-                <column name="sofatext_id" not-null="true" />
+                <column name="sofatext_id" not-null="true"/>
             </key>
-            <one-to-many class="SofaTextMention" />
+            <one-to-many class="SofaTextMention"/>
         </set>
-        
+
         <many-to-one
-            name="encounter"
-            column="encounter_id"
-            class="org.openmrs.Encounter"
-            not-null="true"/>
-            
+                name="encounter"
+                column="encounter_id"
+                class="org.openmrs.Encounter"
+                not-null="true"/>
+
         <many-to-one
-            name="sofaDocument"
-            column="sofa_document_id"
-            class="SofaDocument"
-            not-null="true"/>
-	</class>
-	
-	<class name="SofaTextMention"
-		table="sofatext_mention">
-		<id name="sofaTextMentionId" type="int" column="sofatext_mention_id" unsaved-value="0">
-			<generator class="native" />
-		</id>
-		<discriminator column="sofatext_mention_id" insert="false" />
-		<property name="uuid" type="java.lang.String" column="uuid"
-			length="38" unique="true" />
-		
-		<property name="mentionText" type="java.lang.String" column="mention_text" />
-		<property name="mentionStart" type="int" column="mention_start" />
-		<property name="mentionEnd" type="int" column="mention_end" />
-		<property name="mentionType" type="java.lang.String" column="mention_type" />
-		
-		
-		<set name="sofaTextMentionConcept" table="sofatext_mention_concept" 
-				inverse="true" lazy="false" fetch="select">
+                name="sofaDocument"
+                column="sofa_document_id"
+                class="SofaDocument"
+                not-null="true"/>
+    </class>
+
+    <class name="SofaTextMention"
+           table="sofatext_mention">
+        <id name="sofaTextMentionId" type="int" column="sofatext_mention_id" unsaved-value="0">
+            <generator class="native"/>
+        </id>
+        <discriminator column="sofatext_mention_id" insert="false"/>
+        <property name="uuid" type="java.lang.String" column="uuid"
+                  length="38" unique="true"/>
+
+        <property name="mentionText" type="java.lang.String" column="mention_text"/>
+        <property name="mentionStart" type="int" column="mention_start"/>
+        <property name="mentionEnd" type="int" column="mention_end"/>
+        <property name="mentionType" type="java.lang.String" column="mention_type"/>
+
+
+        <set name="sofaTextMentionConcept" table="sofatext_mention_concept"
+             inverse="true" lazy="false" fetch="select">
             <key>
-                <column name="sofatext_mention_id" not-null="true" />
+                <column name="sofatext_mention_id" not-null="true"/>
             </key>
-            <one-to-many class="SofaTextMentionConcept" />
+            <one-to-many class="SofaTextMentionConcept"/>
         </set>
-        
+
         <many-to-one name="sofaText" class="SofaText" fetch="select">
-            <column name="sofatext_id" not-null="true" />
-        </many-to-one>
-		
-		
-		
-	</class>
-	
-	<class name="SofaTextMentionConcept"
-		table="sofatext_mention_concept">
-		<id name="sofaTextMentionConceptId" type="int" column="sofatext_mention_concept_id" unsaved-value="0">
-			<generator class="native" />
-		</id>
-		<discriminator column="sofatext_mention_concept_id" insert="false" />
-		<property name="uuid" type="java.lang.String" column="uuid"
-			length="38" unique="true" />
-		<many-to-one name="concept" class="org.openmrs.Concept" fetch="select">
-            <column name="concept_id" not-null="true" />
-        </many-to-one>
-		
-		
-		
-		<many-to-one name="sofaTextMention" class="SofaTextMention" fetch="select">
-            <column name="sofatext_mention_id" not-null="true" />
+            <column name="sofatext_id" not-null="true"/>
         </many-to-one>
 
-	</class>
-	
+
+    </class>
+
+    <class name="SofaTextMentionConcept"
+           table="sofatext_mention_concept">
+        <id name="sofaTextMentionConceptId" type="int" column="sofatext_mention_concept_id" unsaved-value="0">
+            <generator class="native"/>
+        </id>
+        <discriminator column="sofatext_mention_concept_id" insert="false"/>
+        <property name="uuid" type="java.lang.String" column="uuid"
+                  length="38" unique="true"/>
+        <many-to-one name="concept" class="org.openmrs.Concept" fetch="select">
+            <column name="concept_id" not-null="true"/>
+        </many-to-one>
+
+
+        <many-to-one name="sofaTextMention" class="SofaTextMention" fetch="select">
+            <column name="sofatext_mention_id" not-null="true"/>
+        </many-to-one>
+
+    </class>
+
 </hibernate-mapping>
