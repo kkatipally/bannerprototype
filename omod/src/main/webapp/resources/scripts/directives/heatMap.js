@@ -80,12 +80,12 @@ visitNotesApp.directive('heatMap', function($compile){
 
                 data1.forEach(function(d){
                     for(var n=0; n<negToggleArray.length; n++){
-                        if (d.mentionText === negToggleArray[n]){
+                        if ((d.mentionText === negToggleArray[n]) && (d.relatedTo === null)){
                             d.symbol = '(+)';
                         }
                     }
                     for(var m=0; m<toggleArray.length; m++){
-                        if (d.mentionText === toggleArray[m]){
+                        if ((d.mentionText === toggleArray[m]) && (d.relatedTo === null)){
                             d.symbol = '(-)';
                         }
                     }
@@ -216,7 +216,7 @@ visitNotesApp.directive('heatMap', function($compile){
                 nested
                     .each(function(d1, nestedInd) {
 
-                        if ((searchTerms.indexOf(d1.mentionText) > -1) && (nestedInd > 0)){
+                        if ((searchTerms.indexOf(d1.mentionText) > -1) && (d1.relatedTo === null) && (nestedInd > 0)){
                             var emptyLine = d3.select(this)
                                 .selectAll('.emptyline')
                                 .data(d1)

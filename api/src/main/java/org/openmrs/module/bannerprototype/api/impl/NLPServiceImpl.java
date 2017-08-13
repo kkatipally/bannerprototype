@@ -167,18 +167,15 @@ public class NLPServiceImpl extends BaseOpenmrsService implements NLPService {
 				List<Word> testTopWords = testCloud.getTopWordsShuffled(5);
 				
 				for (Word word : problemTopWords) {
-					if (!(Arrays.asList(searchTerms).contains(word.getWord())))
-						allTopTerms.add(word.getWord());
+					allTopTerms.add(word.getWord());
 				}
 				
 				for (Word word : treatmentTopWords) {
-					if (!(Arrays.asList(searchTerms).contains(word.getWord())))
-						allTopTerms.add(word.getWord());
+					allTopTerms.add(word.getWord());
 				}
 				
 				for (Word word : testTopWords) {
-					if (!(Arrays.asList(searchTerms).contains(word.getWord())))
-						allTopTerms.add(word.getWord());
+					allTopTerms.add(word.getWord());
 				}
 				
 				String[] allTopTermsArr = new String[allTopTerms.size()];
