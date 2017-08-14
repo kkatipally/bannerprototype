@@ -213,6 +213,10 @@ span.cloud-treatment {
   color: green /*rgb(33, 119, 67)*/
 }
 
+.table > tbody > tr.selectedNote {
+  background-color: rgb(176,224,230);
+}
+
 span.mention-type-problem {
   color: purple
 }
