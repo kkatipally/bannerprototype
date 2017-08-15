@@ -114,6 +114,8 @@ visitNotesApp
         $scope.searchInput = "";
         $scope.searchBarTerms = [];
 
+        $scope.orderByField = 'date';
+        $scope.reverseSort = false;
         $scope.resetVisitList = function() {
             $scope.filterFromDate = "";
             $scope.filterToDate = "";

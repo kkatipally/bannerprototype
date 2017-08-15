@@ -90,15 +90,32 @@
                 <table class="table table-bordered table-hover table-sm">
                     <thead class="thead-default">
                     <tr>
-                        <th>Date</th>
-                        <th>Diagnosis</th>
-                        <th>Provider</th>
-                        <th>Location</th>
+                        <th><a ngHref="#" ng-click="orderByField='date'; reverseSort = !reverseSort">
+                            Date
+                            <span ng-show="orderByField == 'date'"><span ng-show="!reverseSort">^</span><span
+                                    ng-show="reverseSort">v</span></span>
+                        </a></th>
+                        <th><a ngHref="#" ng-click="orderByField='diagnosis'; reverseSort = !reverseSort">
+                            Diagnosis
+                            <span ng-show="orderByField == 'diagnosis'"><span ng-show="!reverseSort">^</span><span
+                                    ng-show="reverseSort">v</span></span>
+                        </a></th>
+                        <th><a ngHref="#" ng-click="orderByField='provider'; reverseSort = !reverseSort">
+                            Provider
+                            <span ng-show="orderByField == 'provider'"><span ng-show="!reverseSort">^</span><span
+                                    ng-show="reverseSort">v</span></span>
+                        </a></th>
+                        <th><a ngHref="#" ng-click="orderByField='location'; reverseSort = !reverseSort">
+                            Location
+                            <span ng-show="orderByField == 'location'"><span ng-show="!reverseSort">^</span><span
+                                    ng-show="reverseSort">v</span></span>
+                        </a></th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="visitNote in filteredVisitNotes = (visitNotes | orderBy: 'date' | dateRangeAndTerm: filterFromDate : filterToDate : matchTerm | filter:visitListInput | uniqueNotes) | limitTo:5:5*(currentPage-1)"
-                        ng-click="selectNote()" ng-class="{selectedNote: visitNote.uuid === selectedNoteUuid}">
+                    <tr
+                            ng-repeat="visitNote in filteredVisitNotes = (visitNotes | orderBy: orderByField: reverseSort | dateRangeAndTerm: filterFromDate : filterToDate : matchTerm | filter:visitListInput | uniqueNotes) | limitTo:5:5*(currentPage-1)"
+                            ng-click="selectNote()" ng-class="{selectedNote: visitNote.uuid === selectedNoteUuid}">
                         <td>{{visitNote.date | date:'mediumDate'}}</td>
                         <td>{{visitNote.diagnosis}}</td>
                         <td>{{visitNote.provider}}</td>
