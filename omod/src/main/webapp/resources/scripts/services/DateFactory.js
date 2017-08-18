@@ -3,12 +3,21 @@
 visitNotesApp.factory('DateFactory', function(){
 
 	var data = {
+				  minDate: '',
 				  sliderMinDate: '',
 				  sliderMaxDate: ''
 			    };
 
 	return {
-			        getSliderMinDate: function () {
+			        getMinDate: function () {
+                        //console.log("Min in getter: " + data.minDate);
+                        return data.minDate;
+                    },
+                    setMinDate: function (minDate) {
+                        data.minDate = minDate;
+                        //console.log("Min in setter: " + data.minDate);
+                    },
+                    getSliderMinDate: function () {
 			        	//console.log("Slider min in getter: " + data.sliderMinDate);
 			            return data.sliderMinDate;
 			        },

@@ -62,11 +62,11 @@ visitNotesApp
             "name" : DateFactory.getSliderMaxDate()
         };
 
-        $scope.minDate1 = monthsBefore(new Date(), 24);
+        $scope.minDate1 = DateFactory.getMinDate()
 
         $scope.dateOptions1 = {
             formatYear : 'yyyy',
-            minDate : $scope.minDate1, // min start date: 2 years ago from today
+            minDate : $scope.minDate1, // min(2 years ago from today, min date with patient data)
             startingDay : 0
         };
 

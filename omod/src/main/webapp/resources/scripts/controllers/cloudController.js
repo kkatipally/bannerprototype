@@ -48,6 +48,17 @@ visitNotesApp.controller('cloudController',
             $timeout(function() {
                 $scope.visitDatesDataUpdated = true;
                 $scope.visitDatesData = $scope.allSofadocs.results ;
+                var allDates = [];
+                    for(var i=0; i<$scope.visitDatesData.length; i++){
+                        allDates.push($scope.visitDatesData[i].dateCreated);
+                    }
+                allDates.sort();
+                $scope.patientMinDate = new Date(allDates[0]);
+
+                $scope.minDate = monthsBefore(new Date(), 24);
+                if($scope.minDate > $scope.patientMinDate)
+                    $scope.minDate = $scope.patientMinDate;
+                DateFactory.setMinDate($scope.minDate);
             }, 0);
         });
 
