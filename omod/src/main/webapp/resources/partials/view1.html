@@ -1,5 +1,19 @@
 <div ng-app="visitNotesApp" class="center">
     <div ng-controller="cloudController">
+
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a>Search History</a></li>
+            <li class="breadcrumb-item" ng-repeat="term in breadCrumbs">
+                <a ngHref="#" ng-click="clickBreadCrumb(term)">{{term.word}}</a>
+            </li>
+        </ol>
+
+        <!--<div>
+            <button id="clearHistory" type="button" class="btn btn-secondary inner" ng-click="clearHistory()">Clear
+                History
+            </button>
+        </div>-->
+
         <h4>Select start and end dates, entity type (all/problems/treatments/tests) and number of entities to view:</h4>
 
         <div>

@@ -3,17 +3,22 @@
 visitNotesApp.factory('BreadcrumbFactory', function() {
 
 	var data = {
-			breadCrumbs : ''
+			breadCrumbs : '',
+			addNewBreadCrumb : true
 	};
 
 	return {
 		getBreadCrumbs : function() {
-			// console.log("searchTerms in getter: " + data.searchTerms);
 			return data.breadCrumbs;
 		},
 		setBreadCrumbs : function(breadCrumbs) {
 			data.breadCrumbs = breadCrumbs;
-			// console.log("searchTerms in setter: " + data.searchTerms);
-		}
+		},
+		getAddNewBreadCrumb : function() {
+            return data.addNewBreadCrumb;
+        },
+        setAddNewBreadCrumb : function(addNewBreadCrumb) {
+            data.addNewBreadCrumb = addNewBreadCrumb;
+        }
 	};
 });

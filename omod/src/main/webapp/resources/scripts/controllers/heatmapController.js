@@ -253,7 +253,7 @@ visitNotesApp
         return Notes;
         }
 
-        $scope.searchInput = SearchFactory.getSearchTerms();
+        $scope.searchInput = SearchFactory.getSearchInput();
         $scope.visitDateUuid = VisitUuidFactory.getVisitDateUuid();
 
         //if both search terms and visit date are falsy, reload
@@ -262,17 +262,13 @@ visitNotesApp
         } else if ($scope.searchInput){ //search terms entered
             $scope.searchBarTerms = $scope.searchInput.split(",");
 
-            $scope.uniqueSearchBarTerms = $scope.searchBarTerms
-                    .filter(onlyUnique);
-            $scope.finalSearchBarTerms = [];
-
-            for (var i = 0; i < $scope.uniqueSearchBarTerms.length; i++) {
-                $scope.uniqueSearchBarTerms[i] = $scope.uniqueSearchBarTerms[i]
+            for (var i = 0; i < $scope.searchBarTerms.length; i++) {
+                $scope.searchBarTerms[i] = $scope.searchBarTerms[i]
                         .trim().toLowerCase();
-                if ($scope.uniqueSearchBarTerms[i])
-                    $scope.finalSearchBarTerms
-                            .push($scope.uniqueSearchBarTerms[i]);
             }
+
+            $scope.uniqueSearchBarTerms = $scope.searchBarTerms.filter(onlyUnique);
+            $scope.finalSearchBarTerms = $scope.uniqueSearchBarTerms;
 
             initiateBreadCrumb($scope.searchInput);
 
@@ -319,17 +315,14 @@ visitNotesApp
         $scope.page2Submit = function(searchInput) {
 
             $scope.searchBarTerms = $scope.searchInput.split(",");
-            $scope.uniqueSearchBarTerms = $scope.searchBarTerms
-                    .filter(onlyUnique);
-            $scope.finalSearchBarTerms = [];
 
-            for (var i = 0; i < $scope.uniqueSearchBarTerms.length; i++) {
-                $scope.uniqueSearchBarTerms[i] = $scope.uniqueSearchBarTerms[i]
+            for (var i = 0; i < $scope.searchBarTerms.length; i++) {
+                $scope.searchBarTerms[i] = $scope.searchBarTerms[i]
                         .trim().toLowerCase();
-                if ($scope.uniqueSearchBarTerms[i] !== "")
-                    $scope.finalSearchBarTerms
-                            .push($scope.uniqueSearchBarTerms[i]);
             }
+
+            $scope.uniqueSearchBarTerms = $scope.searchBarTerms.filter(onlyUnique);
+            $scope.finalSearchBarTerms = $scope.uniqueSearchBarTerms;
 
             addBreadCrumb($scope.searchInput);
 
@@ -363,6 +356,12 @@ visitNotesApp
 
 		$scope.backToSearchPage = function() {
             BreadcrumbFactory.setBreadCrumbs($scope.breadCrumbs);
+
+            //update the search bar and dates on page 1 from the last search
+            SearchFactory.setSearchInput($scope.searchInput);
+            DateFactory.setSliderMinDate($scope.startDate.name);
+            DateFactory.setSliderMaxDate($scope.endDate.name);
+
             $location.url('/view1');
         };
 
@@ -375,13 +374,18 @@ visitNotesApp
             if (BreadcrumbFactory.getBreadCrumbs() != "")
                 $scope.breadCrumbs = BreadcrumbFactory
                         .getBreadCrumbs();
-            $timeout(function() {
-                $scope.breadCrumbs.push({
-                    "word" : searchInput,
-                    "startDate" : $scope.startDate.name,
-                    "endDate" : $scope.endDate.name
-                });
-            }, 0);
+
+            $scope.addNewBreadCrumb = BreadcrumbFactory.getAddNewBreadCrumb();
+
+            if($scope.addNewBreadCrumb){
+                $timeout(function() {
+                    $scope.breadCrumbs.push({
+                        "word" : searchInput,
+                        "startDate" : $scope.startDate.name,
+                        "endDate" : $scope.endDate.name
+                    });
+                }, 0);
+            }
         };
 
         function addBreadCrumb(searchInput) {
@@ -410,19 +414,15 @@ visitNotesApp
                         }
                         $scope.searchInput = term.word;
 
-                        $scope.searchBarTerms = $scope.searchInput
-                                .split(",");
-                        $scope.uniqueSearchBarTerms = $scope.searchBarTerms
-                                .filter(onlyUnique);
-                        $scope.finalSearchBarTerms = [];
+                        $scope.searchBarTerms = $scope.searchInput.split(",");
 
-                        for (var i = 0; i < $scope.uniqueSearchBarTerms.length; i++) {
-                            $scope.uniqueSearchBarTerms[i] = $scope.uniqueSearchBarTerms[i]
+                        for (var i = 0; i < $scope.searchBarTerms.length; i++) {
+                            $scope.searchBarTerms[i] = $scope.searchBarTerms[i]
                                     .trim().toLowerCase();
-                            if ($scope.uniqueSearchBarTerms[i])
-                                $scope.finalSearchBarTerms
-                                        .push($scope.uniqueSearchBarTerms[i]);
                         }
+
+                        $scope.uniqueSearchBarTerms = $scope.searchBarTerms.filter(onlyUnique);
+                        $scope.finalSearchBarTerms = $scope.uniqueSearchBarTerms;
 
                         $scope.stms = SofaTextMentionUIResources
                                 .displayHeatMap(

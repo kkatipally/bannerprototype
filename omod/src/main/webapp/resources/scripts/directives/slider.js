@@ -53,9 +53,6 @@ visitNotesApp.directive('slider', function($compile){
                 }
             );
             
-            scope.sliderMinDate = monthsBefore(new Date(), 24);
-            scope.sliderMaxDate = new Date();
-
             scope.$watch('minDate',
                 function(newVal, oldVal) {
 
@@ -68,12 +65,21 @@ visitNotesApp.directive('slider', function($compile){
                       bounds: { //bounds of the date range
                           min: newVal,
                           max: new Date()
-                      },
-                      defaultValues:{
-                          min: newVal,
-                          max: new Date()
                       }
                   });
+
+            });
+
+            scope.$watch('[sliderMinDate, sliderMaxDate]',
+                function(newVals, oldVals) {
+
+                  // if 'val' is undefined, exit
+                  if (!newVals[0]) {
+                     return;
+                  }
+
+                  element.dateRangeSlider("values", newVals[0], newVals[1]);
+
             });
 
             element.bind("userValuesChanged", function(e, data){

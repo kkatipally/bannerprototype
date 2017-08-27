@@ -1,7 +1,8 @@
 'use strict';
 
 visitNotesApp.controller('cloudController',
-    function cloudController($scope, $location, $timeout, DateFactory, SearchFactory, VisitUuidFactory, SofaDocumentResources, WordResources){
+    function cloudController($scope, $location, $timeout, DateFactory, SearchFactory, VisitUuidFactory,
+    BreadcrumbFactory, SofaDocumentResources, WordResources){
 
         function monthsBefore(d, months) {
           		  var nd = new Date(d.getTime());
@@ -59,6 +60,14 @@ visitNotesApp.controller('cloudController',
                 if($scope.minDate > $scope.patientMinDate)
                     $scope.minDate = $scope.patientMinDate;
                 DateFactory.setMinDate($scope.minDate);
+
+                if(!DateFactory.getSliderMinDate()){
+                    $scope.sliderMinDate = $scope.minDate;
+                    DateFactory.setSliderMinDate($scope.sliderMinDate);
+                } else {
+                    $scope.sliderMinDate = DateFactory.getSliderMinDate();
+                    $scope.sliderMaxDate = DateFactory.getSliderMaxDate();
+                }
             }, 0);
         });
 
@@ -70,7 +79,7 @@ visitNotesApp.controller('cloudController',
                     //reset visitDateUuid
                     $scope.visitDateUuid = "";
                     //reset search Terms
-                    SearchFactory.setSearchTerms("");
+                    SearchFactory.setSearchInput("");
                     $location.url('/view2');
                 }
             });
@@ -91,13 +100,10 @@ visitNotesApp.controller('cloudController',
         $scope.selectDisplayNumTerms = function(term){
             $scope.displayNumTerm = term.num;
         };
-        
+
         $scope.sliderMinDate = monthsBefore(new Date(), 24);
         $scope.sliderMaxDate = new Date();
-        
-        DateFactory.setSliderMinDate($scope.sliderMinDate);
-        DateFactory.setSliderMaxDate($scope.sliderMaxDate);
-        
+
         $scope.words = WordResources.displayCloud({
 	 			startDate: formatDate($scope.sliderMinDate),
 	 			endDate: formatDate($scope.sliderMaxDate),
@@ -114,7 +120,9 @@ visitNotesApp.controller('cloudController',
         
         $scope.$watch('[sliderMinDate, sliderMaxDate, entityType, displayNumTerm]', 
                 function(newVals, oldVals) {
-        				
+
+        			if((newVals[0] !== oldVals[0])||(newVals[1] !== oldVals[1])||
+        				 (newVals[2] !== oldVals[2])||(newVals[3] !== oldVals[3])){
         				DateFactory.setSliderMinDate($scope.sliderMinDate);
                 	  	DateFactory.setSliderMaxDate($scope.sliderMaxDate);
                 	  	
@@ -131,21 +139,56 @@ visitNotesApp.controller('cloudController',
             					i2.emph();
             				}, 0);
             			});
+            			}
                   });
 
         $scope.searchInput = "";
+        $scope.searchInput = SearchFactory.getSearchInput();
 
         $scope.addToSearch = function(name){
             if($scope.searchInput === "")
                 $scope.searchInput += name ;
-            else
-                $scope.searchInput += ", " + name ;
+            else {
+                $scope.searchBarTerms = $scope.searchInput.split(",");
+
+                for (var i = 0; i < $scope.searchBarTerms.length; i++) {
+                    $scope.searchBarTerms[i] = $scope.searchBarTerms[i].trim().toLowerCase();
+                }
+
+                if($scope.searchBarTerms.indexOf(name) == -1)
+                    $scope.searchInput += ", " + name ;
+            }
         };
 
         $scope.page1Submit = function(searchInput){
 
-            SearchFactory.setSearchTerms($scope.searchInput);
+            SearchFactory.setSearchInput($scope.searchInput);
             $location.url('/view2');
         };
 
+        $scope.breadCrumbs = [];
+        if (BreadcrumbFactory.getBreadCrumbs() != "")
+            $scope.breadCrumbs = BreadcrumbFactory.getBreadCrumbs();
+
+        $scope.clearHistory = function(term) {
+            $scope.breadCrumbs = [];
+        }
+
+        BreadcrumbFactory.setAddNewBreadCrumb(true);
+
+        $scope.clickBreadCrumb = function(term) {
+
+            $timeout(
+                function() {
+                    $scope.sliderMinDate = term.startDate;
+                    $scope.sliderMaxDate = term.endDate;
+
+                    DateFactory.setSliderMinDate($scope.sliderMinDate);
+                    DateFactory.setSliderMaxDate($scope.sliderMaxDate);
+
+                    BreadcrumbFactory.setAddNewBreadCrumb(false);
+
+                    $scope.searchInput = term.word;
+                }, 0);
+        }
 });

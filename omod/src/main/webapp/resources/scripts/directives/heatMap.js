@@ -331,8 +331,14 @@ visitNotesApp.directive('heatMap', function($compile){
                             	scope.$apply(function() {
                             		if(scope.searchInput === "")
                                 		scope.searchInput += d.mentionText ;
-                                	else
-                                		scope.searchInput += ", " + d.mentionText ;
+                                	else{
+                                        scope.searchBarTerms = scope.searchInput.split(",");
+                                        for (var i = 0; i < scope.searchBarTerms.length; i++) {
+                                            scope.searchBarTerms[i] = scope.searchBarTerms[i].trim().toLowerCase();
+                                        }
+                                        if(scope.searchBarTerms.indexOf(d.mentionText) == -1)
+                                            scope.searchInput += ", " + d.mentionText ;
+                                    }
                             	});
                             })
                             .on("click", function(d, i){ //left click to add to Visit Note List filter

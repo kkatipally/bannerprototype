@@ -3,17 +3,17 @@
 visitNotesApp.factory('SearchFactory', function() {
 
 	var data = {
-		searchTerms : ''
+		searchInput : ''
 	};
 
 	return {
-		getSearchTerms : function() {
-			// console.log("searchTerms in getter: " + data.searchTerms);
-			return data.searchTerms;
+		getSearchInput : function() {
+			// console.log("searchInput in getter: " + data.searchInput);
+			return data.searchInput;
 		},
-		setSearchTerms : function(searchTerms) {
-			data.searchTerms = searchTerms;
-			// console.log("searchTerms in setter: " + data.searchTerms);
+		setSearchInput : function(searchInput) {
+			data.searchInput = searchInput;
+			// console.log("searchInput in setter: " + data.searchInput);
 		}
 	};
 });

@@ -92,7 +92,6 @@ visitNotesApp.directive('visitDates', function($compile){
                          .style("opacity", 0);
                  })
                 .on("click", function(d, i){
-                      console.log("visitDate clicked");
                       scope.$apply(function() {
                     	  scope.visitDateUuid = d.uuid;
                       });
